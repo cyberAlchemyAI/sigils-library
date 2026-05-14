@@ -37,9 +37,9 @@ A Formulae sigil is ready when:
 - its output contract is stable enough for another agent or script to consume,
 - its anti-patterns prevent accidental use for interpretive work.
 
-## Starter Example Pattern
+## Example Pattern
 
-No concrete Formulae sigil has been copied into this library yet. A good first candidate would be a deterministic markdown link validator, schema conformance checker, or registry synchronizer that always returns the same result for the same file state.
+No Formulae example has been added yet. A good first candidate would be a deterministic markdown link validator, schema conformance checker, or registry synchronizer that always returns the same result for the same file state.
 
 ## Relationship To Other Tiers
 

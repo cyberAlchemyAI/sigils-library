@@ -22,7 +22,7 @@ Scope note: Layer 0 is the minimum working unit POC that proves the concept with
 
 ## Layering Method
 
-- POC-first: prove the concept with the smallest useful end-to-end slice.
+- Minimum proof: prove the concept with the smallest useful end-to-end slice.
 - Decision-first: each layer exists to answer one important question.
 - Progressive hardening: each layer adds one bounded improvement theme.
 - Non-regression: prior layer guarantees remain true in later layers.

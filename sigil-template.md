@@ -24,12 +24,16 @@ version: 0.1.0
 </process>
 
 <quality-bar>
+See QUALITY-BAR.md for authoring guidance.
+
 A successful execution of this Sigil must:
 - [Constraint 1]
 - [Constraint 2]
 </quality-bar>
 
 <anti-patterns>
+See ANTI-PATTERNS.md for authoring guidance.
+
 - [Avoid X because of Y]
 - [Do not use this Sigil if Z is the primary goal]
 </anti-patterns>

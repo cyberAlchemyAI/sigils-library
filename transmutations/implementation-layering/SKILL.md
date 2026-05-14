@@ -1,11 +1,11 @@
 ---
 name: implementation-layering
-description: "Use when: creating or evolving a project-agnostic POC-first implementation layering model for a feature, capability, product workflow, research workflow, infrastructure change, or system improvement. Builds layers from minimum working unit proof to progressive hardening using value/cost layer-boundary heuristics."
+description: "Use when: creating or evolving a project-agnostic implementation layering model for a feature, capability, product workflow, research workflow, infrastructure change, or system improvement. Builds layers from minimum working unit proof to progressive hardening using value/cost layer-boundary heuristics."
 argument-hint: "<target-name> [--path <output-path>] [--update]"
 tier: transmutations
 domain: implementation-planning
 version: 0.1.0
-provenance: copied from .github/skills/implementation-layering
+origin: generalized from recurring implementation-planning practice
 allowed-tools: Read, Write, Glob, Grep
 ---
 
@@ -14,7 +14,7 @@ Create or evolve a project-agnostic implementation layering model where Layer 0 
 </objective>
 
 <logic-type>
-Transmutation: bounded synthesis from target context into a POC-first implementation layering model.
+Transmutation: bounded synthesis from target context into a minimum-proof implementation layering model.
 </logic-type>
 
 <applicability>
@@ -27,8 +27,6 @@ Use this skill for any project that needs to sequence implementation scope befor
 - process automation,
 - data pipelines,
 - agentic or human-in-the-loop systems.
-
-This skill does not require DomainSpec, GSD, MARS, or any specific repository structure.
 </applicability>
 
 <inputs>
@@ -38,7 +36,7 @@ Expected inputs, if available:
 - existing requirements, specs, issues, PRDs, ADRs, README sections, or roadmap notes,
 - existing implementation files or tests,
 - known constraints such as budget, timeline, team size, safety, compliance, reliability, or pilot needs.
-  </inputs>
+</inputs>
 
 <default-output>
 If the user does not provide `--path`, write the artifact to the first suitable location:
@@ -46,7 +44,7 @@ If the user does not provide `--path`, write the artifact to the first suitable 
 1. `docs/{target-name}/implementation-layering.md` when a target-specific docs folder exists,
 2. `docs/implementation-layering.md` when project-level docs exist,
 3. `implementation-layering.md` at the project root when no docs folder exists.
-   </default-output>
+</default-output>
 
 <template>
 Use `templates/implementation-layering.md` as the starting point.
@@ -86,7 +84,7 @@ A good implementation layering artifact:
 - makes promotion decisions evidence-based,
 - balances working length against value delivered,
 - can be understood by both implementation agents and human reviewers.
-  </quality-bar>
+</quality-bar>
 
 <anti-patterns>
 Avoid:
@@ -97,7 +95,7 @@ Avoid:
 - making layer boundaries by component ownership alone,
 - deferring verification until the final layer,
 - adding a layer when it does not unlock a new decision.
-  </anti-patterns>
+</anti-patterns>
 
 <output-contract>
 Return:

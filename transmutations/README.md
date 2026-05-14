@@ -27,9 +27,9 @@ They are appropriate when the desired result cannot be produced by mechanical va
 - the agent would need to make sovereign project decisions without a human gate,
 - there is no source material or decision boundary to constrain the synthesis.
 
-## Starter Example
+## Example Sigil
 
-[implementation-layering](implementation-layering/) is the first copied Transmutation sigil in this library. It transforms a target capability plus available context into a POC-first implementation layering artifact.
+[implementation-layering](implementation-layering/) turns a rough capability, feature, workflow, or system improvement into a layered implementation plan that starts with the smallest useful proof and grows through evidence-based hardening.
 
 It belongs here because the procedure is bounded and structured, but still depends on judgment: the agent must identify the smallest useful proof, distinguish deferrals from requirements, and balance value against cost for each layer.
 

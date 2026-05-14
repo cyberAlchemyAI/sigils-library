@@ -4,7 +4,7 @@ description: Run a multi-agent parallel investigation to identify cross-layer te
 tier: arcana
 domain: multi-agent-governance
 version: 0.1.0
-provenance: copied from implementation/domainspec/.claude/skills/robot-talks
+origin: generalized from recurring cross-layer investigation practice
 ---
 
 # Robot-Talks: Multi-Agent Investigation Skill
@@ -15,7 +15,7 @@ Auditing tool for cross-layer tension discovery. Does NOT implement fixes.
 Arcana: recursive, multi-agent investigation with synthesis, human gating, and session preservation.
 </logic-type>
 
-**Full rationale & templates:** `docs/vault/constitution/robot-talks-constitution.md`
+Use this sigil when misunderstanding the system shape is more expensive than a short, structured investigation.
 
 ## Invocation Checklist (All must be YES)
 
@@ -26,9 +26,9 @@ Arcana: recursive, multi-agent investigation with synthesis, human gating, and s
 
 **If any box is empty:**
 
-- Single-file bug -> `systematic-debugging`
-- "How does X work?" -> `gitnexus-exploring`
-- Refactor in one module -> `gitnexus-impact-analysis`
+- Single-file bug -> use a local debugging workflow
+- "How does X work?" -> use focused code or documentation exploration
+- Refactor in one module -> use local impact analysis
 - Well-specified feature -> implement directly
 
 ## Phase 1: Setup (~15 min)
@@ -47,7 +47,7 @@ Do NOT proceed until the user has stated both. Ask if missing.
 
 Agents do NOT spawn until the user evaluates and approves the approach.
 
-Rules: decompose by **concerns**, not files. No two agents investigate the same question. Evidence overlap is fine. See constitution R2 for scope template.
+Rules: decompose by **concerns**, not files. No two agents investigate the same question. Evidence overlap is fine.
 
 ## Phase 2: Exploration (~15 min per agent, parallel)
 
@@ -68,7 +68,7 @@ Identify **tensions** (contradictions between layers), not summaries. A tension 
 - Finding contradicts documented contract
 - Frontend assumes Y, backend implements NOT-Y
 
-Each tension needs: what Layer A holds, what Layer B actually does, impact severity, and evidence from specific agent findings. See constitution R4 for tension template.
+Each tension needs: what Layer A holds, what Layer B actually does, impact severity, and evidence from specific agent findings.
 
 ## Phase 4: Human Gate
 
@@ -77,7 +77,7 @@ No action without human validation. Present tensions, human decides:
 - Real + actionable -> implementation plan (separate session)
 - Real + deferred -> backlog item
 - Misinterpretation -> close with explanation
-- Uncertain -> targeted follow-up (see constitution R6)
+- Uncertain -> targeted follow-up
 
 ## Session Preservation
 

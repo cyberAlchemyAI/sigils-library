@@ -27,11 +27,15 @@ They are used when a single bounded transformation is not enough. Arcana coordin
 - the user wants immediate implementation of a well-scoped change,
 - the workflow lacks a human gate for consequential interpretation.
 
-## Starter Example
+## Example Sigil
 
-[robot-talks](robot-talks/) is the first copied Arcana sigil in this library. It defines a multi-agent parallel investigation pattern for cross-layer tension discovery.
+[robot-talks](robot-talks/) defines a multi-agent parallel investigation pattern for cross-layer tension discovery.
 
 It belongs here because the workflow is recursive and strategic: it requires scope definition, role decomposition, parallel inquiry, synthesis of contradictions, human validation, and session preservation.
+
+[sigil-development](sigil-development/) defines the lifecycle for creating, observing, reflecting on, and iterating sigils.
+
+It belongs here because it coordinates authoring, validation, subagent-assisted observation, reflection triggers, and evidence-based maintenance across the life of a sigil.
 
 ## Quality Bar
 
