@@ -2,6 +2,8 @@
 
 The **Sigils Library** is the authoritative registry of agentic capabilities for the **Cyber Alchemy AI** ecosystem. It serves as a repository of codified patterns of intent—combining system instructions, tool definitions, and reasoning constraints—that allow agents to interact with complex systems.
 
+Start with the [Sigils Registry](REGISTRY.md) for a concise summary of each sigil and a direct link to its folder.
+
 ## 🏛️ Ontology of Sigils
 
 Capabilities are categorized by their **Epistemic Nature**, defining how an agent processes information and executes logic.
@@ -14,6 +16,7 @@ Each tier has a concept file that expands the category and gives authors a clear
 
 Two cross-tier authoring concepts apply to every sigil:
 
+- [Sigils Registry](REGISTRY.md) - quick-reference index of available sigils.
 - [Quality Bar](QUALITY-BAR.md) - observable criteria for successful execution.
 - [Anti-Patterns](ANTI-PATTERNS.md) - known misuse cases and failure modes to avoid.
 - [Sigil Development Workflow](SIGIL-DEVELOPMENT-WORKFLOW.md) - the lifecycle for designing, validating, observing, reflecting on, and maintaining sigils.
