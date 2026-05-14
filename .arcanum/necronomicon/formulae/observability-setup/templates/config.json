@@ -1,0 +1,13 @@
+{
+  "version": "0.1.0",
+  "storage_model": "hybrid",
+  "source_of_truth": "signals/sigil-invocations.jsonl",
+  "per_sigil_path": "by-sigil/<sigil-name>.jsonl",
+  "reflection_path": "reflections/",
+  "thresholds": {
+    "meaningful_executions": 5,
+    "generated_outputs": 10,
+    "related_workflow_gaps": 3,
+    "severe_workflow_gaps": 1
+  }
+}
