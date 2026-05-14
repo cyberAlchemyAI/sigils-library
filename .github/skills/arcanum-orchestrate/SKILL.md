@@ -12,17 +12,17 @@ Expose the installed Arcanum GitHub Copilot adapter to GitHub Copilot's required
 </objective>
 
 <context>
-The canonical local adapter lives at .arcanum/runtimes/github-copilot/skills/arcanum-orchestrate/SKILL.md. Necronomicon lives under .arcanum/necronomicon/.
+The canonical local adapter lives at .arcanum/runtimes/github-copilot/skills/arcanum-orchestrate/SKILL.md.
 </context>
 
 <process>
 1. Read .arcanum/runtimes/github-copilot/skills/arcanum-orchestrate/SKILL.md.
 2. Follow that adapter's process.
-3. If the runtime adapter is unavailable, read .arcanum/necronomicon/REGISTRY.md and .arcanum/necronomicon/ROUTES.md directly.
+3. If the runtime adapter is unavailable, report a blocked install and ask to rerun Arcanum bootstrap.
 </process>
 
 <guardrails>
 - Keep this file as a discovery bridge only.
 - Do not copy full sigil internals into this wrapper.
-- Treat .arcanum/runtimes/github-copilot/ and .arcanum/necronomicon/ as authoritative for installed runtime behavior.
+- Treat .arcanum/runtimes/github-copilot/ as authoritative for installed runtime behavior.
 </guardrails>

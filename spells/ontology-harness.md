@@ -3,16 +3,17 @@
 ## Identity
 
 - Canonical ID: `ontology-harness`
+- Primary alias: `Necronomicon`
 - Aliases: `Necronomicon Vault`, `Ontology Codex`
 - Scope: library
 
 ## Purpose
 
-Ontology Harness composes `inventory`, `ontology-vault`, and `context-builder` so a repository can turn vault-like knowledge material into a reusable ontology governance layer.
+Ontology Harness, invoked by the human-facing alias Necronomicon, composes `inventory`, `ontology-vault`, and `context-builder` so a repository can turn vault-like knowledge material into a reusable ontology governance layer.
 
 It is designed for repositories with sessions, discoveries, premises, conventions, confidence rules, or delegated research artifacts that need traceable distillation and promotion gates.
 
-When a repository has both business/domain material and system/runtime material, Ontology Harness can run a branch-aware path that maps business ontology, maps system ontology, and validates the bridge between intent and implementation.
+When a repository has both business/domain material and system/runtime material, Necronomicon can run a branch-aware path that maps business ontology, maps system ontology, and validates the bridge between intent and implementation.
 
 ## Trigger Conditions
 
@@ -81,7 +82,7 @@ When a repository has both business/domain material and system/runtime material,
 ## Local Customization
 
 - Spell root: `.arcanum/spells/`
-- Default output root: `.arcanum/ontology-vault/`
+- Default output root: `.arcanum/ontology/`
 - Local paths: repository-specific vault, ontology, docs, notes, wiki, or session folders.
 - Branch paths: optional repository-specific business, system, and bridge folders or tags.
 - Gate strictness: standard by default, strict for promotion or convention mutation.

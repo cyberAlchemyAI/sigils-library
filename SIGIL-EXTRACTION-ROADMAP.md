@@ -163,7 +163,7 @@ This extension creates a governed ontology-vault sigil and a harness spell for r
 | ---- | ------ | ---- | ---- | ------ |
 | ONT.1 | ontology-vault | Arcana | Create neutral ontology governance sigil with mapping, session distillation, premise review, confidence promotion, convention changes, delegated evidence, and validation modes. | Done |
 | ONT.2 | ontology-harness | Spell | Compose inventory, ontology-vault, and context-builder into a reusable vault governance workflow. | Done |
-| ONT.3 | repository-harness ontology branch | Spell extension | Add optional ontology-vault branch to Necronomicon without making ontology governance mandatory. | Done |
+| ONT.3 | repository-harness ontology branch | Spell extension | Add optional ontology-vault branch to the Ontology Harness without making ontology governance mandatory. | Done |
 
 Ontology vault extraction and validation are complete.
 
@@ -176,7 +176,7 @@ This extension adds optional business/system ontology branches to Ontology Vault
 | ONT-BR.1 | ontology-vault branch model | Arcana update | Add business, system, and bridge concepts, starter role catalogs, branch-aware mode arguments, and validation rules. | Done |
 | ONT-BR.2 | branch templates | Templates | Add business map, system map, bridge map, drift report, and traceability matrix templates. | Done |
 | ONT-BR.3 | ontology-harness branch path | Spell update | Add optional branch-aware phases and cross-branch context proof. | Done |
-| ONT-BR.4 | repository-harness branch trigger | Spell extension | Let Necronomicon activate branch-aware ontology when intent-to-system traceability is in scope. | Done |
+| ONT-BR.4 | repository-harness branch trigger | Spell extension | Let the Necronomicon/Ontology Harness alias activate branch-aware ontology when intent-to-system traceability is in scope. | Done |
 
 Branch-aware ontology extension validation is complete.
 

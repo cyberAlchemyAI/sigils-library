@@ -18,7 +18,7 @@ The canonical local adapter lives at .arcanum/runtimes/github-copilot/skills/arc
 <process>
 1. Read .arcanum/runtimes/github-copilot/skills/arcanum-sigil-sigil-development/SKILL.md.
 2. Follow that adapter's process.
-3. If the runtime adapter is unavailable, read .arcanum/necronomicon/REGISTRY.md and then .arcanum/necronomicon/arcana/sigil-development/SKILL.md.
+3. If the runtime adapter is unavailable, report a blocked install and ask to rerun Arcanum bootstrap.
 </process>
 
 <guardrails>

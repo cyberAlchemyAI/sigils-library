@@ -12,7 +12,7 @@ allowed-tools: Read, Write, Glob, Grep, Bash, AskQuestions
 # Sigil: Sigil Runtime Installer
 
 <objective>
-Install thin runtime adapters that expose Arcanum sigils and spells through a selected agent command surface while preserving Necronomicon as the installed runtime authority.
+Install runtime adapters that expose Arcanum sigils and spells through a selected agent command surface while preserving Necronomicon as the Ontology Harness alias.
 </objective>
 
 <logic-type>
@@ -24,7 +24,7 @@ Arcana: target selection, adapter generation, repository-local installation, val
 - `claude`: create or plan `.arcanum/runtimes/claude/commands/<command>.md` and a `.claude/commands/<command>.md` discovery bridge.
 - `codex`: create or plan `.arcanum/runtimes/codex/commands/<command>.md` and a `.codex/commands/<command>.md` discovery bridge.
 
-Install the general `arcanum-orchestrate` command and individual artifact commands for each installed sigil and spell. Individual commands use `arcanum-sigil-<id>` and `arcanum-spell-<id>`.
+Install the general `arcanum-orchestrate` command and individual artifact commands for each selected sigil and spell. Individual commands use `arcanum-sigil-<id>` and `arcanum-spell-<id>`. When `ontology-harness` is selected, also install `arcanum-necronomicon` as its friendly alias command.
 </targets>
 
 <applicability>
@@ -37,7 +37,7 @@ Expected inputs, if available:
 - target runtime,
 - repository root,
 - Arcanum registry path,
-- Necronomicon runtime path,
+- observability path,
 - command name,
 - install path override,
 - dry-run preference,
@@ -82,8 +82,8 @@ codex          -> .codex/commands/arcanum-orchestrate.md
 ## Step 2 - Build Adapter Plan
 
 5. Choose adapter shape for the selected target.
-6. Keep the adapter thin: read Necronomicon, route requests, read selected definitions, apply observability handoff, and report validation.
-7. Do not copy complete sigil internals into the adapter.
+6. Keep the adapter focused: route requests, follow its embedded canonical definition snapshot, apply observability handoff, and report validation.
+7. Do not require generated `.arcanum/necronomicon/` registry files.
 8. Preserve local runtime conventions and avoid changing unrelated agent files.
 
 ## Step 3 - Install Or Dry Run
@@ -95,7 +95,7 @@ codex          -> .codex/commands/arcanum-orchestrate.md
 ## Step 4 - Validate
 
 12. Check that the adapter file exists.
-13. Check that the adapter points to a resolvable Necronomicon runtime registry.
+13. Check that the adapter contains or points to a resolvable canonical definition snapshot.
 14. Check that links in generated markdown resolve when the repository has a markdown link checker.
 15. Check that the adapter names the canonical source and does not make local wrappers authoritative.
 16. Return pass, flag, or block.
@@ -116,12 +116,11 @@ GitHub Copilot discovery still requires a bridge at:
 
 It should include frontmatter fields supported by repository-local Copilot skills, then a compact process that:
 
-1. reads `.arcanum/necronomicon/`,
-2. maps the user request to a sigil or spell,
-3. reads the selected definition named by Necronomicon,
-4. follows that sigil's process,
-5. applies Necronomicon observability handoff,
-6. reports which canonical sigil or spell was used.
+1. maps the user request to a sigil, spell, or Necronomicon/Ontology Harness alias,
+2. reads the selected installed command adapter,
+3. follows the embedded canonical definition snapshot,
+4. applies `.arcanum/observability/` handoff,
+5. reports which canonical sigil or spell was used.
 </github-copilot-adapter>
 
 <claude-adapter>
@@ -157,8 +156,8 @@ A successful execution must:
 
 - require or infer a single selected target runtime,
 - install orchestrator, per-sigil, and per-spell runtime adapter files plus required discovery bridges,
-- keep Necronomicon as the runtime router and installed definition package,
-- avoid copying full sigil internals into wrappers,
+- keep Necronomicon as the Ontology Harness alias,
+- avoid requiring generated `.arcanum/necronomicon/` files,
 - validate adapter paths and registry links,
 - preserve unrelated local agent configuration,
 - report what was installed and how to invoke it.
@@ -169,7 +168,7 @@ Avoid:
 
 - installing for multiple runtimes when the user selected one,
 - overwriting existing command files without checking ownership,
-- embedding stale copies of sigil instructions in adapter files,
+- embedding stale or untraceable copies of sigil instructions in adapter files,
 - assuming Claude or Codex path conventions without allowing override,
 - making a consuming repository's adapter the canonical sigil source,
 - hiding validation failures behind a successful install message.
@@ -184,7 +183,7 @@ When `.arcanum/observability/` exists, emit telemetry for:
 - files created,
 - files updated,
 - registry path,
-- Necronomicon path,
+- Necronomicon alias command status,
 - validation result,
 - blockers.
 </observability>

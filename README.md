@@ -2,7 +2,7 @@
 
 **Arcanum** is a framework and registry for reusable agent capabilities.
 
-The framework defines how sigils are designed, validated, composed, observed, and maintained. The registry catalogs the reusable sigils and spells that can be installed, adapted, or invoked in a consuming repository. Installed repositories route runtime lookup through Necronomicon, the local runtime book under `.arcanum/necronomicon/`.
+The framework defines how sigils are designed, validated, composed, observed, and maintained. The registry catalogs the reusable sigils and spells that can be exposed through repository-local runtime commands. Necronomicon is the human-facing alias for the Ontology Harness: the spell for vault-like knowledge, ontology branches, session distillation, premise review, and business-system bridge validation.
 
 Start with the [Sigil Registry](registry/SIGILS.md) when you know the kind of work you need. Start with the [Framework](framework/) when you are authoring, reviewing, or maintaining sigils. For workflows that combine multiple sigils, use the [Spell Registry](registry/SPELLS.md).
 
@@ -18,18 +18,19 @@ arcanum/
 	spells/          reusable workflow compositions
 ```
 
-## Necronomicon Runtime Book
+## Necronomicon Ontology Harness
 
-Necronomicon is generated during installation inside a consuming repository at `.arcanum/necronomicon/`.
+Necronomicon is not a generated runtime registry folder. It is the Ontology Harness invocation surface.
 
-It is the runtime control plane for installed Arcanum usage:
+Use Necronomicon when a repository needs to:
 
-- registry lookup for installed sigils and spells,
-- orchestration routes and alias resolution,
-- installed sigil and spell definitions under `.arcanum/necronomicon/formulae/`, `.arcanum/necronomicon/transmutations/`, `.arcanum/necronomicon/arcana/`, and `.arcanum/necronomicon/spells/`,
-- observability handoff into `.arcanum/observability/`.
+- map vault-like knowledge into ontology concepts,
+- distill sessions, discoveries, premises, decisions, contradictions, and open questions,
+- manage confidence promotion and convention-change gates,
+- branch business/domain ontology from system/runtime ontology,
+- validate bridge edges between intent and implementation evidence.
 
-Runtime adapters should read Necronomicon first. The installed definitions live inside Necronomicon; the upstream repository remains the canonical development source.
+Runtime adapters should expose `arcanum-necronomicon` as an alias for the canonical `ontology-harness` spell when that spell is selected. Bootstrap does not copy sigil or spell definitions into `.arcanum/necronomicon/`; generated commands carry the necessary runtime instructions and observability handoff.
 
 ## Framework
 
@@ -117,9 +118,9 @@ When working from a local checkout, use the repository bootstrap script directly
 tools/bootstrap_arcanum.sh --target <repo> --sigils all --spells all --runtime github-copilot
 ```
 
-Both paths install Arcanum under `.arcanum/`, with Necronomicon runtime files and installed definitions under `.arcanum/necronomicon/`, observability under `.arcanum/observability/`, and runtime adapters under `.arcanum/runtimes/`. GitHub Copilot, Claude, and Codex may still require tiny discovery bridges in their platform-specific folders, but canonical local runtime behavior lives inside `.arcanum/`. Use `--sigils <comma-separated-list>` and `--spells <comma-separated-list>` for selected installs.
+Both paths install Arcanum runtime support under `.arcanum/`, with observability under `.arcanum/observability/` and runtime adapters under `.arcanum/runtimes/`. GitHub Copilot, Claude, and Codex may still require tiny discovery bridges in their platform-specific folders, but canonical local runtime behavior lives inside `.arcanum/runtimes/`. Use `--sigils <comma-separated-list>` and `--spells <comma-separated-list>` to choose which runtime commands are generated.
 
-When a runtime is selected, bootstrap installs both the general `arcanum-orchestrate` adapter and individual adapters for every installed sigil and spell. Individual adapter names use `arcanum-sigil-<id>` and `arcanum-spell-<id>`.
+When a runtime is selected, bootstrap installs the general `arcanum-orchestrate` adapter and individual adapters for every selected sigil and spell. Individual adapter names use `arcanum-sigil-<id>` and `arcanum-spell-<id>`. When `ontology-harness` is selected, bootstrap also installs `arcanum-necronomicon` as the friendly alias command.
 
 ## Research And Proofs
 

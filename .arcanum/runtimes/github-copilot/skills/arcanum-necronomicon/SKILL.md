@@ -1,18 +1,57 @@
+---
+name: arcanum-necronomicon
+description: Run the installed Arcanum necronomicon ontology-harness from its embedded canonical definition snapshot.
+argument-hint: "<request-for-ontology-harness>"
+allowed-tools: Read, Glob, Grep, AskQuestions, Task
+---
+
+# Arcanum necronomicon: ontology harness
+
+<objective>
+Run the installed Arcanum necronomicon ontology-harness using the canonical definition snapshot embedded in this slash command.
+</objective>
+
+<context>
+Arcanum runtime support is installed at .arcanum/ in this repository. Necronomicon is the Ontology Harness alias, not a generated runtime registry folder. The canonical source reference for this command is https://github.com/cyberAlchemyAI/arcanum/blob/main/spells/ontology-harness.md.
+</context>
+
+<process>
+1. Use the embedded canonical definition snapshot below as the execution contract.
+2. For sigils, use both the README and SKILL snapshots when present. For spells, follow the spell snapshot directly.
+3. Execute only this installed necronomicon unless the definition explicitly delegates or the user asks to route elsewhere.
+4. Preserve the selected artifact's process, quality bar, anti-patterns, output contract, and validation gates.
+5. Apply the observability handoff by summarizing request, artifact, outputs, files changed, validation, gaps, and follow-up; append telemetry under .arcanum/observability/ when allowed.
+6. Return the artifact used, command used, validation result, observability result, and next action.
+</process>
+
+<guardrails>
+- Keep this skill as a thin runtime adapter for one installed artifact.
+- Do not require or create .arcanum/necronomicon/ runtime registry files.
+- Necronomicon means the Ontology Harness alias.
+- Treat the embedded canonical snapshot as the local command contract.
+</guardrails>
+
+## Canonical Spell Snapshot
+
+Canonical source: https://github.com/cyberAlchemyAI/arcanum/blob/main/spells/ontology-harness.md
+
+````markdown
 # Ontology Harness
 
 ## Identity
 
 - Canonical ID: `ontology-harness`
+- Primary alias: `Necronomicon`
 - Aliases: `Necronomicon Vault`, `Ontology Codex`
 - Scope: library
 
 ## Purpose
 
-Ontology Harness composes `inventory`, `ontology-vault`, and `context-builder` so a repository can turn vault-like knowledge material into a reusable ontology governance layer.
+Ontology Harness, invoked by the human-facing alias Necronomicon, composes `inventory`, `ontology-vault`, and `context-builder` so a repository can turn vault-like knowledge material into a reusable ontology governance layer.
 
 It is designed for repositories with sessions, discoveries, premises, conventions, confidence rules, or delegated research artifacts that need traceable distillation and promotion gates.
 
-When a repository has both business/domain material and system/runtime material, Ontology Harness can run a branch-aware path that maps business ontology, maps system ontology, and validates the bridge between intent and implementation.
+When a repository has both business/domain material and system/runtime material, Necronomicon can run a branch-aware path that maps business ontology, maps system ontology, and validates the bridge between intent and implementation.
 
 ## Trigger Conditions
 
@@ -81,7 +120,7 @@ When a repository has both business/domain material and system/runtime material,
 ## Local Customization
 
 - Spell root: `.arcanum/spells/`
-- Default output root: `.arcanum/ontology-vault/`
+- Default output root: `.arcanum/ontology/`
 - Local paths: repository-specific vault, ontology, docs, notes, wiki, or session folders.
 - Branch paths: optional repository-specific business, system, and bridge folders or tags.
 - Gate strictness: standard by default, strict for promotion or convention mutation.
@@ -129,3 +168,4 @@ Return:
 - Validation: <checks>
 - Follow-up: <items or none>
 ```
+````
