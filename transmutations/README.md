@@ -1,0 +1,50 @@
+# Transmutations - Synthetic Sigils
+
+Transmutations are cognitive sigils: bounded reasoning procedures that change the semantic state, format, or usefulness of information.
+
+They are appropriate when the desired result cannot be produced by mechanical validation alone, but the task is still scoped enough to produce a concrete artifact. A Transmutation should reduce entropy: it takes scattered, ambiguous, or under-shaped material and turns it into a clearer structure.
+
+## Epistemic Contract
+
+- Primary logic: interpretation, synthesis, and structured judgment.
+- State model: context-aware within the active task boundary.
+- Input tolerance: medium; missing inputs can be inferred conservatively or surfaced as open decisions.
+- Output shape: structured, reviewable, and evidence-linked.
+- Success measure: semantic accuracy, useful compression, and faithful transformation.
+
+## Use Transmutations For
+
+- summarizing or condensing source material into a governed artifact,
+- extracting concepts, requirements, risks, or decisions from prose,
+- translating between domains, formats, or stakeholder vocabularies,
+- creating implementation layers, specs, research notes, or analysis reports,
+- refining rough ideas into explicit options, boundaries, and next steps.
+
+## Avoid Transmutations When
+
+- a deterministic Formulae check is enough,
+- the workflow must coordinate independent agents or long-running recursive governance,
+- the agent would need to make sovereign project decisions without a human gate,
+- there is no source material or decision boundary to constrain the synthesis.
+
+## Starter Example
+
+[implementation-layering](implementation-layering/) is the first copied Transmutation sigil in this library. It transforms a target capability plus available context into a POC-first implementation layering artifact.
+
+It belongs here because the procedure is bounded and structured, but still depends on judgment: the agent must identify the smallest useful proof, distinguish deferrals from requirements, and balance value against cost for each layer.
+
+## Quality Bar
+
+A Transmutation sigil is ready when:
+
+- it names the source material it is allowed to interpret,
+- it separates evidence from inference,
+- it defines how to handle missing or ambiguous inputs,
+- it produces a concrete artifact or state change,
+- it includes anti-patterns that stop overreach into autonomous orchestration.
+
+## Relationship To Other Tiers
+
+- Transmutations can consume Formulae outputs as verified inputs.
+- Transmutations can produce artifacts later used by Arcana workflows.
+- Transmutations should preserve human review points when the output changes project direction.
