@@ -9,9 +9,9 @@
 
 ## Candidate Summary
 
-| Candidate | Decision | Tier | Coupling Risk | Notes |
-| --------- | -------- | ---- | ------------- | ----- |
-| {candidate} | keep | arcana | medium | {notes} |
+| Candidate   | Decision | Tier   | Coupling Risk | Notes   |
+| ----------- | -------- | ------ | ------------- | ------- |
+| {candidate} | keep     | arcana | medium        | {notes} |
 
 ## Boundary
 

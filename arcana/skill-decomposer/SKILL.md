@@ -42,7 +42,7 @@ Expected inputs, if available:
 - source examples,
 - target tier guess,
 - conversion constraints.
-</inputs>
+  </inputs>
 
 <default-output>
 Return a decomposition report and handoff package. Do not create the final sigil package unless the user explicitly asks and the boundary decision is pass.
@@ -80,7 +80,7 @@ Return a decomposition report and handoff package. Do not create the final sigil
 15. Produce a handoff package for `skill-transcriptor` when the candidate is coherent.
 16. Include target name, tier recommendation, objective, inputs, modes, process outline, outputs, quality risks, anti-patterns, templates needed, and validation notes.
 17. If the boundary remains ambiguous, return a block with the minimum decision needed.
-</process>
+    </process>
 
 <quality-bar>
 A successful execution must:
@@ -93,7 +93,7 @@ A successful execution must:
 - prevent final sigil authoring when boundaries are ambiguous,
 - produce a clear handoff to `skill-transcriptor` when ready,
 - avoid replacing `sigil-development` lifecycle governance.
-</quality-bar>
+  </quality-bar>
 
 <anti-patterns>
 Avoid:
@@ -105,7 +105,7 @@ Avoid:
 - keeping source-specific routing, project names, or artifact names as canonical terms,
 - creating the final sigil before the boundary decision is explicit,
 - treating implementation details as reusable capabilities.
-</anti-patterns>
+  </anti-patterns>
 
 <observability>
 When `.arcanum/observability/` exists, emit telemetry for:
@@ -119,7 +119,7 @@ When `.arcanum/observability/` exists, emit telemetry for:
 - decision gate needed,
 - handoff target,
 - validation result.
-</observability>
+  </observability>
 
 <output-contract>
 Return:
@@ -139,4 +139,5 @@ Return:
 - Validation: pass | flag | block | not run
 - Next action: <action>
 ```
+
 </output-contract>

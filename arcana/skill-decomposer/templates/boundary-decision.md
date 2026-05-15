@@ -8,9 +8,9 @@
 
 ## Boundary
 
-| Included Behavior | Excluded Behavior | Reason |
-| ----------------- | ----------------- | ------ |
-| {included} | {excluded} | {reason} |
+| Included Behavior | Excluded Behavior | Reason   |
+| ----------------- | ----------------- | -------- |
+| {included}        | {excluded}        | {reason} |
 
 ## Required Context
 

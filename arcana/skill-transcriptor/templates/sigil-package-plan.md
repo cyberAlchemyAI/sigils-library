@@ -8,11 +8,11 @@
 
 ## Files
 
-| File | Purpose | Required | Notes |
-| ---- | ------- | -------- | ----- |
-| README.md | Human-facing explanation | yes | {notes} |
-| SKILL.md | Executable behavior contract | yes | {notes} |
-| templates/{template}.md | Output shape | optional | {notes} |
+| File                    | Purpose                      | Required | Notes   |
+| ----------------------- | ---------------------------- | -------- | ------- |
+| README.md               | Human-facing explanation     | yes      | {notes} |
+| SKILL.md                | Executable behavior contract | yes      | {notes} |
+| templates/{template}.md | Output shape                 | optional | {notes} |
 
 ## Registry Updates
 

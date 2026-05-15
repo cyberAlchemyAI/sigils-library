@@ -9,9 +9,9 @@
 
 ## Findings
 
-| Finding | Source Evidence | Implication | Confidence |
-| ------- | --------------- | ----------- | ---------- |
-| {finding} | {research path and section} | {implication} | medium |
+| Finding   | Source Evidence             | Implication   | Confidence |
+| --------- | --------------------------- | ------------- | ---------- |
+| {finding} | {research path and section} | {implication} | medium     |
 
 ## Analysis
 

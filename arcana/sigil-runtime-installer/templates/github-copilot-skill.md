@@ -1,5 +1,5 @@
 ---
-name: {command}
+name: { command }
 description: Route Arcanum requests to the canonical sigil and spell registry.
 argument-hint: "<natural-language-arcanum-request>"
 allowed-tools: Read, Glob, Grep, AskQuestions, Task

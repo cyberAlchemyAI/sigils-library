@@ -10,15 +10,15 @@
 
 ## Durable Claims
 
-| Claim | Evidence | Confidence | Proposed Role | Action |
-| ----- | -------- | ---------- | ------------- | ------ |
-| {claim} | {evidence} | low | discovery | keep |
+| Claim   | Evidence   | Confidence | Proposed Role | Action |
+| ------- | ---------- | ---------- | ------------- | ------ |
+| {claim} | {evidence} | low        | discovery     | keep   |
 
 ## Decisions
 
-| Decision | Options Considered | Selected | Rationale | Follow-Up |
-| -------- | ------------------ | -------- | --------- | --------- |
-| {decision} | {options} | {selected} | {why} | {follow-up} |
+| Decision   | Options Considered | Selected   | Rationale | Follow-Up   |
+| ---------- | ------------------ | ---------- | --------- | ----------- |
+| {decision} | {options}          | {selected} | {why}     | {follow-up} |
 
 ## Contradictions
 

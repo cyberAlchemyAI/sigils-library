@@ -7,11 +7,11 @@
 
 ## Risks
 
-| Risk Type | Finding | Severity | Action |
-| --------- | ------- | -------- | ------ |
-| local vocabulary | {finding} | medium | rewrite |
-| source machinery | {finding} | high | reject |
-| missing context | {finding} | medium | clarify |
+| Risk Type        | Finding   | Severity | Action  |
+| ---------------- | --------- | -------- | ------- |
+| local vocabulary | {finding} | medium   | rewrite |
+| source machinery | {finding} | high     | reject  |
+| missing context  | {finding} | medium   | clarify |
 
 ## Verdict
 

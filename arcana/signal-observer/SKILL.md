@@ -27,7 +27,7 @@ Use this sigil when:
 - the run produced meaningful user-facing output, decision, validation, or orchestration result,
 - the project has or wants a repository-local observability ledger,
 - reflection thresholds should be evaluated from real usage.
-</applicability>
+  </applicability>
 
 <inputs>
 Expected inputs:
@@ -39,7 +39,7 @@ Expected inputs:
 - validation results,
 - Quality Bar and Anti-Patterns for the invoked sigil, when available,
 - reflection state, when available.
-</inputs>
+  </inputs>
 
 <default-paths>
 Use these defaults when the user does not provide explicit paths:
@@ -47,7 +47,7 @@ Use these defaults when the user does not provide explicit paths:
 - envelope: `.arcanum/observability/tmp/latest-invocation.json`
 - ledger: `.arcanum/observability/signals/sigil-invocations.jsonl`
 - reflection state: `.arcanum/observability/reflection-state.json`
-</default-paths>
+  </default-paths>
 
 <process>
 1. Load the invocation envelope.
@@ -105,7 +105,7 @@ A successful execution of this sigil must:
 - classify Quality Bar status and Anti-Pattern hits when evidence exists,
 - evaluate reflection trigger state,
 - avoid blocking or changing the primary task outcome.
-</quality-bar>
+  </quality-bar>
 
 <anti-patterns>
 Avoid:
@@ -117,7 +117,7 @@ Avoid:
 - treating observability failure as primary task failure unless observability was the requested task,
 - producing many telemetry rows for one invocation,
 - hiding severe workflow gaps behind a generic success note.
-</anti-patterns>
+  </anti-patterns>
 
 <output-contract>
 Return:
@@ -135,4 +135,5 @@ Return:
 - Recommendation: none | targeted-update | reflect-now
 - Validation: <checks performed>
 ```
+
 </output-contract>

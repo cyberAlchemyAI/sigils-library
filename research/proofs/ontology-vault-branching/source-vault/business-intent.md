@@ -6,17 +6,17 @@ Users can request a quote and receive a clear eligibility decision before commit
 
 ## Business Rules
 
-| Rule | Meaning | Outcome |
-| ---- | ------- | ------- |
+| Rule                                           | Meaning                                                                    | Outcome                                              |
+| ---------------------------------------------- | -------------------------------------------------------------------------- | ---------------------------------------------------- |
 | Quote eligibility requires a complete profile. | The user must provide enough information for a responsible quote decision. | The quote workflow should block incomplete requests. |
-| Quote decisions must explain rejection. | Users should know why they cannot proceed. | Rejection output includes a reason. |
+| Quote decisions must explain rejection.        | Users should know why they cannot proceed.                                 | Rejection output includes a reason.                  |
 
 ## Value Claims
 
-| Claim | Value Measure |
-| ----- | ------------- |
-| Clear eligibility feedback reduces repeated support contact. | Support-contact rate after rejection. |
-| Fast quote decisions improve completion. | Quote-decision latency and quote-completion rate. |
+| Claim                                                        | Value Measure                                     |
+| ------------------------------------------------------------ | ------------------------------------------------- |
+| Clear eligibility feedback reduces repeated support contact. | Support-contact rate after rejection.             |
+| Fast quote decisions improve completion.                     | Quote-decision latency and quote-completion rate. |
 
 ## Premises
 

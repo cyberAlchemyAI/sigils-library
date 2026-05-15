@@ -30,7 +30,7 @@ Expected inputs, if available:
 - preferred storage model: `central`, `per-sigil`, or `hybrid`,
 - whether existing files should be repaired,
 - existing observability folder path, if non-standard.
-</inputs>
+  </inputs>
 
 <default-output>
 Create or verify this package at the repository root:
@@ -38,6 +38,7 @@ Create or verify this package at the repository root:
 ```text
 .arcanum/observability/
 ```
+
 </default-output>
 
 <process>
@@ -72,7 +73,7 @@ A successful execution of this sigil must:
 - create an append-only JSONL ledger path,
 - state the selected storage model,
 - avoid requiring a specific application framework or agent runtime.
-</quality-bar>
+  </quality-bar>
 
 <anti-patterns>
 Avoid:
@@ -82,7 +83,7 @@ Avoid:
 - creating per-sigil ledgers without a central index or aggregation path,
 - treating setup as reflection,
 - adding runtime-specific dependencies to the portable package contract.
-</anti-patterns>
+  </anti-patterns>
 
 <output-contract>
 Return:
@@ -98,4 +99,5 @@ Return:
 - Validation: <checks performed>
 - Next step: <how sigils should append invocation telemetry>
 ```
+
 </output-contract>

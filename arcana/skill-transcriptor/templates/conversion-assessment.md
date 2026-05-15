@@ -9,17 +9,17 @@
 
 ## Coherence Gate
 
-| Question | Result | Evidence |
-| -------- | ------ | -------- |
-| One coherent capability? | yes | {evidence} |
-| Multiple separable capabilities? | no | {evidence} |
-| Direct conversion safe? | yes | {evidence} |
+| Question                         | Result | Evidence   |
+| -------------------------------- | ------ | ---------- |
+| One coherent capability?         | yes    | {evidence} |
+| Multiple separable capabilities? | no     | {evidence} |
+| Direct conversion safe?          | yes    | {evidence} |
 
 ## Risks
 
-| Risk | Severity | Mitigation |
-| ---- | -------- | ---------- |
-| {risk} | medium | {mitigation} |
+| Risk   | Severity | Mitigation   |
+| ------ | -------- | ------------ |
+| {risk} | medium   | {mitigation} |
 
 ## Decision
 

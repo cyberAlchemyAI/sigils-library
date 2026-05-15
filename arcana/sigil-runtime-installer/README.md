@@ -31,11 +31,11 @@ Adapters should use their embedded canonical instruction snapshots and apply obs
 
 ## Supported Targets
 
-| Target | Adapter Shape | Canonical Path | Discovery Bridge |
-| ------ | ------------- | -------------- | ---------------- |
+| Target         | Adapter Shape                  | Canonical Path                                               | Discovery Bridge                    |
+| -------------- | ------------------------------ | ------------------------------------------------------------ | ----------------------------------- |
 | GitHub Copilot | repository-local skill wrapper | `.arcanum/runtimes/github-copilot/skills/<command>/SKILL.md` | `.github/skills/<command>/SKILL.md` |
-| Claude | command adapter plan | `.arcanum/runtimes/claude/commands/<command>.md` | `.claude/commands/<command>.md` |
-| Codex | command adapter plan | `.arcanum/runtimes/codex/commands/<command>.md` | `.codex/commands/<command>.md` |
+| Claude         | command adapter plan           | `.arcanum/runtimes/claude/commands/<command>.md`             | `.claude/commands/<command>.md`     |
+| Codex          | command adapter plan           | `.arcanum/runtimes/codex/commands/<command>.md`              | `.codex/commands/<command>.md`      |
 
 For artifact-specific adapters, `<command>` is `arcanum-sigil-<id>` or `arcanum-spell-<id>`.
 

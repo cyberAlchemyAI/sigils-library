@@ -6,20 +6,20 @@ The goal is to keep sigils clear, reusable, and governed without making the auth
 
 ## Workflow Overview
 
-| Stage | Purpose | Main Output | Gate |
-| ----- | ------- | ----------- | ---- |
-| 1. Candidate Capture | Record the capability idea and the problem it should solve. | Candidate note or draft folder. | The problem is specific enough to evaluate. |
-| 2. Tier Classification | Decide whether the sigil is Formulae, Transmutation, or Arcana. | Tier decision with rationale. | The epistemic nature is clear. |
-| 3. Intent Design | Define objective, trigger conditions, scope, and authority. | Human-facing README draft. | The sigil has a bounded purpose. |
-| 4. Behavior Contract | Write the executable `SKILL.md`. | Skill instruction contract. | The agent can execute without hidden assumptions. |
-| 5. Quality And Failure Design | Add Quality Bar and Anti-Patterns. | Reviewable success and failure boundaries. | The sigil can be accepted or rejected by evidence. |
-| 6. Template And Artifact Design | Add reusable templates only when needed. | Optional `templates/` files. | Templates reduce ambiguity or repetition. |
-| 7. Observability Design | Define telemetry signals and reflection triggers. | Usage telemetry and reflection templates. | Future usage can be observed and improved from evidence. |
-| 8. Review And Validation | Check structure, links, wording, and tier fit. | Review notes or edits. | The sigil is self-contained and product-neutral. |
-| 9. Trial Execution | Run or simulate the sigil against a realistic task. | Trial result and improvement notes. | The sigil produces the intended output shape. |
-| 10. Promotion | Mark the sigil ready for library use. | Final folder in the correct tier. | The review gates pass. |
-| 11. Observe And Reflect | Emit usage telemetry and reflect when triggered. | Telemetry signals and reflection reports. | Iteration is based on evidence. |
-| 12. Maintenance | Improve the sigil from observed use. | Changelog notes or targeted edits. | Changes preserve the sigil's core contract. |
+| Stage                           | Purpose                                                         | Main Output                                | Gate                                                     |
+| ------------------------------- | --------------------------------------------------------------- | ------------------------------------------ | -------------------------------------------------------- |
+| 1. Candidate Capture            | Record the capability idea and the problem it should solve.     | Candidate note or draft folder.            | The problem is specific enough to evaluate.              |
+| 2. Tier Classification          | Decide whether the sigil is Formulae, Transmutation, or Arcana. | Tier decision with rationale.              | The epistemic nature is clear.                           |
+| 3. Intent Design                | Define objective, trigger conditions, scope, and authority.     | Human-facing README draft.                 | The sigil has a bounded purpose.                         |
+| 4. Behavior Contract            | Write the executable `SKILL.md`.                                | Skill instruction contract.                | The agent can execute without hidden assumptions.        |
+| 5. Quality And Failure Design   | Add Quality Bar and Anti-Patterns.                              | Reviewable success and failure boundaries. | The sigil can be accepted or rejected by evidence.       |
+| 6. Template And Artifact Design | Add reusable templates only when needed.                        | Optional `templates/` files.               | Templates reduce ambiguity or repetition.                |
+| 7. Observability Design         | Define telemetry signals and reflection triggers.               | Usage telemetry and reflection templates.  | Future usage can be observed and improved from evidence. |
+| 8. Review And Validation        | Check structure, links, wording, and tier fit.                  | Review notes or edits.                     | The sigil is self-contained and product-neutral.         |
+| 9. Trial Execution              | Run or simulate the sigil against a realistic task.             | Trial result and improvement notes.        | The sigil produces the intended output shape.            |
+| 10. Promotion                   | Mark the sigil ready for library use.                           | Final folder in the correct tier.          | The review gates pass.                                   |
+| 11. Observe And Reflect         | Emit usage telemetry and reflect when triggered.                | Telemetry signals and reflection reports.  | Iteration is based on evidence.                          |
+| 12. Maintenance                 | Improve the sigil from observed use.                            | Changelog notes or targeted edits.         | Changes preserve the sigil's core contract.              |
 
 ## Stage 1 - Candidate Capture
 

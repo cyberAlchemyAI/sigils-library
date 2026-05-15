@@ -10,11 +10,11 @@
 
 ## Rationale
 
-| Signal | Observation | Effect |
-| ------ | ----------- | ------ |
-| Knowledge | {observation} | raises | 
+| Signal      | Observation   | Effect |
+| ----------- | ------------- | ------ |
+| Knowledge   | {observation} | raises |
 | Uncertainty | {observation} | lowers |
-| Investment | {observation} | adjust |
+| Investment  | {observation} | adjust |
 
 ## Next Move
 

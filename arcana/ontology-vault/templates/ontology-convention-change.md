@@ -9,9 +9,9 @@
 
 ## Impact
 
-| Affected Area | Impact | Migration Needed | Risk |
-| ------------- | ------ | ---------------- | ---- |
-| {area} | {impact} | yes | medium |
+| Affected Area | Impact   | Migration Needed | Risk   |
+| ------------- | -------- | ---------------- | ------ |
+| {area}        | {impact} | yes              | medium |
 
 ## Decision Gate
 

@@ -10,12 +10,12 @@
 
 ## Promotion Gate
 
-| Gate | Required Evidence | Result | Notes |
-| ---- | ----------------- | ------ | ----- |
-| Source authority | {requirement} | pass | {notes} |
-| Contradictions | no unresolved blockers | flag | {notes} |
-| Usage evidence | {requirement} | pass | {notes} |
-| Review | {reviewer or process} | pending | {notes} |
+| Gate             | Required Evidence      | Result  | Notes   |
+| ---------------- | ---------------------- | ------- | ------- |
+| Source authority | {requirement}          | pass    | {notes} |
+| Contradictions   | no unresolved blockers | flag    | {notes} |
+| Usage evidence   | {requirement}          | pass    | {notes} |
+| Review           | {reviewer or process}  | pending | {notes} |
 
 ## Decision
 

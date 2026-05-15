@@ -30,7 +30,7 @@ Use this sigil for:
 - selecting or installing a repository-local observability package for a consuming repository,
 - reflecting on accumulated usage signals,
 - improving Quality Bar, Anti-Patterns, templates, or output contracts after evidence shows gaps.
-</applicability>
+  </applicability>
 
 <inputs>
 Expected inputs, if available:
@@ -43,7 +43,7 @@ Expected inputs, if available:
 - generated outputs from prior sigil runs,
 - known workflow gaps, repeated confusion, or review comments,
 - desired telemetry threshold, if different from defaults.
-</inputs>
+  </inputs>
 
 <default-output>
 If creating or updating a sigil, write or update files in:
@@ -153,7 +153,7 @@ A successful execution of this sigil must:
 - define manual, threshold-based, and gap-based reflection triggers,
 - validate markdown links and product-neutral wording before completion,
 - return the next lifecycle step for the sigil.
-</quality-bar>
+  </quality-bar>
 
 <anti-patterns>
 Avoid:
@@ -165,7 +165,7 @@ Avoid:
 - changing the core contract of a sigil without naming the evidence that justifies it,
 - using thresholds as rigid bureaucracy when a severe gap needs immediate reflection,
 - storing vague gap notes that cannot be connected to a Quality Bar, Anti-Pattern, process step, or output contract.
-</anti-patterns>
+  </anti-patterns>
 
 <output-contract>
 Return:
@@ -184,4 +184,5 @@ Return:
 - Validation: <checks performed>
 - Next lifecycle step: <step>
 ```
+
 </output-contract>

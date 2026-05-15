@@ -42,7 +42,7 @@ Expected inputs, if available:
 - install path override,
 - dry-run preference,
 - local runtime conventions.
-</inputs>
+  </inputs>
 
 <default-output>
 If no command is provided, install or plan `arcanum-orchestrate` plus individual artifact adapters.
@@ -75,6 +75,7 @@ codex          -> .codex/commands/arcanum-orchestrate.md
 				 .codex/commands/arcanum-necronomicon-session.md
 				 .arcanum/runtimes/codex/commands/arcanum-necronomicon-session.md
 ```
+
 </default-output>
 
 <process>
@@ -105,7 +106,7 @@ codex          -> .codex/commands/arcanum-orchestrate.md
 14. Check that links in generated markdown resolve when the repository has a markdown link checker.
 15. Check that the adapter names the canonical source and does not make local wrappers authoritative.
 16. Return pass, flag, or block.
-</process>
+    </process>
 
 <github-copilot-adapter>
 The canonical GitHub Copilot adapter should live at:
@@ -127,7 +128,7 @@ It should include frontmatter fields supported by repository-local Copilot skill
 3. follows the embedded canonical definition snapshot,
 4. applies `.arcanum/observability/` handoff,
 5. reports which canonical sigil or spell was used.
-</github-copilot-adapter>
+   </github-copilot-adapter>
 
 <claude-adapter>
 The Claude adapter should be generated as a command adapter plan unless the repository already has a confirmed Claude command convention. Default canonical path:
@@ -141,6 +142,7 @@ Default discovery bridge:
 ```text
 .claude/commands/<command>.md
 ```
+
 </claude-adapter>
 
 <codex-adapter>
@@ -155,6 +157,7 @@ Default discovery bridge:
 ```text
 .codex/commands/<command>.md
 ```
+
 </codex-adapter>
 
 <quality-bar>
@@ -168,7 +171,7 @@ A successful execution must:
 - validate adapter paths and registry links,
 - preserve unrelated local agent configuration,
 - report what was installed and how to invoke it.
-</quality-bar>
+  </quality-bar>
 
 <anti-patterns>
 Avoid:
@@ -179,7 +182,7 @@ Avoid:
 - assuming Claude or Codex path conventions without allowing override,
 - making a consuming repository's adapter the canonical sigil source,
 - hiding validation failures behind a successful install message.
-</anti-patterns>
+  </anti-patterns>
 
 <observability>
 When `.arcanum/observability/` exists, emit telemetry for:
@@ -193,7 +196,7 @@ When `.arcanum/observability/` exists, emit telemetry for:
 - Necronomicon alias command status,
 - validation result,
 - blockers.
-</observability>
+  </observability>
 
 <output-contract>
 Return:
@@ -212,4 +215,5 @@ Return:
 - Invocation: <command or command name>
 - Next action: <action>
 ```
+
 </output-contract>

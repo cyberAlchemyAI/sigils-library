@@ -41,7 +41,7 @@ Expected inputs, if available:
 - source validation rules,
 - source templates,
 - desired output folder.
-</inputs>
+  </inputs>
 
 <default-output>
 If writing artifacts, prefer:
@@ -93,7 +93,7 @@ If the user has not approved file creation, return a package plan and conversion
 20. Check neutral wording and coupling risks.
 21. Check links, JSON templates, and registry references when files exist.
 22. Return pass, flag, or block.
-</process>
+    </process>
 
 <quality-bar>
 A successful execution must:
@@ -105,7 +105,7 @@ A successful execution must:
 - include Quality Bar, Anti-Patterns, output contract, and observability guidance,
 - route unclear boundaries to `skill-decomposer`,
 - distinguish source facts, conversion inference, and authored target content.
-</quality-bar>
+  </quality-bar>
 
 <anti-patterns>
 Avoid:
@@ -117,7 +117,7 @@ Avoid:
 - creating templates that do not support the output contract,
 - registering the sigil before validation,
 - replacing `sigil-development` lifecycle governance.
-</anti-patterns>
+  </anti-patterns>
 
 <observability>
 When `.arcanum/observability/` exists, emit telemetry for:
@@ -132,7 +132,7 @@ When `.arcanum/observability/` exists, emit telemetry for:
 - files created,
 - validation result,
 - blocker count.
-</observability>
+  </observability>
 
 <output-contract>
 Return:
@@ -153,4 +153,5 @@ Return:
 - Validation: pass | flag | block | not run
 - Next action: <action>
 ```
+
 </output-contract>

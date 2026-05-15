@@ -9,19 +9,19 @@
 
 ## Drift Findings
 
-| Business Expectation | Observed System Behavior | Drift Type | Evidence | Severity |
-| -------------------- | ------------------------ | ---------- | -------- | -------- |
-| Clear eligibility feedback reduces repeated support contact. | Rejection reasons are counted, but support contact is not measured. | observability gap | [business-intent.md](../source-vault/business-intent.md), [system-runtime.md](../source-vault/system-runtime.md) | medium |
-| Fast quote decisions improve completion. | Latency is measured, but quote completion rate is not. | observability gap | [business-intent.md](../source-vault/business-intent.md), [system-runtime.md](../source-vault/system-runtime.md) | medium |
-| Quote decisions must explain rejection. | A test verifies reason visibility, but not reason quality. | test gap | [business-intent.md](../source-vault/business-intent.md), [system-runtime.md](../source-vault/system-runtime.md) | low |
+| Business Expectation                                         | Observed System Behavior                                            | Drift Type        | Evidence                                                                                                         | Severity |
+| ------------------------------------------------------------ | ------------------------------------------------------------------- | ----------------- | ---------------------------------------------------------------------------------------------------------------- | -------- |
+| Clear eligibility feedback reduces repeated support contact. | Rejection reasons are counted, but support contact is not measured. | observability gap | [business-intent.md](../source-vault/business-intent.md), [system-runtime.md](../source-vault/system-runtime.md) | medium   |
+| Fast quote decisions improve completion.                     | Latency is measured, but quote completion rate is not.              | observability gap | [business-intent.md](../source-vault/business-intent.md), [system-runtime.md](../source-vault/system-runtime.md) | medium   |
+| Quote decisions must explain rejection.                      | A test verifies reason visibility, but not reason quality.          | test gap          | [business-intent.md](../source-vault/business-intent.md), [system-runtime.md](../source-vault/system-runtime.md) | low      |
 
 ## Impact
 
-| Drift | Business Impact | System Impact | Recommended Action |
-| ----- | --------------- | ------------- | ------------------ |
-| Support-contact rate missing | Cannot prove the value claim. | Add or link analytics signal. | Add bridge edge to support analytics source. |
-| Quote-completion rate missing | Cannot prove completion improvement. | Add quote-completion metric or event. | Add metric and update traceability matrix. |
-| Reason quality untested | Visible reason may still be unclear. | Add acceptance check for reason content. | Add test evidence for reason quality. |
+| Drift                         | Business Impact                      | System Impact                            | Recommended Action                           |
+| ----------------------------- | ------------------------------------ | ---------------------------------------- | -------------------------------------------- |
+| Support-contact rate missing  | Cannot prove the value claim.        | Add or link analytics signal.            | Add bridge edge to support analytics source. |
+| Quote-completion rate missing | Cannot prove completion improvement. | Add quote-completion metric or event.    | Add metric and update traceability matrix.   |
+| Reason quality untested       | Visible reason may still be unclear. | Add acceptance check for reason content. | Add test evidence for reason quality.        |
 
 ## Follow-Up
 

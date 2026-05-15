@@ -48,25 +48,25 @@ When a repository has both domain intent and implementation evidence, Ontology V
 
 Business and system ontology branches should be coordinated, not isolated.
 
-| Branch | Authority | Typical Claims |
-| ------ | --------- | -------------- |
-| Business | Meaning, intent, policy, value, outcome, and domain rules. | What should be true, why it matters, who it affects, and how success is judged. |
-| System | Implementation, runtime behavior, data shape, technical constraints, tests, and observability. | What exists in the system, how it behaves, where it runs, and how it is measured. |
-| Bridge | Traceability, realization, coverage, constraints, evidence gaps, and drift. | How business claims connect to system artifacts and where alignment is missing or broken. |
+| Branch   | Authority                                                                                      | Typical Claims                                                                            |
+| -------- | ---------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| Business | Meaning, intent, policy, value, outcome, and domain rules.                                     | What should be true, why it matters, who it affects, and how success is judged.           |
+| System   | Implementation, runtime behavior, data shape, technical constraints, tests, and observability. | What exists in the system, how it behaves, where it runs, and how it is measured.         |
+| Bridge   | Traceability, realization, coverage, constraints, evidence gaps, and drift.                    | How business claims connect to system artifacts and where alignment is missing or broken. |
 
 The bridge layer is required when a claim asserts alignment between intent and implementation. A system artifact should not silently redefine business meaning, and a business claim should not pretend implementation exists without bridge evidence.
 
 ## Branch Edge Types
 
-| Edge Type | Meaning |
-| --------- | ------- |
-| `realized_by` | A business concept, rule, or behavior is implemented by a system artifact. |
-| `depends_on` | A business behavior depends on a system capability. |
-| `constrained_by` | A business rule or outcome is limited by a technical constraint. |
-| `observed_by` | A business outcome or behavior is measured by a metric, log, event, or trace. |
-| `tested_by` | A business claim, rule, or outcome is verified by a test. |
-| `drifts_from` | Observed system behavior diverges from business intent. |
-| `traced_to` | A system artifact links back to a business premise, decision, discovery, or rule. |
+| Edge Type        | Meaning                                                                           |
+| ---------------- | --------------------------------------------------------------------------------- |
+| `realized_by`    | A business concept, rule, or behavior is implemented by a system artifact.        |
+| `depends_on`     | A business behavior depends on a system capability.                               |
+| `constrained_by` | A business rule or outcome is limited by a technical constraint.                  |
+| `observed_by`    | A business outcome or behavior is measured by a metric, log, event, or trace.     |
+| `tested_by`      | A business claim, rule, or outcome is verified by a test.                         |
+| `drifts_from`    | Observed system behavior diverges from business intent.                           |
+| `traced_to`      | A system artifact links back to a business premise, decision, discovery, or rule. |
 
 ## Output
 

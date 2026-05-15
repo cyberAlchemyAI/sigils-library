@@ -10,8 +10,8 @@
 
 ## Files
 
-| File | Action |
-| ---- | ------ |
+| File   | Action  |
+| ------ | ------- |
 | {path} | created |
 
 ## Invocation

@@ -7,11 +7,11 @@
 
 ## Tier Fit
 
-| Tier | Fit | Rationale |
-| ---- | --- | --------- |
-| Formulae | low | {rationale} |
+| Tier           | Fit    | Rationale   |
+| -------------- | ------ | ----------- |
+| Formulae       | low    | {rationale} |
 | Transmutations | medium | {rationale} |
-| Arcana | high | {rationale} |
+| Arcana         | high   | {rationale} |
 
 ## Decision
 

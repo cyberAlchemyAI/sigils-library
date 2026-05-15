@@ -8,12 +8,12 @@
 
 ## Scoring
 
-| Dimension | Score | Rationale |
-| --------- | ----- | --------- |
-| Coherence | high | {rationale} |
-| Reuse value | medium | {rationale} |
-| Coupling risk | low | {rationale} |
-| Tier clarity | high | {rationale} |
+| Dimension     | Score  | Rationale   |
+| ------------- | ------ | ----------- |
+| Coherence     | high   | {rationale} |
+| Reuse value   | medium | {rationale} |
+| Coupling risk | low    | {rationale} |
+| Tier clarity  | high   | {rationale} |
 
 ## Decision
 

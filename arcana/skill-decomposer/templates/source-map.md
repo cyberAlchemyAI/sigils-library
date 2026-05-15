@@ -9,12 +9,12 @@
 
 ## Sections
 
-| Section | Behavior | Dependencies | Local Vocabulary | Notes |
-| ------- | -------- | ------------ | ---------------- | ----- |
-| {section} | {behavior} | {dependencies} | {terms} | {notes} |
+| Section   | Behavior   | Dependencies   | Local Vocabulary | Notes   |
+| --------- | ---------- | -------------- | ---------------- | ------- |
+| {section} | {behavior} | {dependencies} | {terms}          | {notes} |
 
 ## Gates And Outputs
 
-| Gate Or Output | Source Location | Reuse Potential | Notes |
-| -------------- | --------------- | --------------- | ----- |
-| {item} | {location} | high | {notes} |
+| Gate Or Output | Source Location | Reuse Potential | Notes   |
+| -------------- | --------------- | --------------- | ------- |
+| {item}         | {location}      | high            | {notes} |

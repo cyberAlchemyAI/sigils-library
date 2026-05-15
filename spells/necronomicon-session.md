@@ -23,43 +23,43 @@ The spell makes Necronomicon the operational harness for a repository without tu
 
 ## Required Sigils And Spells
 
-| Artifact | Role In Spell | Required Mode |
-| -------- | ------------- | ------------- |
-| `ontology-harness` | Provide the Necronomicon ontology, session distillation, premise review, branch mapping, and bridge validation contract. | direct or delegated |
-| `inventory` | Track repository knowledge entries and capability evidence when inventory exists. | lookup, ingest, validate |
-| `context-builder` | Build compact context packs for session resume, routing, and evidence retrieval. | lean, standard, or deep |
+| Artifact           | Role In Spell                                                                                                            | Required Mode            |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------ | ------------------------ |
+| `ontology-harness` | Provide the Necronomicon ontology, session distillation, premise review, branch mapping, and bridge validation contract. | direct or delegated      |
+| `inventory`        | Track repository knowledge entries and capability evidence when inventory exists.                                        | lookup, ingest, validate |
+| `context-builder`  | Build compact context packs for session resume, routing, and evidence retrieval.                                         | lean, standard, or deep  |
 
 ## Recommended Capabilities
 
-| Capability | Use When | Notes |
-| ---------- | -------- | ----- |
-| `task-session` | A routed request resolves to one bounded implementation or documentation task. | Use for scoped execution with decisions and gates. |
-| `decision-gate` | Capability updates, ontology promotions, or route ambiguity require user choice. | Ask only consequential questions. |
-| `observability-setup` | Repository-local telemetry paths need initialization or verification. | Keep runtime telemetry under `.arcanum/observability/`. |
-| `sigil-runtime-installer` | Selected capabilities need generated runtime command adapters. | Use for add, remove, or refresh operations. |
+| Capability                | Use When                                                                         | Notes                                                   |
+| ------------------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| `task-session`            | A routed request resolves to one bounded implementation or documentation task.   | Use for scoped execution with decisions and gates.      |
+| `decision-gate`           | Capability updates, ontology promotions, or route ambiguity require user choice. | Ask only consequential questions.                       |
+| `observability-setup`     | Repository-local telemetry paths need initialization or verification.            | Keep runtime telemetry under `.arcanum/observability/`. |
+| `sigil-runtime-installer` | Selected capabilities need generated runtime command adapters.                   | Use for add, remove, or refresh operations.             |
 
 ## Optional Capabilities
 
-| Capability | Use When | Notes |
-| ---------- | -------- | ----- |
-| `ontology-vault` | Session memory needs ontology distillation, premise review, confidence promotion, or bridge validation. | Usually present through `ontology-harness`. |
-| `architecture-pattern-inventory` | Routing or ontology branches depend on repository structure. | Useful for system/runtime branches. |
-| `feature-glossary` | The session needs plain-language concept summaries. | Explanatory, not authoritative. |
-| `signal-observer` | Route misses or session outcomes should become maintenance signals. | Use after meaningful runs. |
-| `workflow-reflect` | Accumulated signals should propose capability improvements. | Use after several sessions. |
-| `spellcraft` | A repeated session pattern should become a reusable spell. | Use for composition design. |
-| `sigil-development` | A missing behavior should become a reusable sigil. | Use for new capability authoring. |
+| Capability                       | Use When                                                                                                | Notes                                       |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| `ontology-vault`                 | Session memory needs ontology distillation, premise review, confidence promotion, or bridge validation. | Usually present through `ontology-harness`. |
+| `architecture-pattern-inventory` | Routing or ontology branches depend on repository structure.                                            | Useful for system/runtime branches.         |
+| `feature-glossary`               | The session needs plain-language concept summaries.                                                     | Explanatory, not authoritative.             |
+| `signal-observer`                | Route misses or session outcomes should become maintenance signals.                                     | Use after meaningful runs.                  |
+| `workflow-reflect`               | Accumulated signals should propose capability improvements.                                             | Use after several sessions.                 |
+| `spellcraft`                     | A repeated session pattern should become a reusable spell.                                              | Use for composition design.                 |
+| `sigil-development`              | A missing behavior should become a reusable sigil.                                                      | Use for new capability authoring.           |
 
 ## Modes
 
-| Mode | Purpose | Primary Outputs |
-| ---- | ------- | --------------- |
-| `start` | Create a new repository harness session. | session folder, memory seed, capability manifest reference |
-| `resume` | Continue from existing memory, decisions, and route history. | refreshed context summary, next action |
-| `route` | Route a user request through selected Necronomicon capabilities. | selected command, route record, result summary |
-| `update-capabilities` | Add, remove, or refresh selected sigils and spells. | capability update report, regenerated runtime command plan |
-| `fallback-discover` | Offer Arcanum registry candidates when no selected capability matches. | candidate list, user decision, optional update path |
-| `close` | Write final memory, decisions, route summary, and handoff. | handoff artifact, observability summary |
+| Mode                  | Purpose                                                                | Primary Outputs                                            |
+| --------------------- | ---------------------------------------------------------------------- | ---------------------------------------------------------- |
+| `start`               | Create a new repository harness session.                               | session folder, memory seed, capability manifest reference |
+| `resume`              | Continue from existing memory, decisions, and route history.           | refreshed context summary, next action                     |
+| `route`               | Route a user request through selected Necronomicon capabilities.       | selected command, route record, result summary             |
+| `update-capabilities` | Add, remove, or refresh selected sigils and spells.                    | capability update report, regenerated runtime command plan |
+| `fallback-discover`   | Offer Arcanum registry candidates when no selected capability matches. | candidate list, user decision, optional update path        |
+| `close`               | Write final memory, decisions, route summary, and handoff.             | handoff artifact, observability summary                    |
 
 ## Prerequisites
 
@@ -70,32 +70,32 @@ The spell makes Necronomicon the operational harness for a repository without tu
 
 ## Shared State
 
-| State | Owner | Updated By | Consumed By |
-| ----- | ----- | ---------- | ----------- |
-| `.arcanum/necronomicon/README.md` | repository | bootstrap or session spell | user, local agents |
-| `.arcanum/necronomicon/capabilities.json` | repository | bootstrap, capability update flow | session router |
-| `.arcanum/necronomicon/sessions/<session-id>/SESSION.md` | session | session spell | user, resume flow |
-| `.arcanum/necronomicon/sessions/<session-id>/memory.md` | session | session spell, close flow | resume flow, router |
-| `.arcanum/necronomicon/sessions/<session-id>/routes.jsonl` | session | route flow | resume flow, signal observer |
-| `.arcanum/necronomicon/sessions/<session-id>/decisions.md` | session | decision gate, session spell | resume flow, user |
-| `.arcanum/necronomicon/sessions/<session-id>/handoff.md` | session | close flow | future sessions |
-| `.arcanum/necronomicon/capability-updates/` | repository | update-capabilities flow | bootstrap, sigil-runtime-installer |
-| `.arcanum/observability/` | repository | session spell and routed commands | reflection workflows |
+| State                                                      | Owner      | Updated By                        | Consumed By                        |
+| ---------------------------------------------------------- | ---------- | --------------------------------- | ---------------------------------- |
+| `.arcanum/necronomicon/README.md`                          | repository | bootstrap or session spell        | user, local agents                 |
+| `.arcanum/necronomicon/capabilities.json`                  | repository | bootstrap, capability update flow | session router                     |
+| `.arcanum/necronomicon/sessions/<session-id>/SESSION.md`   | session    | session spell                     | user, resume flow                  |
+| `.arcanum/necronomicon/sessions/<session-id>/memory.md`    | session    | session spell, close flow         | resume flow, router                |
+| `.arcanum/necronomicon/sessions/<session-id>/routes.jsonl` | session    | route flow                        | resume flow, signal observer       |
+| `.arcanum/necronomicon/sessions/<session-id>/decisions.md` | session    | decision gate, session spell      | resume flow, user                  |
+| `.arcanum/necronomicon/sessions/<session-id>/handoff.md`   | session    | close flow                        | future sessions                    |
+| `.arcanum/necronomicon/capability-updates/`                | repository | update-capabilities flow          | bootstrap, sigil-runtime-installer |
+| `.arcanum/observability/`                                  | repository | session spell and routed commands | reflection workflows               |
 
 ## Execution Phases
 
-| Phase | Capability | Input | Output | Gate | Failure Policy |
-| ----- | ---------- | ----- | ------ | ---- | -------------- |
-| 1 | session setup | repository root, requested mode | active session ID | one session resolved | ask if multiple active sessions exist |
-| 2 | capability load | `capabilities.json`, runtime folders | selected command surface | selected capabilities are readable | flag stale entries |
-| 3 | memory load | `memory.md`, `decisions.md`, recent routes | compact session context | memory source cited | start fresh if no prior memory exists |
-| 4 | request classification | user request, session context | route candidates | explicit route wins | ask on tied medium/high confidence routes |
-| 5 | selected routing | selected capabilities | chosen local command | command adapter exists | fallback discover when no selected match exists |
-| 6 | fallback discover | Arcanum registry or embedded command surface | 2-5 candidate capabilities | user accepts before expansion | return block when no candidate is credible |
-| 7 | execution handoff | chosen command | routed result | chosen command contract followed | report partial if command cannot run |
-| 8 | route ledger | route result | `routes.jsonl` entry | JSON line is valid | flag if telemetry cannot be written |
-| 9 | memory update | result, decisions, outputs | updated `memory.md` and `decisions.md` | durable changes summarized | defer if user requests no mutation |
-| 10 | close or continue | session status | handoff or next action | blockers named | leave session resumable |
+| Phase | Capability             | Input                                        | Output                                 | Gate                               | Failure Policy                                  |
+| ----- | ---------------------- | -------------------------------------------- | -------------------------------------- | ---------------------------------- | ----------------------------------------------- |
+| 1     | session setup          | repository root, requested mode              | active session ID                      | one session resolved               | ask if multiple active sessions exist           |
+| 2     | capability load        | `capabilities.json`, runtime folders         | selected command surface               | selected capabilities are readable | flag stale entries                              |
+| 3     | memory load            | `memory.md`, `decisions.md`, recent routes   | compact session context                | memory source cited                | start fresh if no prior memory exists           |
+| 4     | request classification | user request, session context                | route candidates                       | explicit route wins                | ask on tied medium/high confidence routes       |
+| 5     | selected routing       | selected capabilities                        | chosen local command                   | command adapter exists             | fallback discover when no selected match exists |
+| 6     | fallback discover      | Arcanum registry or embedded command surface | 2-5 candidate capabilities             | user accepts before expansion      | return block when no candidate is credible      |
+| 7     | execution handoff      | chosen command                               | routed result                          | chosen command contract followed   | report partial if command cannot run            |
+| 8     | route ledger           | route result                                 | `routes.jsonl` entry                   | JSON line is valid                 | flag if telemetry cannot be written             |
+| 9     | memory update          | result, decisions, outputs                   | updated `memory.md` and `decisions.md` | durable changes summarized         | defer if user requests no mutation              |
+| 10    | close or continue      | session status                               | handoff or next action                 | blockers named                     | leave session resumable                         |
 
 ## Routing Rules
 
@@ -112,12 +112,12 @@ The spell makes Necronomicon the operational harness for a repository without tu
 
 ## Route Confidence
 
-| Confidence | Meaning |
-| ---------- | ------- |
-| high | Explicit command name, exact canonical ID, or exact alias. |
-| medium | Selected capability trigger, description, or mode strongly matches the request. |
-| low | Fallback registry candidate may fit but is not selected in the session. |
-| block | No credible selected or fallback route exists. |
+| Confidence | Meaning                                                                         |
+| ---------- | ------------------------------------------------------------------------------- |
+| high       | Explicit command name, exact canonical ID, or exact alias.                      |
+| medium     | Selected capability trigger, description, or mode strongly matches the request. |
+| low        | Fallback registry candidate may fit but is not selected in the session.         |
+| block      | No credible selected or fallback route exists.                                  |
 
 Ask one focused clarification when multiple medium or high routes tie.
 

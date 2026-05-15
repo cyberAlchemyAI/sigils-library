@@ -9,9 +9,9 @@
 
 ## Raw Evidence
 
-| Source | Scope | Finding | Evidence | Confidence |
-| ------ | ----- | ------- | -------- | ---------- |
-| {source} | {scope} | {finding} | {evidence} | low |
+| Source   | Scope   | Finding   | Evidence   | Confidence |
+| -------- | ------- | --------- | ---------- | ---------- |
+| {source} | {scope} | {finding} | {evidence} | low        |
 
 ## Contradictions
 

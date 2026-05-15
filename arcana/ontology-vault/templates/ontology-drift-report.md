@@ -11,13 +11,13 @@
 
 | Business Expectation | Observed System Behavior | Drift Type | Evidence | Severity |
 | -------------------- | ------------------------ | ---------- | -------- | -------- |
-| {expectation} | {behavior} | semantic | {paths} | medium |
+| {expectation}        | {behavior}               | semantic   | {paths}  | medium   |
 
 ## Impact
 
-| Drift | Business Impact | System Impact | Recommended Action |
-| ----- | --------------- | ------------- | ------------------ |
-| {drift} | {business-impact} | {system-impact} | {action} |
+| Drift   | Business Impact   | System Impact   | Recommended Action |
+| ------- | ----------------- | --------------- | ------------------ |
+| {drift} | {business-impact} | {system-impact} | {action}           |
 
 ## Follow-Up
 

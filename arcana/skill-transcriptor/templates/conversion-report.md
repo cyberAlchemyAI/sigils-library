@@ -9,10 +9,10 @@
 
 ## Outputs
 
-| Artifact | Status | Path |
-| -------- | ------ | ---- |
+| Artifact  | Status  | Path   |
+| --------- | ------- | ------ |
 | README.md | planned | {path} |
-| SKILL.md | planned | {path} |
+| SKILL.md  | planned | {path} |
 | Templates | planned | {path} |
 
 ## Validation

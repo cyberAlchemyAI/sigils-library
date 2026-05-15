@@ -15,21 +15,21 @@
 
 ## Phase Notes
 
-| Phase | Status | Evidence |
-| ----- | ------ | -------- |
-| Inventory package | pass | Proof-local inventory created under [../.arcanum/inventory/](../.arcanum/inventory/). |
-| Source ingest | pass | [business-intent.md](../source-vault/business-intent.md) and [system-runtime.md](../source-vault/system-runtime.md) are indexed. |
-| Ontology map | pass | Business and system maps are generated from explicit source evidence. |
-| Branch-aware path | pass | Business, system, and bridge branches are separated. |
-| Architecture evidence | skipped | This proof uses a neutral system source rather than a real repository architecture. |
-| Bridge validation | flag | All bridge edges exist, but two value measures lack direct system signals. |
-| Session distillation | skipped | No session records exist in this proof. |
-| Premise and confidence review | flag | Premises remain low or medium confidence until real-world evidence exists. |
-| Decision gate | skipped | Follow-up decisions are named but not resolved inside the proof. |
-| Convention and drift report | pass | Drift gaps are preserved in [ontology-drift-report.md](ontology-drift-report.md). |
-| Inventory update | pass | Inventory index and entry files reference the source and output artifacts. |
-| Context proof | pass | [context-retrieval-proof.md](context-retrieval-proof.md) maps obligations to selector-level evidence. |
-| Spell report | pass | This report records gates, outputs, validation, and follow-up. |
+| Phase                         | Status  | Evidence                                                                                                                         |
+| ----------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Inventory package             | pass    | Proof-local inventory created under [../.arcanum/inventory/](../.arcanum/inventory/).                                            |
+| Source ingest                 | pass    | [business-intent.md](../source-vault/business-intent.md) and [system-runtime.md](../source-vault/system-runtime.md) are indexed. |
+| Ontology map                  | pass    | Business and system maps are generated from explicit source evidence.                                                            |
+| Branch-aware path             | pass    | Business, system, and bridge branches are separated.                                                                             |
+| Architecture evidence         | skipped | This proof uses a neutral system source rather than a real repository architecture.                                              |
+| Bridge validation             | flag    | All bridge edges exist, but two value measures lack direct system signals.                                                       |
+| Session distillation          | skipped | No session records exist in this proof.                                                                                          |
+| Premise and confidence review | flag    | Premises remain low or medium confidence until real-world evidence exists.                                                       |
+| Decision gate                 | skipped | Follow-up decisions are named but not resolved inside the proof.                                                                 |
+| Convention and drift report   | pass    | Drift gaps are preserved in [ontology-drift-report.md](ontology-drift-report.md).                                                |
+| Inventory update              | pass    | Inventory index and entry files reference the source and output artifacts.                                                       |
+| Context proof                 | pass    | [context-retrieval-proof.md](context-retrieval-proof.md) maps obligations to selector-level evidence.                            |
+| Spell report                  | pass    | This report records gates, outputs, validation, and follow-up.                                                                   |
 
 ## Flagged Gaps
 

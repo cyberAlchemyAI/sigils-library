@@ -28,18 +28,18 @@ For long-running repository work, use `necronomicon-session` as the durable oper
 
 ## Required Sigils
 
-| Sigil | Role In Spell | Required Mode |
-| ----- | ------------- | ------------- |
-| `inventory` | Install or reuse the compiled knowledge layer and ingest vault sources. | `install`, `ingest`, `lookup`, `validate` |
-| `ontology-vault` | Map, distill, review, promote, propose convention changes, and validate ontology governance. | `map`, `distill-sessions`, `premise-review`, `promote-confidence`, `convention-update`, `validate` |
-| `context-builder` | Prove future tasks can retrieve ontology evidence compactly. | dry-run or standard |
+| Sigil             | Role In Spell                                                                                | Required Mode                                                                                      |
+| ----------------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `inventory`       | Install or reuse the compiled knowledge layer and ingest vault sources.                      | `install`, `ingest`, `lookup`, `validate`                                                          |
+| `ontology-vault`  | Map, distill, review, promote, propose convention changes, and validate ontology governance. | `map`, `distill-sessions`, `premise-review`, `promote-confidence`, `convention-update`, `validate` |
+| `context-builder` | Prove future tasks can retrieve ontology evidence compactly.                                 | dry-run or standard                                                                                |
 
 ## Optional Sigils
 
-| Sigil | Use When | Notes |
-| ----- | -------- | ----- |
-| `decision-gate` | Promotion or convention changes require human trade-off decisions. | Use before mutating rules. |
-| `feature-glossary` | Local ontology terms need concise plain-language explanation. | Keep glossary explanatory, not authoritative. |
+| Sigil                            | Use When                                                                              | Notes                                                              |
+| -------------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| `decision-gate`                  | Promotion or convention changes require human trade-off decisions.                    | Use before mutating rules.                                         |
+| `feature-glossary`               | Local ontology terms need concise plain-language explanation.                         | Keep glossary explanatory, not authoritative.                      |
 | `architecture-pattern-inventory` | System ontology or bridge validation depends on architecture or repository structure. | Recommended for branch-aware mapping with implementation evidence. |
 
 ## Prerequisites
@@ -50,36 +50,36 @@ For long-running repository work, use `necronomicon-session` as the durable oper
 
 ## Shared State
 
-| State | Owner | Updated By | Consumed By |
-| ----- | ----- | ---------- | ----------- |
-| `.arcanum/inventory/` | repository | `inventory` | `ontology-vault`, `context-builder` |
-| ontology map | spell | `ontology-vault` | `inventory`, `context-builder`, user |
-| session distillation report | spell | `ontology-vault` | `inventory`, `decision-gate`, user |
-| premise review ledger | spell | `ontology-vault` | `decision-gate`, user |
-| confidence promotion report | spell | `ontology-vault` | user, observability |
-| convention change plan | spell | `ontology-vault` | `decision-gate`, user |
-| business ontology map | spell | `ontology-vault` | `inventory`, `context-builder`, user |
-| system ontology map | spell | `ontology-vault`, `architecture-pattern-inventory` | `inventory`, `context-builder`, user |
-| business-system bridge map | spell | `ontology-vault` | `inventory`, `context-builder`, user |
-| spell run report | spell | all phases | user, observability |
+| State                       | Owner      | Updated By                                         | Consumed By                          |
+| --------------------------- | ---------- | -------------------------------------------------- | ------------------------------------ |
+| `.arcanum/inventory/`       | repository | `inventory`                                        | `ontology-vault`, `context-builder`  |
+| ontology map                | spell      | `ontology-vault`                                   | `inventory`, `context-builder`, user |
+| session distillation report | spell      | `ontology-vault`                                   | `inventory`, `decision-gate`, user   |
+| premise review ledger       | spell      | `ontology-vault`                                   | `decision-gate`, user                |
+| confidence promotion report | spell      | `ontology-vault`                                   | user, observability                  |
+| convention change plan      | spell      | `ontology-vault`                                   | `decision-gate`, user                |
+| business ontology map       | spell      | `ontology-vault`                                   | `inventory`, `context-builder`, user |
+| system ontology map         | spell      | `ontology-vault`, `architecture-pattern-inventory` | `inventory`, `context-builder`, user |
+| business-system bridge map  | spell      | `ontology-vault`                                   | `inventory`, `context-builder`, user |
+| spell run report            | spell      | all phases                                         | user, observability                  |
 
 ## Execution Phases
 
-| Phase | Sigil | Input | Output | Gate | Failure Policy |
-| ----- | ----- | ----- | ------ | ---- | -------------- |
-| 1 | `inventory` | repository root and source folders | inventory package | package exists or install plan approved | block if no storage decision |
-| 2 | `inventory` | vault, ontology, discovery, premise, convention, and session sources | source summaries and entries | raw sources remain unmodified | flag uncovered sources |
-| 3 | `ontology-vault` | inventory lookup and source folders | ontology map | local labels mapped to generic concepts | flag unmapped labels |
-| 4 | `ontology-vault` | business and system sources | branch classification and optional branch maps | branch-aware path is justified or skipped | skip when single ontology map is enough |
-| 5 | `architecture-pattern-inventory` | repository root and system sources | architecture evidence for system ontology | observed structure separated from recommendations | skip when no system branch exists |
-| 6 | `ontology-vault` | business map, system map, architecture evidence | business-system bridge map and traceability matrix | bridge claims cite both branches | flag unbridged claims, block false alignment |
-| 7 | `ontology-vault` | sessions and delegated evidence | session distillation and synthesis traceability report | sessions remain evidence records, not authority | block if findings lack source evidence |
-| 8 | `ontology-vault` | premises, confidence rules, and evidence | premise review and confidence promotion report | promotions cite sufficient evidence | block unsafe promotion |
-| 9 | `decision-gate` | blocker promotions, bridge claims, or convention changes | decision record | user resolves consequential trade-offs | skip if no blockers |
-| 10 | `ontology-vault` | approved decisions | convention change plan, drift report, or validation report | migration impact named | report partial if changes deferred |
-| 11 | `inventory` | ontology outputs and bridge outputs | updated inventory entries | index and log updated | flag if backfill incomplete |
-| 12 | `context-builder` | sample ontology or cross-branch task | context pack or dry-run summary | selected context maps to obligations | flag if no suitable task exists |
-| 13 | spell report | phase outputs | run report | all blockers named | report partial if optional phases skipped |
+| Phase | Sigil                            | Input                                                                | Output                                                     | Gate                                              | Failure Policy                               |
+| ----- | -------------------------------- | -------------------------------------------------------------------- | ---------------------------------------------------------- | ------------------------------------------------- | -------------------------------------------- |
+| 1     | `inventory`                      | repository root and source folders                                   | inventory package                                          | package exists or install plan approved           | block if no storage decision                 |
+| 2     | `inventory`                      | vault, ontology, discovery, premise, convention, and session sources | source summaries and entries                               | raw sources remain unmodified                     | flag uncovered sources                       |
+| 3     | `ontology-vault`                 | inventory lookup and source folders                                  | ontology map                                               | local labels mapped to generic concepts           | flag unmapped labels                         |
+| 4     | `ontology-vault`                 | business and system sources                                          | branch classification and optional branch maps             | branch-aware path is justified or skipped         | skip when single ontology map is enough      |
+| 5     | `architecture-pattern-inventory` | repository root and system sources                                   | architecture evidence for system ontology                  | observed structure separated from recommendations | skip when no system branch exists            |
+| 6     | `ontology-vault`                 | business map, system map, architecture evidence                      | business-system bridge map and traceability matrix         | bridge claims cite both branches                  | flag unbridged claims, block false alignment |
+| 7     | `ontology-vault`                 | sessions and delegated evidence                                      | session distillation and synthesis traceability report     | sessions remain evidence records, not authority   | block if findings lack source evidence       |
+| 8     | `ontology-vault`                 | premises, confidence rules, and evidence                             | premise review and confidence promotion report             | promotions cite sufficient evidence               | block unsafe promotion                       |
+| 9     | `decision-gate`                  | blocker promotions, bridge claims, or convention changes             | decision record                                            | user resolves consequential trade-offs            | skip if no blockers                          |
+| 10    | `ontology-vault`                 | approved decisions                                                   | convention change plan, drift report, or validation report | migration impact named                            | report partial if changes deferred           |
+| 11    | `inventory`                      | ontology outputs and bridge outputs                                  | updated inventory entries                                  | index and log updated                             | flag if backfill incomplete                  |
+| 12    | `context-builder`                | sample ontology or cross-branch task                                 | context pack or dry-run summary                            | selected context maps to obligations              | flag if no suitable task exists              |
+| 13    | spell report                     | phase outputs                                                        | run report                                                 | all blockers named                                | report partial if optional phases skipped    |
 
 ## Local Customization
 

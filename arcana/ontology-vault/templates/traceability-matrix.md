@@ -9,9 +9,9 @@
 
 ## Matrix
 
-| Business Claim | System Artifact | Edge Type | Test Evidence | Observability Evidence | Status |
-| -------------- | --------------- | --------- | ------------- | ---------------------- | ------ |
-| {claim} | {artifact} | realized_by | {test-path} | {signal-path} | flag |
+| Business Claim | System Artifact | Edge Type   | Test Evidence | Observability Evidence | Status |
+| -------------- | --------------- | ----------- | ------------- | ---------------------- | ------ |
+| {claim}        | {artifact}      | realized_by | {test-path}   | {signal-path}          | flag   |
 
 ## Coverage Summary
 

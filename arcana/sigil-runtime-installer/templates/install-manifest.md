@@ -9,8 +9,8 @@
 
 ## Files
 
-| File | Action | Purpose |
-| ---- | ------ | ------- |
+| File   | Action | Purpose   |
+| ------ | ------ | --------- |
 | {path} | create | {purpose} |
 
 ## Validation

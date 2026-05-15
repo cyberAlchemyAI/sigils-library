@@ -27,19 +27,19 @@ The spell supports two installation postures:
 
 ## Required Sigils
 
-| Sigil | Role In Spell | Required Mode |
-| ----- | ------------- | ------------- |
+| Sigil                     | Role In Spell                                             | Required Mode      |
+| ------------------------- | --------------------------------------------------------- | ------------------ |
 | `sigil-runtime-installer` | Select target runtime and install a thin command adapter. | install or dry-run |
-| `observability-setup` | Ensure local `.arcanum/observability/` folders exist. | install or verify |
+| `observability-setup`     | Ensure local `.arcanum/observability/` folders exist.     | install or verify  |
 
 ## Optional Sigils
 
-| Sigil | Use When | Notes |
-| ----- | -------- | ----- |
-| `inventory` | The target repository should track installed knowledge entries. | Useful for larger installs. |
-| `context-builder` | The target repository should prove retrieval over installed sigils. | Useful after selected installs. |
-| `sigil-development` | The user plans to author local sigils. | Include in authoring-oriented installs. |
-| `spellcraft` | The user plans to compose local spells. | Include when local workflow recipes are expected. |
+| Sigil               | Use When                                                            | Notes                                             |
+| ------------------- | ------------------------------------------------------------------- | ------------------------------------------------- |
+| `inventory`         | The target repository should track installed knowledge entries.     | Useful for larger installs.                       |
+| `context-builder`   | The target repository should prove retrieval over installed sigils. | Useful after selected installs.                   |
+| `sigil-development` | The user plans to author local sigils.                              | Include in authoring-oriented installs.           |
+| `spellcraft`        | The user plans to compose local spells.                             | Include when local workflow recipes are expected. |
 
 ## Prerequisites
 
@@ -51,30 +51,30 @@ The spell supports two installation postures:
 
 ## Shared State
 
-| State | Owner | Updated By | Consumed By |
-| ----- | ----- | ---------- | ----------- |
-| `.arcanum/` | target repository | bootstrap script | runtime adapters, users, local agents |
-| `.arcanum/observability/` | target repository | `observability-setup`, bootstrap script | runtime commands, sigil and spell runs, reflection workflows |
-| `.arcanum/runtimes/github-copilot/` | target repository | `sigil-runtime-installer` | GitHub Copilot discovery bridge, individual sigil and spell adapters |
-| `.arcanum/runtimes/claude/` | target repository | `sigil-runtime-installer` | Claude discovery bridge, individual sigil and spell adapters |
-| `.arcanum/runtimes/codex/` | target repository | `sigil-runtime-installer` | Codex discovery bridge, individual sigil and spell adapters |
-| `.arcanum/necronomicon/` | target repository | bootstrap script, Necronomicon Session | session memory, capability manifest, route ledgers, decisions, handoffs |
-| `.github/skills/arcanum-orchestrate/` | target repository | `sigil-runtime-installer` | GitHub Copilot discovery only |
-| `.claude/commands/` | target repository | `sigil-runtime-installer` | Claude discovery only |
-| `.codex/commands/` | target repository | `sigil-runtime-installer` | Codex discovery only |
-| install report | spell | all phases | user, observability |
+| State                                 | Owner             | Updated By                              | Consumed By                                                             |
+| ------------------------------------- | ----------------- | --------------------------------------- | ----------------------------------------------------------------------- |
+| `.arcanum/`                           | target repository | bootstrap script                        | runtime adapters, users, local agents                                   |
+| `.arcanum/observability/`             | target repository | `observability-setup`, bootstrap script | runtime commands, sigil and spell runs, reflection workflows            |
+| `.arcanum/runtimes/github-copilot/`   | target repository | `sigil-runtime-installer`               | GitHub Copilot discovery bridge, individual sigil and spell adapters    |
+| `.arcanum/runtimes/claude/`           | target repository | `sigil-runtime-installer`               | Claude discovery bridge, individual sigil and spell adapters            |
+| `.arcanum/runtimes/codex/`            | target repository | `sigil-runtime-installer`               | Codex discovery bridge, individual sigil and spell adapters             |
+| `.arcanum/necronomicon/`              | target repository | bootstrap script, Necronomicon Session  | session memory, capability manifest, route ledgers, decisions, handoffs |
+| `.github/skills/arcanum-orchestrate/` | target repository | `sigil-runtime-installer`               | GitHub Copilot discovery only                                           |
+| `.claude/commands/`                   | target repository | `sigil-runtime-installer`               | Claude discovery only                                                   |
+| `.codex/commands/`                    | target repository | `sigil-runtime-installer`               | Codex discovery only                                                    |
+| install report                        | spell             | all phases                              | user, observability                                                     |
 
 ## Execution Phases
 
-| Phase | Sigil Or Tool | Input | Output | Gate | Failure Policy |
-| ----- | ------------- | ----- | ------ | ---- | -------------- |
-| 1 | bootstrap script | target root, sigil selection, spell selection | dry-run plan or install plan | target root resolved | block on missing target |
-| 2 | bootstrap script | command posture | selected sigil and spell command list | selections resolve to canonical Arcanum artifacts | block on unknown command selection |
-| 3 | `observability-setup` | target root | `.arcanum/observability/` | folders exist | flag if setup partial |
-| 4 | bootstrap script | selected ontology/session posture | optional `.arcanum/necronomicon/` harness state and `capabilities.json` | folder contains harness state only | block on obsolete runtime-book files without `--force` |
-| 5 | `sigil-runtime-installer` | selected runtime | `.arcanum/runtimes/<runtime>/` orchestrator, per-sigil adapters, per-spell adapters, Necronomicon alias command, Necronomicon session command, plus required discovery bridges | adapters contain executable instruction snapshots | skip if runtime is none |
-| 6 | validation | installed files | command, bridge, syntax, link, and observability validation | selected commands can run without copied Necronomicon definitions | block on broken local runtime links |
-| 7 | spell report | phase outputs | install report | all blockers named | report partial if optional runtime skipped |
+| Phase | Sigil Or Tool             | Input                                         | Output                                                                                                                                                                         | Gate                                                              | Failure Policy                                         |
+| ----- | ------------------------- | --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------- | ------------------------------------------------------ |
+| 1     | bootstrap script          | target root, sigil selection, spell selection | dry-run plan or install plan                                                                                                                                                   | target root resolved                                              | block on missing target                                |
+| 2     | bootstrap script          | command posture                               | selected sigil and spell command list                                                                                                                                          | selections resolve to canonical Arcanum artifacts                 | block on unknown command selection                     |
+| 3     | `observability-setup`     | target root                                   | `.arcanum/observability/`                                                                                                                                                      | folders exist                                                     | flag if setup partial                                  |
+| 4     | bootstrap script          | selected ontology/session posture             | optional `.arcanum/necronomicon/` harness state and `capabilities.json`                                                                                                        | folder contains harness state only                                | block on obsolete runtime-book files without `--force` |
+| 5     | `sigil-runtime-installer` | selected runtime                              | `.arcanum/runtimes/<runtime>/` orchestrator, per-sigil adapters, per-spell adapters, Necronomicon alias command, Necronomicon session command, plus required discovery bridges | adapters contain executable instruction snapshots                 | skip if runtime is none                                |
+| 6     | validation                | installed files                               | command, bridge, syntax, link, and observability validation                                                                                                                    | selected commands can run without copied Necronomicon definitions | block on broken local runtime links                    |
+| 7     | spell report              | phase outputs                                 | install report                                                                                                                                                                 | all blockers named                                                | report partial if optional runtime skipped             |
 
 ## Bootstrap Script
 

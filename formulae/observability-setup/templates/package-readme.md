@@ -14,7 +14,6 @@ This package stores local telemetry for sigil usage in this repository.
 
 The default storage model is hybrid: use the central ledger as the source of truth and optional per-sigil ledgers for focused reflection.
 
-
 ## Privacy
 
 Do not store secrets, credentials, tokens, private keys, or unnecessary raw request content in telemetry.

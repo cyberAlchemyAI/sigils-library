@@ -38,7 +38,7 @@ Branch-aware ontology is optional. Use it when the repository has both business/
 - `promote-confidence --branch business`: promote or demote business knowledge only when evidence and commitment gates pass.
 - `promote-confidence --branch system`: promote or demote system knowledge only when implementation/runtime evidence supports it.
 - `convention-update --branch business|system|bridge`: propose convention changes scoped to one branch or to bridge rules.
-</branch-aware-arguments>
+  </branch-aware-arguments>
 
 <applicability>
 Use this sigil when a repository has vault-like knowledge governance: sessions, discoveries, premises, constitutions, ontology conventions, confidence rules, edge types, or delegated research artifacts.
@@ -56,7 +56,7 @@ Expected inputs, if available:
 - prior findings and audits,
 - schema or frontmatter conventions,
 - user-stated ontology goal.
-</inputs>
+  </inputs>
 
 <default-output>
 If the user does not provide `--output`, prefer:
@@ -65,7 +65,7 @@ If the user does not provide `--output`, prefer:
 2. `docs/ontology/<mode>-<date>.md` when `docs/ontology/` exists,
 3. `docs/knowledge/<mode>-<date>.md` when `docs/knowledge/` exists,
 4. a markdown report in chat when no safe output location exists.
-</default-output>
+   </default-output>
 
 <process>
 ## Step 1 - Resolve Scope And Local Vocabulary
@@ -107,13 +107,14 @@ When branch-aware mapping is requested or clearly useful:
 13. Preserve mixed documents when they are useful, but assign branch ownership at the claim or section level.
 14. Create bridge edges only when there is evidence on both sides of the branch boundary.
 15. Use these starter bridge edge types:
-   - `realized_by`: business concept or behavior is implemented by a system artifact,
-   - `depends_on`: business behavior depends on a system capability,
-   - `constrained_by`: business rule or outcome is limited by a technical constraint,
-   - `observed_by`: business outcome or behavior is measured by a metric, log, event, or trace,
-   - `tested_by`: business claim, rule, or outcome is verified by a test,
-   - `drifts_from`: observed system behavior diverges from business intent,
-   - `traced_to`: system artifact links back to a business premise, decision, discovery, or rule.
+
+- `realized_by`: business concept or behavior is implemented by a system artifact,
+- `depends_on`: business behavior depends on a system capability,
+- `constrained_by`: business rule or outcome is limited by a technical constraint,
+- `observed_by`: business outcome or behavior is measured by a metric, log, event, or trace,
+- `tested_by`: business claim, rule, or outcome is verified by a test,
+- `drifts_from`: observed system behavior diverges from business intent,
+- `traced_to`: system artifact links back to a business premise, decision, discovery, or rule.
 
 ## Step 2B - Validate Branch Bridges
 
@@ -151,7 +152,7 @@ When branch-aware mapping is requested or clearly useful:
 
 36. Validate links, role consistency, confidence gates, delegated-evidence traceability, source authority rules, branch ownership, bridge edges, drift findings, test links, and observability links.
 37. Return a concise report with outputs, blockers, promotion decisions, convention changes, and next action.
-</process>
+    </process>
 
 <branch-role-catalogs>
 Use these as starter catalogs, not a universal taxonomy.
@@ -179,7 +180,7 @@ A successful execution must:
 - preserve drift as a first-class finding rather than smoothing it away,
 - identify migration impact before convention changes,
 - use the inflection heuristic to justify ontology investment level.
-</quality-bar>
+  </quality-bar>
 
 <anti-patterns>
 Avoid:
@@ -197,7 +198,7 @@ Avoid:
 - claiming implementation alignment without bridge evidence,
 - treating test coverage or telemetry as business meaning instead of bridge evidence,
 - forcing branch-aware ontology on repositories that only need a simple map.
-</anti-patterns>
+  </anti-patterns>
 
 <observability>
 When `.arcanum/observability/` exists, emit post-run signals for:
@@ -221,7 +222,7 @@ When `.arcanum/observability/` exists, emit post-run signals for:
 - contradictions found,
 - blockers remaining,
 - validation result.
-</observability>
+  </observability>
 
 <output-contract>
 Return:
@@ -251,4 +252,5 @@ Return:
 - Validation: pass | flag | block | not run
 - Next action: <action>
 ```
+
 </output-contract>

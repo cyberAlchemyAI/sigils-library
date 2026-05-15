@@ -11,9 +11,9 @@
 
 ## Evidence
 
-| Evidence | Supports | Weakens | Source | Notes |
-| -------- | -------- | ------- | ------ | ----- |
-| {evidence} | yes | no | {path} | {notes} |
+| Evidence   | Supports | Weakens | Source | Notes   |
+| ---------- | -------- | ------- | ------ | ------- |
+| {evidence} | yes      | no      | {path} | {notes} |
 
 ## Falsification Check
 
