@@ -10,6 +10,8 @@
 
 Arcanum Bootstrap installs Arcanum runtime support into a consuming repository. It creates observability folders and optional runtime slash commands under one repository-local `.arcanum/` root so users can invoke sigils and spells from their preferred agent surface.
 
+When `ontology-harness` is selected, bootstrap can also initialize Necronomicon session harness state for durable repository memory, selected capability routing, fallback discovery, and capability update reports.
+
 The spell supports two installation postures:
 
 - generate commands for all sigils and spells,
@@ -21,6 +23,7 @@ The spell supports two installation postures:
 - A repository should expose Arcanum through GitHub Copilot, Claude, or Codex.
 - A repository needs `.arcanum/` runtime folders, observability storage, and local slash-command support.
 - A user wants to choose individual sigils rather than install all of Arcanum.
+- A repository should use Necronomicon as a persistent harness for session memory and selected capability routing.
 
 ## Required Sigils
 
@@ -55,6 +58,7 @@ The spell supports two installation postures:
 | `.arcanum/runtimes/github-copilot/` | target repository | `sigil-runtime-installer` | GitHub Copilot discovery bridge, individual sigil and spell adapters |
 | `.arcanum/runtimes/claude/` | target repository | `sigil-runtime-installer` | Claude discovery bridge, individual sigil and spell adapters |
 | `.arcanum/runtimes/codex/` | target repository | `sigil-runtime-installer` | Codex discovery bridge, individual sigil and spell adapters |
+| `.arcanum/necronomicon/` | target repository | bootstrap script, Necronomicon Session | session memory, capability manifest, route ledgers, decisions, handoffs |
 | `.github/skills/arcanum-orchestrate/` | target repository | `sigil-runtime-installer` | GitHub Copilot discovery only |
 | `.claude/commands/` | target repository | `sigil-runtime-installer` | Claude discovery only |
 | `.codex/commands/` | target repository | `sigil-runtime-installer` | Codex discovery only |
@@ -67,9 +71,10 @@ The spell supports two installation postures:
 | 1 | bootstrap script | target root, sigil selection, spell selection | dry-run plan or install plan | target root resolved | block on missing target |
 | 2 | bootstrap script | command posture | selected sigil and spell command list | selections resolve to canonical Arcanum artifacts | block on unknown command selection |
 | 3 | `observability-setup` | target root | `.arcanum/observability/` | folders exist | flag if setup partial |
-| 4 | `sigil-runtime-installer` | selected runtime | `.arcanum/runtimes/<runtime>/` orchestrator, per-sigil adapters, per-spell adapters, Necronomicon alias command when `ontology-harness` is selected, plus required discovery bridges | adapters contain executable instruction snapshots | skip if runtime is none |
-| 5 | validation | installed files | command, bridge, syntax, link, and observability validation | selected commands can run without generated Necronomicon files | block on broken local runtime links |
-| 6 | spell report | phase outputs | install report | all blockers named | report partial if optional runtime skipped |
+| 4 | bootstrap script | selected ontology/session posture | optional `.arcanum/necronomicon/` harness state and `capabilities.json` | folder contains harness state only | block on obsolete runtime-book files without `--force` |
+| 5 | `sigil-runtime-installer` | selected runtime | `.arcanum/runtimes/<runtime>/` orchestrator, per-sigil adapters, per-spell adapters, Necronomicon alias command, Necronomicon session command, plus required discovery bridges | adapters contain executable instruction snapshots | skip if runtime is none |
+| 6 | validation | installed files | command, bridge, syntax, link, and observability validation | selected commands can run without copied Necronomicon definitions | block on broken local runtime links |
+| 7 | spell report | phase outputs | install report | all blockers named | report partial if optional runtime skipped |
 
 ## Bootstrap Script
 
@@ -110,6 +115,8 @@ arcanum/tools/bootstrap_arcanum.sh --target <repo> --sigils all --runtime none -
 - Runtime discovery bridges: target-specific agent folders such as `.github/skills/`
 - Individual runtime names: `arcanum-sigil-<id>` and `arcanum-spell-<id>`
 - Necronomicon runtime name: `arcanum-necronomicon`, installed when `ontology-harness` is selected.
+- Necronomicon session runtime name: `arcanum-necronomicon-session`, installed by default when `ontology-harness` is selected unless disabled.
+- Necronomicon session state root: `.arcanum/necronomicon/`, limited to harness memory, selected capabilities, routes, decisions, handoffs, and capability update reports.
 - Observability root: `.arcanum/observability/`
 - Gate strictness: strict for overwrites, standard for selected install validation.
 - Interaction mode: interactive for selection, dry-run for preview, install for execution.
@@ -123,6 +130,7 @@ Record spell-level telemetry when `.arcanum/observability/` exists:
 - install posture,
 - selected sigils,
 - selected spells,
+- Necronomicon session harness status,
 - runtime adapter,
 - files created,
 - files skipped,
@@ -146,6 +154,8 @@ Return:
 - Sigil commands: all | <list>
 - Spell commands: all | none | <list>
 - Necronomicon alias command: installed | skipped
+- Necronomicon session command: installed | skipped
+- Necronomicon harness state: initialized | skipped
 - Runtime adapter: github-copilot | claude | codex | none
 - Phases completed: <count>
 - Gates: pass | block | flag

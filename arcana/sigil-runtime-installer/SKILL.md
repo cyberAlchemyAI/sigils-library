@@ -24,7 +24,7 @@ Arcana: target selection, adapter generation, repository-local installation, val
 - `claude`: create or plan `.arcanum/runtimes/claude/commands/<command>.md` and a `.claude/commands/<command>.md` discovery bridge.
 - `codex`: create or plan `.arcanum/runtimes/codex/commands/<command>.md` and a `.codex/commands/<command>.md` discovery bridge.
 
-Install the general `arcanum-orchestrate` command and individual artifact commands for each selected sigil and spell. Individual commands use `arcanum-sigil-<id>` and `arcanum-spell-<id>`. When `ontology-harness` is selected, also install `arcanum-necronomicon` as its friendly alias command.
+Install the general `arcanum-orchestrate` command and individual artifact commands for each selected sigil and spell. Individual commands use `arcanum-sigil-<id>` and `arcanum-spell-<id>`. When `ontology-harness` is selected, also install `arcanum-necronomicon` as its friendly alias command and `arcanum-necronomicon-session` as the persistent repository harness command unless disabled.
 </targets>
 
 <applicability>
@@ -56,18 +56,24 @@ github-copilot -> .github/skills/arcanum-orchestrate/SKILL.md
 				 .arcanum/runtimes/github-copilot/skills/arcanum-sigil-<id>/SKILL.md
 				 .github/skills/arcanum-spell-<id>/SKILL.md
 				 .arcanum/runtimes/github-copilot/skills/arcanum-spell-<id>/SKILL.md
+				 .github/skills/arcanum-necronomicon-session/SKILL.md
+				 .arcanum/runtimes/github-copilot/skills/arcanum-necronomicon-session/SKILL.md
 claude         -> .claude/commands/arcanum-orchestrate.md
 				 .arcanum/runtimes/claude/commands/arcanum-orchestrate.md
 				 .claude/commands/arcanum-sigil-<id>.md
 				 .arcanum/runtimes/claude/commands/arcanum-sigil-<id>.md
 				 .claude/commands/arcanum-spell-<id>.md
 				 .arcanum/runtimes/claude/commands/arcanum-spell-<id>.md
+				 .claude/commands/arcanum-necronomicon-session.md
+				 .arcanum/runtimes/claude/commands/arcanum-necronomicon-session.md
 codex          -> .codex/commands/arcanum-orchestrate.md
 				 .arcanum/runtimes/codex/commands/arcanum-orchestrate.md
 				 .codex/commands/arcanum-sigil-<id>.md
 				 .arcanum/runtimes/codex/commands/arcanum-sigil-<id>.md
 				 .codex/commands/arcanum-spell-<id>.md
 				 .arcanum/runtimes/codex/commands/arcanum-spell-<id>.md
+				 .codex/commands/arcanum-necronomicon-session.md
+				 .arcanum/runtimes/codex/commands/arcanum-necronomicon-session.md
 ```
 </default-output>
 
@@ -83,7 +89,7 @@ codex          -> .codex/commands/arcanum-orchestrate.md
 
 5. Choose adapter shape for the selected target.
 6. Keep the adapter focused: route requests, follow its embedded canonical definition snapshot, apply observability handoff, and report validation.
-7. Do not require generated `.arcanum/necronomicon/` registry files.
+7. Do not require generated `.arcanum/necronomicon/` registry files. If Necronomicon session state exists there, treat it as harness memory and selected capability state only.
 8. Preserve local runtime conventions and avoid changing unrelated agent files.
 
 ## Step 3 - Install Or Dry Run
@@ -157,7 +163,8 @@ A successful execution must:
 - require or infer a single selected target runtime,
 - install orchestrator, per-sigil, and per-spell runtime adapter files plus required discovery bridges,
 - keep Necronomicon as the Ontology Harness alias,
-- avoid requiring generated `.arcanum/necronomicon/` files,
+- install the Necronomicon session command when the repository harness is enabled,
+- avoid requiring generated `.arcanum/necronomicon/` definition files,
 - validate adapter paths and registry links,
 - preserve unrelated local agent configuration,
 - report what was installed and how to invoke it.

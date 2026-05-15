@@ -44,6 +44,8 @@ Spells may also define aliases: memorable names, local nicknames, or branded inv
 
 `Necronomicon` is the primary human-facing alias for the `ontology-harness` spell. Use it for ontology governance, vault-like knowledge, session distillation, premise review, branch-aware business/system mapping, and bridge validation.
 
+`Necronomicon Session` is the persistent repository harness mode. Use `necronomicon-session` when a repository should keep durable session memory, route first through selected local sigils and spells, offer Arcanum fallback candidates, and update the selected capability set with an audit trail.
+
 Alias rules:
 
 - aliases must resolve to exactly one canonical spell,

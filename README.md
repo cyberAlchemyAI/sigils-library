@@ -20,7 +20,7 @@ arcanum/
 
 ## Necronomicon Ontology Harness
 
-Necronomicon is not a generated runtime registry folder. It is the Ontology Harness invocation surface.
+Necronomicon is not a generated runtime registry folder. It is the Ontology Harness invocation surface and, when session mode is enabled, the repository-local harness for durable memory and selected capability routing.
 
 Use Necronomicon when a repository needs to:
 
@@ -31,6 +31,8 @@ Use Necronomicon when a repository needs to:
 - validate bridge edges between intent and implementation evidence.
 
 Runtime adapters should expose `arcanum-necronomicon` as an alias for the canonical `ontology-harness` spell when that spell is selected. Bootstrap does not copy sigil or spell definitions into `.arcanum/necronomicon/`; generated commands carry the necessary runtime instructions and observability handoff.
+
+Use `arcanum-necronomicon` for a single ontology harness run. Use `arcanum-necronomicon-session` to create, resume, route within, update, or close a persistent repository harness session. Session state may live under `.arcanum/necronomicon/`, but that folder is only for harness memory, selected capability manifests, route ledgers, decisions, handoffs, and capability update reports.
 
 ## Framework
 
@@ -120,7 +122,7 @@ tools/bootstrap_arcanum.sh --target <repo> --sigils all --spells all --runtime g
 
 Both paths install Arcanum runtime support under `.arcanum/`, with observability under `.arcanum/observability/` and runtime adapters under `.arcanum/runtimes/`. GitHub Copilot, Claude, and Codex may still require tiny discovery bridges in their platform-specific folders, but canonical local runtime behavior lives inside `.arcanum/runtimes/`. Use `--sigils <comma-separated-list>` and `--spells <comma-separated-list>` to choose which runtime commands are generated.
 
-When a runtime is selected, bootstrap installs the general `arcanum-orchestrate` adapter and individual adapters for every selected sigil and spell. Individual adapter names use `arcanum-sigil-<id>` and `arcanum-spell-<id>`. When `ontology-harness` is selected, bootstrap also installs `arcanum-necronomicon` as the friendly alias command.
+When a runtime is selected, bootstrap installs the general `arcanum-orchestrate` adapter and individual adapters for every selected sigil and spell. Individual adapter names use `arcanum-sigil-<id>` and `arcanum-spell-<id>`. When `ontology-harness` is selected, bootstrap also installs `arcanum-necronomicon` as the friendly alias command and `arcanum-necronomicon-session` as the persistent repository harness command unless session harness generation is disabled.
 
 ## Research And Proofs
 

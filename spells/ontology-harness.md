@@ -15,6 +15,8 @@ It is designed for repositories with sessions, discoveries, premises, convention
 
 When a repository has both business/domain material and system/runtime material, Necronomicon can run a branch-aware path that maps business ontology, maps system ontology, and validates the bridge between intent and implementation.
 
+For long-running repository work, use `necronomicon-session` as the durable operational harness. The session spell keeps memory, selected capability routing, fallback discovery, and capability updates while delegating ontology mapping and bridge validation back to this spell.
+
 ## Trigger Conditions
 
 - A repository has a `vault/`, `ontology/`, `discovery/`, `premise/`, `axiom/`, `constitution/`, `sessions/`, or equivalent knowledge-governance area.
