@@ -58,4 +58,16 @@ Alias rules:
 
 Use [spellcraft](../arcana/spellcraft/) to design, install, validate, observe, or revise spells.
 
+Active spell development packs live inside each spell folder under `spells/<canonical-id>/development/` until Spellcraft validation and release approval promote canonical spell changes. `invoke` may prepare the spec, design bundle, or work-pack for a spell, but Spellcraft remains the lifecycle authority for spell composition.
+
+For multi-mode spells, keep one canonical contract file as `README.md` inside the spell folder and place mode-specific contracts in sibling files. Example:
+
+```text
+spells/invoke/README.md
+spells/invoke/define.md
+spells/invoke/design.md
+```
+
+The root file should keep cross-mode identity, gates, shared state, and handoff policy, while mode files carry mode-specific phases and output details.
+
 Start with the [Spell Registry](../registry/SPELLS.md) for available first-party spells.

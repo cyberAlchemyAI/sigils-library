@@ -1,6 +1,6 @@
 ---
 name: arcanum-sigil-signal-observer
-description: Run the installed Arcanum sigil signal-observer from its embedded canonical definition snapshot.
+description: Run the installed Arcanum sigil signal-observer from runtime-local contract files.
 argument-hint: "<request-for-signal-observer>"
 allowed-tools: Read, Glob, Grep, AskQuestions, Task
 ---
@@ -8,16 +8,16 @@ allowed-tools: Read, Glob, Grep, AskQuestions, Task
 # Arcanum sigil: signal observer
 
 <objective>
-Run the installed Arcanum sigil signal-observer using the canonical definition snapshot embedded in this slash command.
+Run the installed Arcanum sigil signal-observer using runtime-local contract files.
 </objective>
 
 <context>
-Arcanum runtime support is installed at .arcanum/ in this repository. Necronomicon is the Ontology Harness alias, not a generated runtime registry folder. The canonical source reference for this command is https://github.com/cyberAlchemyAI/arcanum/blob/main/arcana/signal-observer/SKILL.md.
+Arcanum runtime support is installed at .arcanum/ in this repository. Runtime-local contracts for this runtime live under .arcanum/runtimes/github-copilot/sigils/ and .arcanum/runtimes/github-copilot/spells/.
 </context>
 
 <process>
-1. Use the embedded canonical definition snapshot below as the execution contract.
-2. For sigils, use both the README and SKILL snapshots when present. For spells, follow the spell snapshot directly.
+1. Read the runtime-local contract file at .arcanum/runtimes/github-copilot/sigils/signal-observer/SKILL.md.
+2. For sigils, also read .arcanum/runtimes/github-copilot/sigils/signal-observer/README.md when it exists.
 3. Execute only this installed sigil unless the definition explicitly delegates or the user asks to route elsewhere.
 4. Preserve the selected artifact's process, quality bar, anti-patterns, output contract, and validation gates.
 5. Apply the observability handoff by summarizing request, artifact, outputs, files changed, validation, gaps, and follow-up; append telemetry under .arcanum/observability/ when allowed.
@@ -26,217 +26,6 @@ Arcanum runtime support is installed at .arcanum/ in this repository. Necronomic
 
 <guardrails>
 - Keep this skill as a thin runtime adapter for one installed artifact.
-- Do not require or create .arcanum/necronomicon/ runtime registry files.
-- Necronomicon means the Ontology Harness alias.
-- Treat the embedded canonical snapshot as the local command contract.
+- Use runtime-local contracts under .arcanum/runtimes/github-copilot/ as the command contract.
+- Do not reference upstream Arcanum source paths from this runtime adapter.
 </guardrails>
-
-## Canonical README Snapshot
-
-Canonical source: https://github.com/cyberAlchemyAI/arcanum/blob/main/arcana/signal-observer/README.md
-
-````markdown
-# Signal Observer
-
-Signal Observer is an Arcana sigil for post-run observation of sigil executions. It reads a completed invocation envelope, derives behavior-level signals, appends telemetry, and recommends whether the sigil needs reflection or targeted maintenance.
-
-It is non-blocking by default. Its job is not to redo the user's task; its job is to make the execution learnable.
-
-## Problem It Solves
-
-Without observation, sigils only improve when someone remembers a problem and manually revisits the workflow. Signal Observer captures lightweight evidence from real use: quality status, anti-pattern hits, workflow gaps, output drift, validation gaps, and reflection triggers.
-
-That evidence lets future maintainers improve sigils from repeated signals rather than isolated impressions.
-
-## Use When
-
-- a sigil run has just completed, blocked, or failed,
-- an invocation envelope exists or can be assembled,
-- the project uses the repository-local observability package,
-- the team wants a durable signal record for future reflection,
-- usage patterns should influence sigil maintenance.
-
-## Do Not Use When
-
-- the primary task is still in progress,
-- the run produced no meaningful output or decision,
-- telemetry would include secrets or sensitive raw content,
-- observability write failure would distract from urgent user work,
-- a full reflection cycle is already underway.
-
-## Observation Flow
-
-1. Load or assemble the invocation envelope.
-2. Validate that required envelope sections exist.
-3. Inspect visible execution results, changed artifacts, and validation outcomes.
-4. Derive behavior-level signals.
-5. Append one JSON object to the configured JSONL ledger.
-6. Update reflection counters when configured.
-7. Return signal counts and recommended follow-up.
-
-## Output
-
-The sigil emits:
-
-- observed sigil name,
-- observation result,
-- signal counts by type,
-- ledger path,
-- reflection trigger state,
-- recommended follow-up actions.
-
-## Related Docs
-
-- [Sigil Observability Hook](../../framework/observability/SIGIL-OBSERVABILITY-HOOK.md)
-- [Repository Observability Package](../../framework/observability/REPOSITORY-PACKAGE.md)
-- [Observability Setup](../../formulae/observability-setup/)
-
-## Why This Is Arcana
-
-Signal Observer coordinates evidence interpretation, quality assessment, telemetry mutation, and reflection routing. It is not just a file append; it turns execution traces into governed maintenance signals.
-````
-
-## Canonical SKILL Snapshot
-
-Canonical source: https://github.com/cyberAlchemyAI/arcanum/blob/main/arcana/signal-observer/SKILL.md
-
-````markdown
----
-name: signal-observer
-description: "Use when: deriving post-run behavior signals from a sigil invocation envelope and appending reusable observability telemetry."
-argument-hint: "--envelope <path> [--ledger <path>] [--mode new|update|observe|reflect|execute]"
-tier: arcana
-domain: observability
-version: 0.1.0
-origin: generalized from recurring post-session observability practice
-allowed-tools: Read, Write, Glob, Grep, Bash, Task
----
-
-# Sigil: Signal Observer
-
-<objective>
-Provide independent post-run observation of sigil executions by reading an invocation envelope, deriving behavior-level signals, appending telemetry, and recommending follow-up.
-</objective>
-
-<logic-type>
-Arcana: asynchronous observation and reflection routing over execution evidence.
-</logic-type>
-
-<applicability>
-Use this sigil when:
-
-- a sigil execution has completed, blocked, or failed,
-- an invocation envelope exists or can be assembled safely,
-- the run produced meaningful user-facing output, decision, validation, or orchestration result,
-- the project has or wants a repository-local observability ledger,
-- reflection thresholds should be evaluated from real usage.
-</applicability>
-
-<inputs>
-Expected inputs:
-
-- invocation envelope path, preferably matching `framework/observability/templates/invocation-envelope.json`,
-- optional telemetry ledger path,
-- visible execution summary,
-- changed artifact list,
-- validation results,
-- Quality Bar and Anti-Patterns for the invoked sigil, when available,
-- reflection state, when available.
-</inputs>
-
-<default-paths>
-Use these defaults when the user does not provide explicit paths:
-
-- envelope: `.arcanum/observability/tmp/latest-invocation.json`
-- ledger: `.arcanum/observability/signals/sigil-invocations.jsonl`
-- reflection state: `.arcanum/observability/reflection-state.json`
-</default-paths>
-
-<process>
-1. Load the invocation envelope.
-2. Validate that the envelope contains:
-   - timestamp,
-   - sigil,
-   - tier,
-   - mode,
-   - request summary or safe raw request,
-   - execution status,
-   - outputs,
-   - changed files,
-   - validation entries,
-   - observer section or enough evidence to build one.
-3. Refuse to store secrets, credentials, tokens, private keys, or unnecessary raw content.
-4. Derive behavior-level signals:
-   - `quality-pass`: Quality Bar appears satisfied,
-   - `quality-gap`: Quality Bar is partial, failed, or unchecked without reason,
-   - `anti-pattern-hit`: observed workflow violated an Anti-Pattern,
-   - `output-drift`: output differs from the sigil output contract,
-   - `workflow-gap`: trigger, input, process, template, validation, observability, or reflection gap,
-   - `rework`: failure, correction, and pass sequence is visible,
-   - `useful-pattern`: repeated behavior appears worth preserving.
-5. Set reflection trigger state:
-   - `none`,
-   - `manual`,
-   - `usage-threshold`,
-   - `output-threshold`,
-   - `gap-threshold`,
-   - `severe-gap`.
-6. Append exactly one JSON object to the configured JSONL ledger.
-7. Update reflection counters if reflection state is available.
-8. Validate appended telemetry when a JSON or JSONL checker is available.
-9. Return a concise observation report.
-</process>
-
-<authority-rule>
-This sigil is non-blocking by default. It appends observability signals and updates reflection counters only. It must not modify application source code, user artifacts, or the observed sigil unless explicitly delegated by a separate maintenance workflow.
-</authority-rule>
-
-<privacy-rules>
-- Do not store secrets, credentials, tokens, private keys, or sensitive raw content.
-- Prefer summaries over raw request text when the request contains private details.
-- Prefer file paths and artifact names over large content excerpts.
-- Mark missing evidence as `not_checked` rather than inferring success.
-</privacy-rules>
-
-<quality-bar>
-A successful execution of this sigil must:
-
-- read or assemble a valid invocation envelope,
-- derive signals only from visible evidence,
-- append one valid JSON object per observed invocation,
-- preserve privacy and avoid sensitive raw content,
-- classify Quality Bar status and Anti-Pattern hits when evidence exists,
-- evaluate reflection trigger state,
-- avoid blocking or changing the primary task outcome.
-</quality-bar>
-
-<anti-patterns>
-Avoid:
-
-- rewriting the observed sigil during observation,
-- storing secrets or large raw conversation excerpts,
-- inventing quality status without evidence,
-- appending invalid JSONL,
-- treating observability failure as primary task failure unless observability was the requested task,
-- producing many telemetry rows for one invocation,
-- hiding severe workflow gaps behind a generic success note.
-</anti-patterns>
-
-<output-contract>
-Return:
-
-```markdown
-## Signal Observer Result
-
-- Observed sigil: <name>
-- Result: recorded | skipped | failed
-- Ledger: <path>
-- Signals: <counts by type>
-- Quality Bar: pass | partial | fail | not_checked
-- Anti-Pattern hits: <count and summary>
-- Reflection trigger: none | manual | usage-threshold | output-threshold | gap-threshold | severe-gap
-- Recommendation: none | targeted-update | reflect-now
-- Validation: <checks performed>
-```
-</output-contract>
-````

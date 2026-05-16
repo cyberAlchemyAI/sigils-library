@@ -1,6 +1,6 @@
 ---
 name: arcanum-spell-repository-harness
-description: Run the installed Arcanum spell repository-harness from its embedded canonical definition snapshot.
+description: Run the installed Arcanum spell repository-harness from runtime-local contract files.
 argument-hint: "<request-for-repository-harness>"
 allowed-tools: Read, Glob, Grep, AskQuestions, Task
 ---
@@ -8,16 +8,16 @@ allowed-tools: Read, Glob, Grep, AskQuestions, Task
 # Arcanum spell: repository harness
 
 <objective>
-Run the installed Arcanum spell repository-harness using the canonical definition snapshot embedded in this slash command.
+Run the installed Arcanum spell repository-harness using runtime-local contract files.
 </objective>
 
 <context>
-Arcanum runtime support is installed at .arcanum/ in this repository. Necronomicon is the Ontology Harness alias, not a generated runtime registry folder. The canonical source reference for this command is https://github.com/cyberAlchemyAI/arcanum/blob/main/spells/repository-harness.md.
+Arcanum runtime support is installed at .arcanum/ in this repository. Runtime-local contracts for this runtime live under .arcanum/runtimes/github-copilot/sigils/ and .arcanum/runtimes/github-copilot/spells/.
 </context>
 
 <process>
-1. Use the embedded canonical definition snapshot below as the execution contract.
-2. For sigils, use both the README and SKILL snapshots when present. For spells, follow the spell snapshot directly.
+1. Read the runtime-local contract file at .arcanum/runtimes/github-copilot/spells/repository-harness/README.md.
+2. For sigils, also read  when it exists.
 3. Execute only this installed spell unless the definition explicitly delegates or the user asks to route elsewhere.
 4. Preserve the selected artifact's process, quality bar, anti-patterns, output contract, and validation gates.
 5. Apply the observability handoff by summarizing request, artifact, outputs, files changed, validation, gaps, and follow-up; append telemetry under .arcanum/observability/ when allowed.
@@ -26,84 +26,6 @@ Arcanum runtime support is installed at .arcanum/ in this repository. Necronomic
 
 <guardrails>
 - Keep this skill as a thin runtime adapter for one installed artifact.
-- Do not require or create .arcanum/necronomicon/ runtime registry files.
-- Necronomicon means the Ontology Harness alias.
-- Treat the embedded canonical snapshot as the local command contract.
+- Use runtime-local contracts under .arcanum/runtimes/github-copilot/ as the command contract.
+- Do not reference upstream Arcanum source paths from this runtime adapter.
 </guardrails>
-
-## Canonical Spell Snapshot
-
-Canonical source: https://github.com/cyberAlchemyAI/arcanum/blob/main/spells/repository-harness.md
-
-````markdown
-# Repository Harness
-
-## Identity
-
-- Canonical ID: `repository-harness`
-- Aliases: `Repository Codex`
-- Scope: library
-
-Repository Harness composes `inventory`, `architecture-pattern-inventory`, and `context-builder` so a repository gains a reusable knowledge substrate, architecture package, and focused task-context retrieval path.
-
-When a repository contains vault-like knowledge governance, Repository Harness can also run an optional ontology branch through `ontology-vault`. This keeps repository harnessing and deeper ontology-vault work available without making ontology governance mandatory for every run.
-
-When that vault-like material spans both domain intent and implementation evidence, the ontology branch can become branch-aware: business ontology for intent, system ontology for realization, and bridge outputs for traceability and drift.
-
-## Trigger Conditions
-
-- A repository lacks a stable knowledge harness for future agents.
-- Architecture mapping and task-context retrieval should share reusable evidence.
-- The user wants repository setup before implementation work.
-
-## Required Sigils
-
-| Sigil | Role In Spell | Required Mode |
-| ----- | ------------- | ------------- |
-| `inventory` | Install or validate the compiled knowledge layer. | `install`, `ingest`, `validate`, `lookup` |
-| `architecture-pattern-inventory` | Map architecture and produce architecture package artifacts. | create or update |
-| `context-builder` | Prove task-context retrieval can consume inventory and architecture evidence. | dry-run or standard |
-
-## Optional Sigils
-
-| Sigil | Use When | Notes |
-| ----- | -------- | ----- |
-| `ontology-vault` | The repository has vault, ontology, discovery, premise, constitution, session, confidence, or delegated-research materials. | Map and distill ontology knowledge after inventory ingest. |
-| `decision-gate` | Ontology promotion or convention changes require user decisions. | Use only for blocker trade-offs. |
-
-## Prerequisites
-
-- Repository root is known.
-- User agrees where local harness files should live.
-- Existing docs, architecture notes, or source entrypoints are available for first ingest or mapping.
-
-## Shared State
-
-| State | Owner | Updated By | Consumed By |
-| ----- | ----- | ---------- | ----------- |
-| `.arcanum/inventory/` | repository | `inventory` | `context-builder`, `architecture-pattern-inventory` |
-| architecture package | repository | `architecture-pattern-inventory` | `context-builder`, `inventory` |
-| ontology outputs | repository | `ontology-vault` | `inventory`, `context-builder` |
-| spell run report | spell | all phases | user, observability |
-
-## Execution Phases
-
-| Phase | Sigil | Input | Output | Gate | Failure Policy |
-| ----- | ----- | ----- | ------ | ---- | -------------- |
-| 1 | `inventory` | repository root | inventory package | package exists or install plan approved | block if no storage decision |
-| 2 | `inventory` | README, docs, architecture notes | source summaries and entries | raw sources remain unmodified | flag uncovered sources |
-| 3 | `architecture-pattern-inventory` | repository root and inventory lookup | architecture package | observed architecture separated from recommendations | block on missing repository evidence |
-| 4 | `inventory` | architecture package | architecture entries | index and log updated | flag if backfill incomplete |
-| 5 | `ontology-vault` | vault-like source folders and inventory lookup | ontology map, optional branch maps, session distillation, premise review, bridge map, or validation report | local labels mapped to generic concepts; branch-aware path justified when used | skip when no vault-like materials exist |
-| 6 | `inventory` | ontology outputs | ontology entries | index and log updated | flag if backfill incomplete |
-| 7 | `context-builder` | sample task or user-selected task | context pack or dry-run summary | selected context maps to obligations | flag if no suitable task exists |
-| 8 | spell report | phase outputs | run report | all blockers named | report partial if optional phases skipped |
-
-## Observability
-
-Record spell-level telemetry for install decisions, sources ingested, architecture artifacts produced, optional ontology outputs, context lookup quality, gates, and follow-ups when `.arcanum/observability/` exists.
-
-## Output Contract
-
-Return a spell run report with inventory path, architecture package path, optional ontology output path, context-builder result, gates, validation, and recommended next repository harness action.
-````

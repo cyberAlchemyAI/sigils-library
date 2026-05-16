@@ -48,6 +48,37 @@ titleize_id() {
   printf '%s' "$1" | tr '-' ' '
 }
 
+sigil_alias_slug() {
+  local sigil="$1"
+  case "$sigil" in
+    structured-interview-kits)
+      printf 'interrogation'
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+sigil_alias_display() {
+  local sigil="$1"
+  case "$sigil" in
+    structured-interview-kits)
+      printf 'Interrogation'
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+sigil_alias_command() {
+  local sigil="$1"
+  local alias_slug
+  alias_slug="$(sigil_alias_slug "$sigil")" || return 1
+  printf 'arcanum-sigil-%s' "$alias_slug"
+}
+
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --target)
@@ -322,16 +353,44 @@ collect_selected_sigils() {
   done
 }
 
+spell_contract_file_for() {
+  local spell="$1"
+  if [[ -f "$arcanum_root/spells/$spell/README.md" ]]; then
+    printf '%s\n' "$arcanum_root/spells/$spell/README.md"
+    return 0
+  fi
+  return 1
+}
+
+spell_source_path_for() {
+  local spell="$1"
+  if [[ -f "$arcanum_root/spells/$spell/README.md" ]]; then
+    printf 'spells/%s/README.md\n' "$spell"
+    return 0
+  fi
+  return 1
+}
+
+spell_source_url_for() {
+  local spell="$1"
+  local source_path
+  source_path="$(spell_source_path_for "$spell")" || return 1
+  printf '%s/blob/main/%s\n' "$arcanum_repo_url" "$source_path"
+}
+
 collect_selected_spells() {
   local selection="$1"
-  local spell spell_file
+  local spell spell_file spell_dir
   if [[ "$selection" == "none" ]]; then
     return 0
   fi
   if [[ "$selection" == "all" ]]; then
-    while IFS= read -r spell_file; do
-      installed_spell_ids+=("$(basename "$spell_file" .md)")
-    done < <(find "$arcanum_root/spells" -maxdepth 1 -type f -name '*.md' ! -name 'README.md' | sort)
+    while IFS= read -r spell_dir; do
+      spell="$(basename "$spell_dir")"
+      [[ "$spell" == "templates" ]] && continue
+      [[ -f "$spell_dir/README.md" ]] || continue
+      installed_spell_ids+=("$spell")
+    done < <(find "$arcanum_root/spells" -mindepth 1 -maxdepth 1 -type d | sort)
     return 0
   fi
 
@@ -339,8 +398,7 @@ collect_selected_spells() {
   for spell in "${spells[@]}"; do
     spell="${spell//[[:space:]]/}"
     [[ -n "$spell" ]] || continue
-    spell_file="$arcanum_root/spells/$spell.md"
-    if [[ ! -f "$spell_file" ]]; then
+    if ! spell_file="$(spell_contract_file_for "$spell")"; then
       echo "Unknown spell: $spell" >&2
       exit 1
     fi
@@ -377,7 +435,16 @@ append_sigil_snapshot() {
 append_spell_snapshot() {
   local spell="$1"
   local target_file="$2"
-  append_file_as_fenced_block "$arcanum_root/spells/$spell.md" "$target_file" "Canonical Spell Snapshot" "$arcanum_repo_url/blob/main/spells/$spell.md"
+  local source_file source_url
+  source_file="$(spell_contract_file_for "$spell")" || {
+    echo "Unknown spell: $spell" >&2
+    exit 1
+  }
+  source_url="$(spell_source_url_for "$spell")" || {
+    echo "Unknown spell source path: $spell" >&2
+    exit 1
+  }
+  append_file_as_fenced_block "$source_file" "$target_file" "Canonical Spell Snapshot" "$source_url"
 }
 
 write_necronomicon_harness_state() {
@@ -416,6 +483,10 @@ Do not place copied formulae, transmutations, arcana, spells, registries, or fra
 
   local created_at
   created_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  local necronomicon_session_source ontology_harness_source
+  necronomicon_session_source="$(spell_source_path_for "necronomicon-session")"
+  ontology_harness_source="$(spell_source_path_for "ontology-harness")"
+
   {
     printf '{\n'
     printf '  "version": "0.1.0",\n'
@@ -424,11 +495,17 @@ Do not place copied formulae, transmutations, arcana, spells, registries, or fra
     printf '  "runtime": "%s",\n' "$(json_escape "$runtime")"
     printf '  "fallback_policy": "ask-before-add",\n'
     printf '  "selected_sigils": [\n'
-    local index sigil tier spell
+    local index sigil tier spell alias_slug alias_display alias_command
     for index in "${!installed_sigil_ids[@]}"; do
       sigil="${installed_sigil_ids[$index]}"
       tier="${installed_sigil_tiers[$index]}"
-      printf '    {"id": "%s", "tier": "%s", "command": "arcanum-sigil-%s"}' "$(json_escape "$sigil")" "$(json_escape "$tier")" "$(json_escape "$sigil")"
+      printf '    {"id": "%s", "tier": "%s", "command": "arcanum-sigil-%s"' "$(json_escape "$sigil")" "$(json_escape "$tier")" "$(json_escape "$sigil")"
+      if alias_slug="$(sigil_alias_slug "$sigil")"; then
+        alias_display="$(sigil_alias_display "$sigil")"
+        alias_command="arcanum-sigil-$alias_slug"
+        printf ', "aliases": [{"name": "%s", "slug": "%s", "command": "%s"}]' "$(json_escape "$alias_display")" "$(json_escape "$alias_slug")" "$(json_escape "$alias_command")"
+      fi
+      printf '}'
       if [[ "$index" != "$((${#installed_sigil_ids[@]} - 1))" ]]; then
         printf ','
       fi
@@ -446,10 +523,10 @@ Do not place copied formulae, transmutations, arcana, spells, registries, or fra
     done
     printf '  ],\n'
     printf '  "harness_commands": [\n'
-    printf '    {"id": "necronomicon-session", "command": "arcanum-necronomicon-session", "source": "spells/necronomicon-session.md"}'
+    printf '    {"id": "necronomicon-session", "command": "arcanum-necronomicon-session", "source": "%s"}' "$(json_escape "$necronomicon_session_source")"
     if selected_spell_installed "ontology-harness"; then
       printf ',\n'
-      printf '    {"id": "ontology-harness", "command": "arcanum-necronomicon", "source": "spells/ontology-harness.md"}\n'
+      printf '    {"id": "ontology-harness", "command": "arcanum-necronomicon", "source": "%s"}\n' "$(json_escape "$ontology_harness_source")"
     else
       printf '\n'
     fi
@@ -478,11 +555,14 @@ write_github_copilot_necronomicon_session_adapter() {
     return 0
   fi
 
+  local necronomicon_session_source_url
+  necronomicon_session_source_url="$(spell_source_url_for "necronomicon-session")"
+
   cat > "$adapter" <<EOF_ADAPTER
 ---
 name: $runtime_command
-description: Create, resume, route, update, or close a repository-local Necronomicon session harness.
-argument-hint: "<start|resume|route|update-capabilities|fallback-discover|close> <request>"
+description: Create, set up, resume, research, route, maintain, update, or close a repository-local Necronomicon session harness.
+argument-hint: "<setup|start|resume|route|checkpoint|research|implementation-research|update-capabilities|fallback-discover|maintain|close> <request>"
 allowed-tools: Read, Glob, Grep, AskQuestions, Task
 ---
 
@@ -493,19 +573,23 @@ Run the installed Necronomicon session harness using the canonical necronomicon-
 </objective>
 
 <context>
-Arcanum runtime support is installed at $install_prefix/ in this repository. Necronomicon session state lives under $install_prefix/necronomicon/. Runtime commands live under $install_prefix/runtimes/. The canonical source reference for this command is $arcanum_repo_url/blob/main/spells/necronomicon-session.md.
+Arcanum runtime support is installed at $install_prefix/ in this repository. Necronomicon session state lives under $install_prefix/necronomicon/. Runtime commands live under $install_prefix/runtimes/. The canonical source reference for this command is $necronomicon_session_source_url.
 </context>
 
 <process>
 1. Read $install_prefix/necronomicon/capabilities.json when it exists.
-2. Resolve the mode as start, resume, route, update-capabilities, fallback-discover, or close.
-3. Load active session memory from $install_prefix/necronomicon/sessions/ when resuming or routing.
+2. Resolve the mode as setup, start, resume, route, checkpoint, research, implementation-research, update-capabilities, fallback-discover, maintain, or close.
+3. Load active session memory from $install_prefix/necronomicon/sessions/ when resuming, routing, checkpointing, researching, or maintaining.
 4. Prefer selected local capabilities from the manifest before considering fallback candidates.
 5. Route ontology, vault, premise, branch, bridge, confidence, or session-distillation work to arcanum-necronomicon or arcanum-spell-ontology-harness when installed.
-6. If no selected capability matches, inspect installed runtime commands and canonical Arcanum registry references, then offer 2-5 fallback candidates before adding anything.
-7. Record route attempts, decisions, memory changes, and capability update recommendations under $install_prefix/necronomicon/ when mutation is allowed.
-8. Apply the observability handoff under $install_prefix/observability/ when available.
-9. Return the session ID, selected route, confidence, fallback status, files updated, validation result, and next action.
+6. Route lifecycle authoring requests (define, design, plan, full, validate) and implementation-research handoffs to arcanum-spell-invoke when installed.
+7. In research mode, use bounded source order (session/inventory/ontology/docs/code/web) and include web sources when runtime/tool support exists.
+8. In maintain mode, aggregate route telemetry plus all selected sigil/spell signals and run arcanum-spell-sigil-maintenance-loop when installed.
+9. If no selected capability matches, inspect installed runtime commands and canonical Arcanum registry references, then offer 2-5 fallback candidates before adding anything.
+10. Record route attempts, decisions, memory changes, gap updates, and capability update recommendations under $install_prefix/necronomicon/ when mutation is allowed.
+11. If web access is unavailable, continue repository research and report a web-unavailable note.
+12. Apply the observability handoff under $install_prefix/observability/ when available.
+13. Return the session ID, selected route, confidence, fallback status, files updated, validation result, and next action.
 </process>
 
 <guardrails>
@@ -522,7 +606,7 @@ EOF_ADAPTER
 ---
 name: $runtime_command
 description: Run the installed Necronomicon session harness through its local runtime adapter.
-argument-hint: "<start|resume|route|update-capabilities|fallback-discover|close> <request>"
+argument-hint: "<setup|start|resume|route|checkpoint|research|implementation-research|update-capabilities|fallback-discover|maintain|close> <request>"
 allowed-tools: Read, Glob, Grep, AskQuestions, Task
 ---
 
@@ -583,7 +667,7 @@ Arcanum runtime support is installed at $install_prefix/ in this repository. Run
 1. Classify the request as Necronomicon session, Necronomicon/Ontology Harness, sigil usage, spell usage, install/setup, authoring, validation, observability, or help.
 2. Route Necronomicon start, create, resume, close, memory, route, fallback, or capability-update requests to arcanum-necronomicon-session when installed.
 3. Route Necronomicon ontology, vault, premise, session distillation, business/system branch, or bridge-validation requests to the Ontology Harness command.
-4. Route explicit sigil or spell requests to the matching installed arcanum-sigil-<id> or arcanum-spell-<id> command.
+4. Route explicit sigil or spell requests to the matching installed command and resolve configured sigil aliases to canonical commands.
 5. If multiple routes are plausible, ask one focused clarification.
 6. Read the selected installed command adapter and follow its embedded canonical definition snapshot.
 7. Apply the observability handoff by summarizing request, route, files changed, validation, gaps, and follow-up; append telemetry under $install_prefix/observability/ when allowed.
@@ -608,10 +692,15 @@ EOF_ADAPTER
     if necronomicon_session_should_install; then
       printf -- '- `arcanum-necronomicon-session`: persistent repository harness session command.\n'
     fi
-    local index sigil spell
+    local index sigil spell alias_slug alias_display alias_command
     for index in "${!installed_sigil_ids[@]}"; do
       sigil="${installed_sigil_ids[$index]}"
       printf -- '- `arcanum-sigil-%s`\n' "$sigil"
+      if alias_slug="$(sigil_alias_slug "$sigil")"; then
+        alias_display="$(sigil_alias_display "$sigil")"
+        alias_command="arcanum-sigil-$alias_slug"
+        printf -- '- `%s`: alias (%s) for `arcanum-sigil-%s`.\n' "$alias_command" "$alias_display" "$sigil"
+      fi
     done
     for spell in "${installed_spell_ids[@]}"; do
       printf -- '- `arcanum-spell-%s`\n' "$spell"
@@ -655,9 +744,13 @@ write_github_copilot_artifact_adapter() {
   local artifact_id="$2"
   local artifact_tier="$3"
   local definition_path="$4"
+  local runtime_command_override="${5:-}"
   local runtime_command="arcanum-$artifact_kind-$artifact_id"
   if [[ "$artifact_kind" == "necronomicon" ]]; then
     runtime_command="arcanum-necronomicon"
+  fi
+  if [[ -n "$runtime_command_override" ]]; then
+    runtime_command="$runtime_command_override"
   fi
   local adapter="$dest_root/runtimes/github-copilot/skills/$runtime_command/SKILL.md"
   local bridge="$target_root/.github/skills/$runtime_command/SKILL.md"
@@ -784,10 +877,15 @@ EOF_ADAPTER
       if necronomicon_session_should_install; then
         printf -- '- `arcanum-necronomicon-session`: persistent repository harness session command.\n'
       fi
-      local index sigil spell
+      local index sigil spell alias_slug alias_display alias_command
       for index in "${!installed_sigil_ids[@]}"; do
         sigil="${installed_sigil_ids[$index]}"
         printf -- '- `arcanum-sigil-%s`\n' "$sigil"
+        if alias_slug="$(sigil_alias_slug "$sigil")"; then
+          alias_display="$(sigil_alias_display "$sigil")"
+          alias_command="arcanum-sigil-$alias_slug"
+          printf -- '- `%s`: alias (%s) for `arcanum-sigil-%s`.\n' "$alias_command" "$alias_display" "$sigil"
+        fi
       done
       for spell in "${installed_spell_ids[@]}"; do
         printf -- '- `arcanum-spell-%s`\n' "$spell"
@@ -811,10 +909,14 @@ write_command_artifact_adapter() {
   local artifact_id="$3"
   local artifact_tier="$4"
   local definition_path="$5"
+  local runtime_command_override="${6:-}"
   local runtime_name="${runtime_dir#.}"
   local runtime_command="arcanum-$artifact_kind-$artifact_id"
   if [[ "$artifact_kind" == "necronomicon" ]]; then
     runtime_command="arcanum-necronomicon"
+  fi
+  if [[ -n "$runtime_command_override" ]]; then
+    runtime_command="$runtime_command_override"
   fi
   local adapter="$dest_root/runtimes/$runtime_name/commands/$runtime_command.md"
   local bridge="$target_root/$runtime_dir/commands/$runtime_command.md"
@@ -890,19 +992,23 @@ write_command_necronomicon_session_adapter() {
 
 Arcanum is installed at $install_prefix/ in this repository.
 
-Use this installed command to create, resume, route, update, or close a repository-local Necronomicon session harness.
+Use this installed command to create, set up, resume, research, route, maintain, update, or close a repository-local Necronomicon session harness.
 
 Runtime process:
 
 1. Read $install_prefix/necronomicon/capabilities.json when it exists.
-2. Resolve the mode as start, resume, route, update-capabilities, fallback-discover, or close.
-3. Load active session memory from $install_prefix/necronomicon/sessions/ when resuming or routing.
+2. Resolve the mode as setup, start, resume, route, checkpoint, research, implementation-research, update-capabilities, fallback-discover, maintain, or close.
+3. Load active session memory from $install_prefix/necronomicon/sessions/ when resuming, routing, checkpointing, researching, or maintaining.
 4. Prefer selected local capabilities from the manifest before considering fallback candidates.
 5. Route ontology, vault, premise, branch, bridge, confidence, or session-distillation work to arcanum-necronomicon or arcanum-spell-ontology-harness when installed.
-6. If no selected capability matches, inspect installed runtime commands and canonical Arcanum registry references, then offer 2-5 fallback candidates before adding anything.
-7. Record route attempts, decisions, memory changes, and capability update recommendations under $install_prefix/necronomicon/ when mutation is allowed.
-8. Apply observability under $install_prefix/observability/ when available.
-9. Report the session ID, selected route, confidence, fallback status, files updated, validation result, and next action.
+6. Route lifecycle authoring requests (define, design, plan, full, validate) and implementation-research handoffs to arcanum-spell-invoke when installed.
+7. In research mode, use bounded source order (session/inventory/ontology/docs/code/web) and include web sources when runtime/tool support exists.
+8. In maintain mode, aggregate route telemetry plus all selected sigil/spell signals and run arcanum-spell-sigil-maintenance-loop when installed.
+9. If no selected capability matches, inspect installed runtime commands and canonical Arcanum registry references, then offer 2-5 fallback candidates before adding anything.
+10. Record route attempts, decisions, memory changes, gap updates, and capability update recommendations under $install_prefix/necronomicon/ when mutation is allowed.
+11. If web access is unavailable, continue repository research and report a web-unavailable note.
+12. Apply observability under $install_prefix/observability/ when available.
+13. Report the session ID, selected route, confidence, fallback status, files updated, validation result, and next action.
 
 Keep $install_prefix/necronomicon/ as harness state only. Do not copy formulae, transmutations, arcana, spells, registries, or framework folders into it.
 EOF_ADAPTER
@@ -921,16 +1027,19 @@ EOF_BRIDGE
 }
 
 write_github_copilot_individual_adapters() {
-  local index sigil tier definition_path spell
+  local index sigil tier definition_path spell alias_command
   for index in "${!installed_sigil_ids[@]}"; do
     sigil="${installed_sigil_ids[$index]}"
     tier="${installed_sigil_tiers[$index]}"
     definition_path="$arcanum_repo_url/blob/main/$tier/$sigil/SKILL.md"
     write_github_copilot_artifact_adapter "sigil" "$sigil" "$tier" "$definition_path"
+    if alias_command="$(sigil_alias_command "$sigil")"; then
+      write_github_copilot_artifact_adapter "sigil" "$sigil" "$tier" "$definition_path" "$alias_command"
+    fi
   done
 
   for spell in "${installed_spell_ids[@]}"; do
-    definition_path="$arcanum_repo_url/blob/main/spells/$spell.md"
+    definition_path="$(spell_source_url_for "$spell")"
     write_github_copilot_artifact_adapter "spell" "$spell" "spell" "$definition_path"
     if [[ "$spell" == "ontology-harness" ]]; then
       write_github_copilot_artifact_adapter "necronomicon" "ontology-harness" "spell" "$definition_path"
@@ -941,16 +1050,19 @@ write_github_copilot_individual_adapters() {
 
 write_command_individual_adapters() {
   local runtime_dir="$1"
-  local index sigil tier definition_path spell
+  local index sigil tier definition_path spell alias_command
   for index in "${!installed_sigil_ids[@]}"; do
     sigil="${installed_sigil_ids[$index]}"
     tier="${installed_sigil_tiers[$index]}"
     definition_path="$arcanum_repo_url/blob/main/$tier/$sigil/SKILL.md"
     write_command_artifact_adapter "$runtime_dir" "sigil" "$sigil" "$tier" "$definition_path"
+    if alias_command="$(sigil_alias_command "$sigil")"; then
+      write_command_artifact_adapter "$runtime_dir" "sigil" "$sigil" "$tier" "$definition_path" "$alias_command"
+    fi
   done
 
   for spell in "${installed_spell_ids[@]}"; do
-    definition_path="$arcanum_repo_url/blob/main/spells/$spell.md"
+    definition_path="$(spell_source_url_for "$spell")"
     write_command_artifact_adapter "$runtime_dir" "spell" "$spell" "spell" "$definition_path"
     if [[ "$spell" == "ontology-harness" ]]; then
       write_command_artifact_adapter "$runtime_dir" "necronomicon" "ontology-harness" "spell" "$definition_path"
@@ -1011,4 +1123,10 @@ if [[ "$runtime" != "none" ]]; then
   if necronomicon_session_should_install; then
     echo "Necronomicon session command: arcanum-necronomicon-session"
   fi
+  for sigil in "${installed_sigil_ids[@]}"; do
+    if alias_command="$(sigil_alias_command "$sigil")"; then
+      alias_display="$(sigil_alias_display "$sigil")"
+      echo "Sigil command alias ($alias_display): $alias_command -> arcanum-sigil-$sigil"
+    fi
+  done
 fi

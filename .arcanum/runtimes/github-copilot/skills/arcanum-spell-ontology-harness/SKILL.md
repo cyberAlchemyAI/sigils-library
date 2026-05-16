@@ -1,6 +1,6 @@
 ---
 name: arcanum-spell-ontology-harness
-description: Run the installed Arcanum spell ontology-harness from its embedded canonical definition snapshot.
+description: Run the installed Arcanum spell ontology-harness from runtime-local contract files.
 argument-hint: "<request-for-ontology-harness>"
 allowed-tools: Read, Glob, Grep, AskQuestions, Task
 ---
@@ -8,16 +8,16 @@ allowed-tools: Read, Glob, Grep, AskQuestions, Task
 # Arcanum spell: ontology harness
 
 <objective>
-Run the installed Arcanum spell ontology-harness using the canonical definition snapshot embedded in this slash command.
+Run the installed Arcanum spell ontology-harness using runtime-local contract files.
 </objective>
 
 <context>
-Arcanum runtime support is installed at .arcanum/ in this repository. Necronomicon is the Ontology Harness alias, not a generated runtime registry folder. The canonical source reference for this command is https://github.com/cyberAlchemyAI/arcanum/blob/main/spells/ontology-harness.md.
+Arcanum runtime support is installed at .arcanum/ in this repository. Runtime-local contracts for this runtime live under .arcanum/runtimes/github-copilot/sigils/ and .arcanum/runtimes/github-copilot/spells/.
 </context>
 
 <process>
-1. Use the embedded canonical definition snapshot below as the execution contract.
-2. For sigils, use both the README and SKILL snapshots when present. For spells, follow the spell snapshot directly.
+1. Read the runtime-local contract file at .arcanum/runtimes/github-copilot/spells/ontology-harness/README.md.
+2. For sigils, also read  when it exists.
 3. Execute only this installed spell unless the definition explicitly delegates or the user asks to route elsewhere.
 4. Preserve the selected artifact's process, quality bar, anti-patterns, output contract, and validation gates.
 5. Apply the observability handoff by summarizing request, artifact, outputs, files changed, validation, gaps, and follow-up; append telemetry under .arcanum/observability/ when allowed.
@@ -26,146 +26,6 @@ Arcanum runtime support is installed at .arcanum/ in this repository. Necronomic
 
 <guardrails>
 - Keep this skill as a thin runtime adapter for one installed artifact.
-- Do not require or create .arcanum/necronomicon/ runtime registry files.
-- Necronomicon means the Ontology Harness alias.
-- Treat the embedded canonical snapshot as the local command contract.
+- Use runtime-local contracts under .arcanum/runtimes/github-copilot/ as the command contract.
+- Do not reference upstream Arcanum source paths from this runtime adapter.
 </guardrails>
-
-## Canonical Spell Snapshot
-
-Canonical source: https://github.com/cyberAlchemyAI/arcanum/blob/main/spells/ontology-harness.md
-
-````markdown
-# Ontology Harness
-
-## Identity
-
-- Canonical ID: `ontology-harness`
-- Primary alias: `Necronomicon`
-- Aliases: `Necronomicon Vault`, `Ontology Codex`
-- Scope: library
-
-## Purpose
-
-Ontology Harness, invoked by the human-facing alias Necronomicon, composes `inventory`, `ontology-vault`, and `context-builder` so a repository can turn vault-like knowledge material into a reusable ontology governance layer.
-
-It is designed for repositories with sessions, discoveries, premises, conventions, confidence rules, or delegated research artifacts that need traceable distillation and promotion gates.
-
-When a repository has both business/domain material and system/runtime material, Necronomicon can run a branch-aware path that maps business ontology, maps system ontology, and validates the bridge between intent and implementation.
-
-## Trigger Conditions
-
-- A repository has a `vault/`, `ontology/`, `discovery/`, `premise/`, `axiom/`, `constitution/`, `sessions/`, or equivalent knowledge-governance area.
-- Session records need distillation into durable claims, decisions, contradictions, and open questions.
-- Premises or working bets need confidence review.
-- Ontology roles, statuses, edge rules, tags, or schema conventions need mapping or update planning.
-- Delegated research and synthesis findings need traceability checks.
-- Business intent needs explicit links to implementation, tests, telemetry, constraints, or drift findings.
-
-## Required Sigils
-
-| Sigil | Role In Spell | Required Mode |
-| ----- | ------------- | ------------- |
-| `inventory` | Install or reuse the compiled knowledge layer and ingest vault sources. | `install`, `ingest`, `lookup`, `validate` |
-| `ontology-vault` | Map, distill, review, promote, propose convention changes, and validate ontology governance. | `map`, `distill-sessions`, `premise-review`, `promote-confidence`, `convention-update`, `validate` |
-| `context-builder` | Prove future tasks can retrieve ontology evidence compactly. | dry-run or standard |
-
-## Optional Sigils
-
-| Sigil | Use When | Notes |
-| ----- | -------- | ----- |
-| `decision-gate` | Promotion or convention changes require human trade-off decisions. | Use before mutating rules. |
-| `feature-glossary` | Local ontology terms need concise plain-language explanation. | Keep glossary explanatory, not authoritative. |
-| `architecture-pattern-inventory` | System ontology or bridge validation depends on architecture or repository structure. | Recommended for branch-aware mapping with implementation evidence. |
-
-## Prerequisites
-
-- Repository root is known.
-- User agrees where local ontology outputs should live.
-- Existing vault-like source folders or session records are available, or the user wants an initial ontology map.
-
-## Shared State
-
-| State | Owner | Updated By | Consumed By |
-| ----- | ----- | ---------- | ----------- |
-| `.arcanum/inventory/` | repository | `inventory` | `ontology-vault`, `context-builder` |
-| ontology map | spell | `ontology-vault` | `inventory`, `context-builder`, user |
-| session distillation report | spell | `ontology-vault` | `inventory`, `decision-gate`, user |
-| premise review ledger | spell | `ontology-vault` | `decision-gate`, user |
-| confidence promotion report | spell | `ontology-vault` | user, observability |
-| convention change plan | spell | `ontology-vault` | `decision-gate`, user |
-| business ontology map | spell | `ontology-vault` | `inventory`, `context-builder`, user |
-| system ontology map | spell | `ontology-vault`, `architecture-pattern-inventory` | `inventory`, `context-builder`, user |
-| business-system bridge map | spell | `ontology-vault` | `inventory`, `context-builder`, user |
-| spell run report | spell | all phases | user, observability |
-
-## Execution Phases
-
-| Phase | Sigil | Input | Output | Gate | Failure Policy |
-| ----- | ----- | ----- | ------ | ---- | -------------- |
-| 1 | `inventory` | repository root and source folders | inventory package | package exists or install plan approved | block if no storage decision |
-| 2 | `inventory` | vault, ontology, discovery, premise, convention, and session sources | source summaries and entries | raw sources remain unmodified | flag uncovered sources |
-| 3 | `ontology-vault` | inventory lookup and source folders | ontology map | local labels mapped to generic concepts | flag unmapped labels |
-| 4 | `ontology-vault` | business and system sources | branch classification and optional branch maps | branch-aware path is justified or skipped | skip when single ontology map is enough |
-| 5 | `architecture-pattern-inventory` | repository root and system sources | architecture evidence for system ontology | observed structure separated from recommendations | skip when no system branch exists |
-| 6 | `ontology-vault` | business map, system map, architecture evidence | business-system bridge map and traceability matrix | bridge claims cite both branches | flag unbridged claims, block false alignment |
-| 7 | `ontology-vault` | sessions and delegated evidence | session distillation and synthesis traceability report | sessions remain evidence records, not authority | block if findings lack source evidence |
-| 8 | `ontology-vault` | premises, confidence rules, and evidence | premise review and confidence promotion report | promotions cite sufficient evidence | block unsafe promotion |
-| 9 | `decision-gate` | blocker promotions, bridge claims, or convention changes | decision record | user resolves consequential trade-offs | skip if no blockers |
-| 10 | `ontology-vault` | approved decisions | convention change plan, drift report, or validation report | migration impact named | report partial if changes deferred |
-| 11 | `inventory` | ontology outputs and bridge outputs | updated inventory entries | index and log updated | flag if backfill incomplete |
-| 12 | `context-builder` | sample ontology or cross-branch task | context pack or dry-run summary | selected context maps to obligations | flag if no suitable task exists |
-| 13 | spell report | phase outputs | run report | all blockers named | report partial if optional phases skipped |
-
-## Local Customization
-
-- Spell root: `.arcanum/spells/`
-- Default output root: `.arcanum/ontology/`
-- Local paths: repository-specific vault, ontology, docs, notes, wiki, or session folders.
-- Branch paths: optional repository-specific business, system, and bridge folders or tags.
-- Gate strictness: standard by default, strict for promotion or convention mutation.
-- Interaction mode: interactive for promotions, guided-auto for mapping and distillation, dry-run when requested.
-
-## Observability
-
-Record spell-level telemetry when `.arcanum/observability/` exists:
-
-- spell name,
-- alias used,
-- source folders scanned,
-- sessions distilled,
-- delegated research records found,
-- synthesis findings validated,
-- premises reviewed,
-- promotions recommended,
-- convention changes proposed,
-- gates passed or blocked,
-- handoff artifacts created,
-- branch-aware path used,
-- business documents mapped,
-- system documents mapped,
-- bridge edges validated,
-- drift findings found,
-- traceability gaps found,
-- validation result,
-- follow-up actions.
-
-## Output Contract
-
-Return:
-
-```markdown
-## Spell Result
-
-- Spell: Ontology Harness
-- Canonical ID: ontology-harness
-- Alias used: <alias or none>
-- Repository: <path>
-- Phases completed: <count>
-- Sigils invoked: inventory, ontology-vault, context-builder, <optional>
-- Gates: pass | block | flag
-- Outputs: <paths, including branch maps or bridge artifacts when used>
-- Validation: <checks>
-- Follow-up: <items or none>
-```
-````

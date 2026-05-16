@@ -106,9 +106,17 @@ Arcana are autonomous orchestration sigils: recursive, multi-turn, or governance
 - Composer sigil: [spellcraft](arcana/spellcraft/)
 - Registry: [registry/SPELLS.md](registry/SPELLS.md)
 
+## Development Workbench
+
+Development is artifact-local.
+
+Use each artifact's own `development/` folder as the single editable source for in-progress planning artifacts.
+
+Use `invoke` to prepare governed definition, design, and work-pack artifacts. Use [spellcraft](arcana/spellcraft/) to author, validate, observe, and revise spell compositions. Use [sigil-development](arcana/sigil-development/) to create or update sigils. `invoke` may hand off to these lifecycle authorities, but it should not absorb their modes or copy their internal contracts.
+
 ## Installing Arcanum Into Another Repository
 
-Use the [Arcanum Bootstrap](spells/arcanum-bootstrap.md) spell or the bootstrap script to install Arcanum into a consuming repository:
+Use the [Arcanum Bootstrap](spells/arcanum-bootstrap/README.md) spell or the bootstrap script to install Arcanum into a consuming repository:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/cyberAlchemyAI/arcanum/main/tools/install_arcanum.sh | bash -s -- --target . --sigils all --spells all --runtime github-copilot
@@ -144,13 +152,22 @@ Spell files live under [spells](spells/) for reusable Arcanum compositions or `.
 
 ## Contribution And Governance
 
+To add or revise a reusable spell:
+
+1. Create or update the spell development pack under `spells/<canonical-id>/development/`.
+2. Use `invoke` when the work needs a governed spec, glossary, architecture bundle, or work-pack.
+3. Use [spellcraft](arcana/spellcraft/) for spell design, validation, observability, and reflection.
+4. Promote the canonical spell file to [spells](spells/) only after validation passes.
+5. Register promoted spells in [registry/SPELLS.md](registry/SPELLS.md).
+
 To add a new sigil:
 
 1. Follow the [Sigil Development Workflow](framework/SIGIL-DEVELOPMENT-WORKFLOW.md).
 2. Draft from the [Sigil Template](framework/templates/sigil-template.md).
 3. Assign the sigil to `formulae/`, `transmutations/`, or `arcana/` based on epistemic nature.
-4. Include a [Quality Bar](framework/QUALITY-BAR.md) and [Anti-Patterns](framework/ANTI-PATTERNS.md).
-5. Register promoted sigils in [registry/SIGILS.md](registry/SIGILS.md).
+4. Keep in-progress development artifacts under `<tier>/<canonical-id>/development/`.
+5. Include a [Quality Bar](framework/QUALITY-BAR.md) and [Anti-Patterns](framework/ANTI-PATTERNS.md).
+6. Register promoted sigils in [registry/SIGILS.md](registry/SIGILS.md).
 
 ## License
 
