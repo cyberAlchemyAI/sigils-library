@@ -225,7 +225,7 @@ The experiment harness closes the lifecycle loop by integrating with `signal-obs
 - reports become safe invocation envelopes,
 - envelopes are appended to `.arcanum/observability/signals/sigil-invocations.jsonl`,
 - observer hook activity is recorded under `.arcanum/observability/hooks/`,
-- per-sigil telemetry is mirrored to `.arcanum/observability/by-sigil/experiment-harness.jsonl`,
+- per-sigil and per-capability lookup indexes are rebuilt from the central ledger,
 - reflection counters are updated in `.arcanum/observability/reflection-state.json`,
 - configured reflection thresholds are evaluated during observation and emitted as `usage-threshold`, `output-threshold`, `gap-threshold`, or `severe-gap` with recommendation `reflect-now`,
 - dedupe prevents repeated observer emissions for the same report and observer version,

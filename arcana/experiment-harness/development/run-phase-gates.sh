@@ -34,16 +34,48 @@ record_lesson() {
 run_phase0() {
 	local tmpdir
 	tmpdir="$(mktemp -d)"
+	mkdir -p "$tmpdir/observability"
+	cat > "$tmpdir/observability/config.json" <<'JSON'
+{
+  "version": "0.2.0",
+  "storage_model": "central-ledger-reference-indexes",
+  "source_of_truth": "signals/sigil-invocations.jsonl",
+  "per_sigil_index_path": "by-sigil/<sigil-name>.jsonl",
+  "per_capability_index_path": "by-capability/<kind>/<capability-id>.jsonl",
+  "reflection_path": "reflections/",
+  "thresholds": {
+    "meaningful_executions": 1,
+    "generated_outputs": 10,
+    "related_workflow_gaps": 3,
+    "severe_workflow_gaps": 1
+  }
+}
+JSON
+	cat > "$tmpdir/observability/reflection-state.json" <<'JSON'
+{
+  "version": "0.1.0",
+  "last_reflection_at": null,
+  "counters": {
+    "meaningful_executions": 0,
+    "generated_outputs": 0,
+    "related_workflow_gaps": 0,
+    "severe_workflow_gaps": 0,
+    "quality_bar_failures": 0,
+    "output_contract_drift_events": 0
+  },
+  "by_sigil": {}
+}
+JSON
 	if bash -n "$SCRIPT_DIR"/*.sh \
 		&& bash -n "$INVOKE_DIR"/development/*.sh \
 		&& "$INVOKE_DIR/development/run-validation-fixtures.sh" >/tmp/experiment-harness-phase0-invoke.log 2>&1 \
 		&& "$SCRIPT_DIR/validate-harness.sh" "$INVOKE_DIR" >/tmp/experiment-harness-phase0-validate.log 2>&1 \
-		&& mkdir -p "$tmpdir/observability" \
-		&& EXPERIMENT_OBSERVABILITY_DIR="$tmpdir/observability" "$SCRIPT_DIR/observe-harness.sh" "$INVOKE_DIR" >/tmp/experiment-harness-phase0-observe.log 2>&1; then
-		record_result "Phase 0" "pass" "baseline controls, syntax checks, generic validation, and temp observation ran"
+		&& EXPERIMENT_OBSERVABILITY_DIR="$tmpdir/observability" "$SCRIPT_DIR/observe-harness.sh" "$INVOKE_DIR" >/tmp/experiment-harness-phase0-observe.log 2>&1 \
+		&& jq -e 'select(.observer.reflection_trigger == "usage-threshold" and .observer.recommendation == "reflect-now")' "$tmpdir/observability/signals/sigil-invocations.jsonl" >/tmp/experiment-harness-phase0-reflection.log 2>&1; then
+		record_result "Phase 0" "pass" "baseline controls, syntax checks, generic validation, observation, and threshold reflection signal ran"
 		record_lesson "Phase 0" "The deterministic baseline can stay green while loop-first features are added behind separate gates."
 	else
-		record_result "Phase 0" "block" "baseline controls or observation failed"
+		record_result "Phase 0" "block" "baseline controls, observation, or threshold reflection signal failed"
 		record_lesson "Phase 0" "Baseline failures should block later phase work because they obscure loop regressions."
 	fi
 	rm -rf "$tmpdir"
@@ -134,7 +166,7 @@ run_phase4() {
 	MAX_ATTEMPTS=2 PASS_STREAK=2 AUTO_IMPROVE=1 EXPERIMENT_LOOP_MOCK_DIR="$mockdir" \
 		"$SCRIPT_DIR/loop-harness.sh" "$INVOKE_DIR" LIVE-DEFINE-001 >/tmp/experiment-harness-phase4.log 2>&1 || true
 	loop_dir="$(sed -n 's/^LOOP_DIR=//p' /tmp/experiment-harness-phase4.log | tail -n 1)"
-	if [[ -n "$loop_dir" && -f "$WORKSPACE_ROOT/$loop_dir/attempt-001/robot-talks.md" && -f "$WORKSPACE_ROOT/$loop_dir/attempt-001/improvement-argument.md" ]]; then
+	if [[ -n "$loop_dir" && -f "$ARCANUM_DIR/$loop_dir/attempt-001/robot-talks.md" && -f "$ARCANUM_DIR/$loop_dir/attempt-001/improvement-argument.md" ]]; then
 		record_result "Phase 4" "pass" "failed attempt creates robot-talks and improvement argument artifacts"
 		record_lesson "Phase 4" "Reflection artifacts can be generated deterministically before richer subagent-based robot-talks exists."
 	else

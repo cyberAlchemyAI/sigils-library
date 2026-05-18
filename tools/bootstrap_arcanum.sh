@@ -311,17 +311,17 @@ install_observability_package() {
 This repository-local package stores Arcanum command, sigil, and spell telemetry plus reflection state.
 
 - signals/sigil-invocations.jsonl is the central append-only invocation ledger.
-- by-sigil/ and by-capability/ hold optional per-artifact ledgers.
+- by-sigil/ and by-capability/ hold rebuildable ledger-reference indexes.
 - hooks/ stores hook operation evidence.
 - runs/ stores pending and completed observer envelopes.
 - reflections/ can hold reflection reports."
 
   write_file_if_missing "$observability_root/config.json" '{
-  "version": "0.1.0",
-  "storage_model": "hybrid",
+  "version": "0.2.0",
+  "storage_model": "central-ledger-reference-indexes",
   "source_of_truth": "signals/sigil-invocations.jsonl",
-  "per_sigil_path": "by-sigil/<sigil-name>.jsonl",
-  "per_capability_path": "by-capability/<kind>/<capability-id>.jsonl",
+  "per_sigil_index_path": "by-sigil/<sigil-name>.jsonl",
+  "per_capability_index_path": "by-capability/<kind>/<capability-id>.jsonl",
   "reflection_path": "reflections/",
   "thresholds": {
     "meaningful_executions": 5,
@@ -530,6 +530,7 @@ EOF
   for spell in "${installed_spell_ids[@]}"; do
     body+="- \`arcanum-spell-$spell\`"$'\n'
   done
+  body="${body%$'\n'}"
   write_command_file "$command" "Arcanum Orchestrate" "$command" "skill" "runtime" "$body"
 }
 

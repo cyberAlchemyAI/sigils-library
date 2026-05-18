@@ -142,7 +142,7 @@ Required phases:
 | start | Resolve capability id, kind, tier, mode, request summary, and run id. | observed run metadata or equivalent local variables |
 | execute | Run or dry-run the target capability while preserving the primary result. | primary status, outputs, changed files, validation |
 | envelope | Assemble a privacy-safe invocation envelope. | `capability.id`, `capability.kind`, legacy `sigil`, execution status, observer fields |
-| observe | Call `framework/observability/scripts/observe-invocation.sh`. | `OBSERVATION`, `LEDGER`, `REFLECTION_TRIGGER`, `RECOMMENDATION`, `DEDUPE_KEY` |
+| observe | Call `framework/observability/scripts/observe-invocation.sh`. | `OBSERVATION`, `LEDGER`, `LEDGER_LINE`, `REFLECTION_TRIGGER`, `RECOMMENDATION`, `DEDUPE_KEY` |
 | reflect | If enabled and recommended, call `framework/observability/scripts/reflect-invocation-signals.sh`. | report path or skipped reason |
 | closeout | Return primary result plus telemetry status. | observed invocation result |
 
@@ -159,6 +159,7 @@ Adapter controls:
 - `OBSERVED_INVOCATION_STRICT=1`: telemetry append failure blocks closeout.
 - `OBSERVED_REFLECT=off|auto|always`: controls reflection report execution.
 - Manual observer calls are allowed for diagnostics only and do not satisfy hook-enforcement evidence.
+- `signals/sigil-invocations.jsonl` is the telemetry source of truth. `by-sigil/` and `by-capability/` contain compact indexes that can be rebuilt from the central ledger.
 
 ## Automatic Attachment
 

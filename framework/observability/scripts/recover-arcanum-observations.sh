@@ -52,7 +52,7 @@ while IFS= read -r envelope; do
     continue
   fi
 
-  recovered_envelope="$run_dir/recovered-envelope.json"
+  recovered_envelope="$run_dir/envelope.json"
   jq '.timestamp = (now | todateiso8601)
     | .execution.status = (.execution.status // "partial")
     | .execution.validation += ["arcanum observation recovery scanner"]
@@ -62,6 +62,7 @@ while IFS= read -r envelope; do
   observe_output="$("$observer" --envelope "$recovered_envelope" --observability-dir "$observability_dir" 2>&1 || true)"
   printf '%s\n' "$observe_output" > "$run_dir/recovery-output.txt"
   if printf '%s\n' "$observe_output" | grep -q '^OBSERVATION=recorded'; then
+    rm -f "$run_dir/pending-envelope.json" "$run_dir/recovered-envelope.json"
     recovered=$((recovered + 1))
   else
     skipped=$((skipped + 1))

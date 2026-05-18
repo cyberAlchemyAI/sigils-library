@@ -29,6 +29,8 @@ When Arcanum is installed through bootstrap, `.arcanum/necronomicon/OBSERVABILIT
     sigil-invocations.jsonl
   by-sigil/
     .gitkeep
+  by-capability/
+    .gitkeep
   hooks/
     hook-operations.jsonl
     failures.jsonl
@@ -66,12 +68,13 @@ Cons:
 
 Use when the repository has low to moderate sigil usage or wants the simplest portable setup.
 
-### Option 2: Per-Sigil Ledgers
+### Option 2: Rebuildable Lookup Indexes
 
-Each sigil writes to its own JSONL file:
+Each central ledger row can be indexed by sigil or capability:
 
 ```text
 .arcanum/observability/by-sigil/<sigil-name>.jsonl
+.arcanum/observability/by-capability/<kind>/<capability-id>.jsonl
 ```
 
 Pros:
@@ -79,19 +82,18 @@ Pros:
 - easy to reflect on one sigil,
 - lower noise per file,
 - clearer ownership when sigils have different thresholds,
-- easier to prune or archive by sigil.
+- indexes can be deleted and rebuilt from the central ledger.
 
 Cons:
 
-- harder to reconstruct global chronology,
-- requires one more routing decision in the hook,
-- global reflection needs aggregation.
+- index rows are not full telemetry rows,
+- consumers must follow the `ledger` and `line` reference to retrieve the canonical event.
 
-Use when individual sigils are high-volume, high-risk, or owned by different maintainers.
+Use when individual sigils or capabilities are high-volume, high-risk, or owned by different maintainers.
 
-### Option 3: Hybrid Ledger
+### Option 3: Mirrored Ledgers
 
-Write every invocation to the central ledger and optionally mirror or derive per-sigil ledgers:
+Write every invocation to the central ledger and also mirror full telemetry rows into per-sigil files:
 
 ```text
 .arcanum/observability/signals/sigil-invocations.jsonl
@@ -111,21 +113,22 @@ Cons:
 - requires clear rule for whether per-sigil files are source-of-truth or derived,
 - slightly more setup.
 
-Recommended default: use the central ledger as source-of-truth and treat per-sigil ledgers as optional derived views unless the consuming repo explicitly chooses otherwise.
+This is no longer the recommended default because it duplicates telemetry and complicates dedupe. Use it only for a consuming repo that explicitly wants independent per-sigil archival files.
 
 ## Recommended Default
 
-Use the hybrid model with central source-of-truth:
+Use the central ledger with rebuildable reference indexes:
 
 ```json
 {
-  "storage_model": "hybrid",
+  "storage_model": "central-ledger-reference-indexes",
   "source_of_truth": "signals/sigil-invocations.jsonl",
-  "per_sigil_ledgers": "derived-or-optional"
+  "per_sigil_index_path": "by-sigil/<sigil-name>.jsonl",
+  "per_capability_index_path": "by-capability/<kind>/<capability-id>.jsonl"
 }
 ```
 
-This gives the best balance: one reliable append path now, plus per-sigil reflection later.
+This gives one reliable append path, compact per-artifact lookup, and a clean rebuild story.
 
 ## Config File
 
@@ -133,10 +136,11 @@ This gives the best balance: one reliable append path now, plus per-sigil reflec
 
 ```json
 {
-  "version": "0.1.0",
-  "storage_model": "hybrid",
+  "version": "0.2.0",
+  "storage_model": "central-ledger-reference-indexes",
   "source_of_truth": "signals/sigil-invocations.jsonl",
-  "per_sigil_path": "by-sigil/<sigil-name>.jsonl",
+  "per_sigil_index_path": "by-sigil/<sigil-name>.jsonl",
+  "per_capability_index_path": "by-capability/<kind>/<capability-id>.jsonl",
   "reflection_path": "reflections/",
   "thresholds": {
     "meaningful_executions": 5,
@@ -163,7 +167,8 @@ This gives the best balance: one reliable append path now, plus per-sigil reflec
     "quality_bar_failures": 0,
     "output_contract_drift_events": 0
   },
-  "by_sigil": {}
+  "by_sigil": {},
+  "by_capability": {}
 }
 ```
 
@@ -178,3 +183,5 @@ Use [Sigil Observability Hook](SIGIL-OBSERVABILITY-HOOK.md) after each meaningfu
 Background extraction, observation, append, and hook-health work must write operational audit rows to `hooks/hook-operations.jsonl`, not to the capability telemetry ledger. See [Hook Operations Ledger](HOOK-OPERATIONS-LEDGER.md).
 
 Long-running sigil and spell executions should use observed run bundles under `runs/`. See [Observed Runs](OBSERVED-RUNS.md).
+
+Use `scripts/rebuild-observability-indexes.sh` after manual ledger edits or imports. Use `scripts/compact-observability-store.sh` to dedupe the central ledger and remove superseded hook envelope copies.

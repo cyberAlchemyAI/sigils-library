@@ -55,6 +55,7 @@ observe_output="$("$observer" --envelope "$closed" --observability-dir "$observa
 printf '%s\n' "$observe_output" > "$run_dir/observer-output.txt"
 
 if printf '%s\n' "$observe_output" | grep -q '^OBSERVATION=\(recorded\|skipped\)'; then
+  rm -f "$pending"
   jq -n --arg context "$observe_output" '{
     hookSpecificOutput: {
       hookEventName: "Stop",

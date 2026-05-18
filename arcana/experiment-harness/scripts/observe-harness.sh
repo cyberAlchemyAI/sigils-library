@@ -30,7 +30,7 @@ fi
 
 artifact_abs="$(cd "$artifact" && pwd)"
 dev_dir="$artifact_abs/development"
-repo_root="${EXPERIMENT_REPO_ROOT:-$(git -C "$PWD" rev-parse --show-toplevel 2>/dev/null || pwd)}"
+repo_root="${EXPERIMENT_REPO_ROOT:-$(git -C "$artifact_abs" rev-parse --show-toplevel 2>/dev/null || pwd)}"
 observability_dir="${EXPERIMENT_OBSERVABILITY_DIR:-$repo_root/.arcanum/observability}"
 
 if [[ ! -d "$observability_dir" ]]; then
@@ -47,11 +47,10 @@ run_starter="$framework_observability_dir/scripts/start-observed-run.sh"
 run_checkpointer="$framework_observability_dir/scripts/checkpoint-observed-run.sh"
 run_finisher="$framework_observability_dir/scripts/finish-observed-run.sh"
 
-mkdir -p "$observability_dir/signals" "$observability_dir/by-sigil" "$observability_dir/hooks/reflections" "$observability_dir/runs"
+mkdir -p "$observability_dir/signals" "$observability_dir/by-sigil" "$observability_dir/by-capability" "$observability_dir/hooks/reflections" "$observability_dir/runs"
 ledger="$observability_dir/signals/sigil-invocations.jsonl"
-per_sigil_ledger="$observability_dir/by-sigil/experiment-harness.jsonl"
 reflection_state="$observability_dir/reflection-state.json"
-touch "$ledger" "$per_sigil_ledger" "$observability_dir/hooks/hook-operations.jsonl" "$observability_dir/hooks/failures.jsonl" "$observability_dir/hooks/dedupe.jsonl"
+touch "$ledger" "$observability_dir/hooks/hook-operations.jsonl" "$observability_dir/hooks/failures.jsonl" "$observability_dir/hooks/dedupe.jsonl"
 
 report="${2:-}"
 if [[ -z "$report" ]]; then
@@ -216,6 +215,8 @@ event="$(
 		--arg sigil "experiment-harness" \
 		--arg tier "arcana" \
 		--arg mode "observe" \
+		--arg run_id "$target_run_id" \
+		--arg session_id "$target_session_id" \
 		--arg summary "Observed experiment harness report for $artifact_rel" \
 		--arg intent "Close the experiment cycle by recording harness validation evidence as observability telemetry." \
 		--arg status "$execution_status" \
@@ -230,9 +231,17 @@ event="$(
 		--argjson workflow_gaps "$workflow_gaps_json" \
 		'{
 			timestamp: $timestamp,
+			run_id: $run_id,
+			session_id: $session_id,
 			sigil: $sigil,
 			tier: $tier,
 			mode: $mode,
+			capability: {
+				id: $sigil,
+				kind: "sigil",
+				tier: $tier,
+				mode: $mode
+			},
 			request: {
 				raw: null,
 				summary: $summary,
@@ -254,26 +263,47 @@ event="$(
 				recommendation: $recommendation
 			},
 			target_artifact: $artifact
-		}'
+	}'
 )"
 
-dedupe_probe="$("$hook_recorder" \
-	--observability-dir "$observability_dir" \
-	--hook signal-observer \
-	--target-run-id "$target_run_id" \
-	--target-session-id "$target_session_id" \
-	--action append \
-	--status completed \
-	--input "$report_rel" \
-	--output "${ledger#$repo_root/}" \
-	--emitted-signal true \
-	--reason "capability telemetry append" \
-	--duration-ms "$(( $(date +%s%3N) - hook_started_at_ms ))" \
-	--dedupe-key "$dedupe_key" \
-	--observer-version "$observer_version" 2>/dev/null || true)"
+if [[ -n "$run_dir" ]]; then
+	observer_envelope="$run_dir/invocation-envelope.json"
+else
+	observer_envelope="$(mktemp)"
+fi
+printf '%s\n' "$event" > "$observer_envelope"
 
-hook_status="$(printf '%s\n' "$dedupe_probe" | sed -n 's/^HOOK_OPERATION=//p' | tail -n 1)"
-if [[ "$hook_status" == "skipped" ]]; then
+observer_script="$framework_observability_dir/scripts/observe-invocation.sh"
+if [[ ! -x "$observer_script" ]]; then
+	printf 'OBSERVATION=failed\n'
+	printf 'REASON=generic observer not found: %s\n' "$observer_script"
+	exit 1
+fi
+
+observer_output="$("$observer_script" \
+	--envelope "$observer_envelope" \
+	--observability-dir "$observability_dir" \
+	--observer-version "$observer_version" 2>&1)" || {
+	if [[ -n "$run_dir" && -x "$run_finisher" ]]; then
+		"$run_finisher" "$run_dir" \
+			--status failed \
+			--output "$report_rel" \
+			--file "$report_rel" \
+			--validation "generic observer failed" \
+			--notes "$observer_output" >/dev/null || true
+	fi
+	printf '%s\n' "$observer_output"
+	exit 1
+}
+
+observer_status="$(printf '%s\n' "$observer_output" | sed -n 's/^OBSERVATION=//p' | tail -n 1)"
+reflection_trigger="$(printf '%s\n' "$observer_output" | sed -n 's/^REFLECTION_TRIGGER=//p' | tail -n 1)"
+recommendation="$(printf '%s\n' "$observer_output" | sed -n 's/^RECOMMENDATION=//p' | tail -n 1)"
+dedupe_key="$(printf '%s\n' "$observer_output" | sed -n 's/^DEDUPE_KEY=//p' | tail -n 1)"
+ledger_out="$(printf '%s\n' "$observer_output" | sed -n 's/^LEDGER=//p' | tail -n 1)"
+per_sigil_out="$(printf '%s\n' "$observer_output" | sed -n 's/^BY_SIGIL=//p' | tail -n 1)"
+
+if [[ "$observer_status" == "skipped" ]]; then
 	if [[ -n "$run_dir" && -x "$run_finisher" ]]; then
 		"$run_finisher" "$run_dir" \
 			--status partial \
@@ -282,33 +312,8 @@ if [[ "$hook_status" == "skipped" ]]; then
 			--validation "duplicate observer emission skipped" \
 			--notes "dedupe_key=$dedupe_key" >/dev/null || true
 	fi
-	printf 'OBSERVATION=skipped\n'
-	printf 'REASON=duplicate observer emission\n'
-	printf 'DEDUPE_KEY=%s\n' "$dedupe_key"
+	printf '%s\n' "$observer_output"
 	exit 0
-fi
-
-printf '%s\n' "$event" >> "$ledger"
-printf '%s\n' "$event" >> "$per_sigil_ledger"
-
-if [[ -f "$reflection_state" ]]; then
-	tmp_state="$(mktemp)"
-	jq \
-		--arg sigil "experiment-harness" \
-		--argjson generated_outputs "$output_count" \
-		--arg quality "$quality_bar_status" \
-		--arg trigger "$reflection_trigger" \
-		'
-		.counters.meaningful_executions += 1
-		| .counters.generated_outputs += $generated_outputs
-		| .counters.related_workflow_gaps += (if $quality == "partial" then 1 else 0 end)
-		| .counters.severe_workflow_gaps += (if $trigger == "severe-gap" then 1 else 0 end)
-		| .counters.quality_bar_failures += (if $quality == "fail" then 1 else 0 end)
-		| .counters.output_contract_drift_events += 0
-		| .by_sigil[$sigil].meaningful_executions = ((.by_sigil[$sigil].meaningful_executions // 0) + 1)
-		| .by_sigil[$sigil].generated_outputs = ((.by_sigil[$sigil].generated_outputs // 0) + $generated_outputs)
-		| .by_sigil[$sigil].last_observed_at = (now | todate)
-		' "$reflection_state" > "$tmp_state" && mv "$tmp_state" "$reflection_state"
 fi
 
 if [[ -n "$run_dir" && -x "$run_finisher" ]]; then
@@ -320,9 +325,10 @@ if [[ -n "$run_dir" && -x "$run_finisher" ]]; then
 		--notes "observer_version=$observer_version dedupe_key=$dedupe_key" >/dev/null || true
 fi
 
-printf 'OBSERVATION=recorded\n'
-printf 'LEDGER=%s\n' "${ledger#$repo_root/}"
-printf 'PER_SIGIL_LEDGER=%s\n' "${per_sigil_ledger#$repo_root/}"
-printf 'REFLECTION_TRIGGER=%s\n' "$reflection_trigger"
+printf 'OBSERVATION=%s\n' "$observer_status"
+printf 'LEDGER=%s\n' "${ledger_out#$repo_root/}"
+printf 'PER_SIGIL_INDEX=%s\n' "${per_sigil_out#$repo_root/}"
+printf 'REFLECTION_TRIGGER=%s\n' "${reflection_trigger:-none}"
+printf 'RECOMMENDATION=%s\n' "${recommendation:-none}"
 printf 'RUN_ID=%s\n' "$target_run_id"
 printf 'DEDUPE_KEY=%s\n' "$dedupe_key"

@@ -36,19 +36,22 @@ This sigil solves that by scaffolding a portable observability package that any 
     sigil-invocations.jsonl
   by-sigil/
     .gitkeep
+  by-capability/
+    .gitkeep
   reflections/
     .gitkeep
 ```
 
 ## Storage Recommendation
 
-Use the hybrid model by default:
+Use one central source-of-truth ledger with rebuildable lookup indexes by default:
 
 - central ledger: `.arcanum/observability/signals/sigil-invocations.jsonl`,
-- per-sigil derived or optional ledgers: `.arcanum/observability/by-sigil/<sigil-name>.jsonl`,
+- per-sigil indexes: `.arcanum/observability/by-sigil/<sigil-name>.jsonl`,
+- per-capability indexes: `.arcanum/observability/by-capability/<kind>/<capability-id>.jsonl`,
 - reflection reports: `.arcanum/observability/reflections/`.
 
-The central ledger preserves chronological history across all sigils. Per-sigil files make local reflection easy when a single sigil becomes noisy or high-value.
+The central ledger preserves chronological history across all capabilities. Index files contain compact references back to central ledger rows, not full duplicate telemetry events. They can be rebuilt with `framework/observability/scripts/rebuild-observability-indexes.sh`.
 
 ## Why This Is Formulae
 

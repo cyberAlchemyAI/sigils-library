@@ -53,7 +53,7 @@ Expected inputs:
 7. Reject empty outputs and self-referential save summaries such as `Saved the output to ...`.
 8. For `validate`, check required harness files, fixture pairs, example outputs, Quality Bar evidence, Anti-Pattern hits, and latest report shape.
 9. For `report`, write a timestamped report under `development/runs/`.
-10. For `observe`, or after `report` when observability exists, append one JSONL signal under `.arcanum/observability/` and update reflection counters.
+10. For `observe`, or after `report` when observability exists, append one JSONL signal under `.arcanum/observability/`, update reflection counters, and emit threshold-backed reflection triggers when configured thresholds are reached.
 11. Return the selected artifact, command mode, files touched, validation state, telemetry state, and next missing example.
 </process>
 
@@ -72,8 +72,9 @@ The experiment harness closes the lifecycle loop by integrating with `signal-obs
 - reports become safe invocation envelopes,
 - envelopes are appended to `.arcanum/observability/signals/sigil-invocations.jsonl`,
 - observer hook activity is recorded under `.arcanum/observability/hooks/`,
-- per-sigil telemetry is mirrored to `.arcanum/observability/by-sigil/experiment-harness.jsonl`,
+- per-sigil and per-capability lookup indexes are rebuilt from the central ledger,
 - reflection counters are updated in `.arcanum/observability/reflection-state.json`,
+- configured reflection thresholds are evaluated during observation and emitted as `usage-threshold`, `output-threshold`, `gap-threshold`, or `severe-gap` with recommendation `reflect-now`,
 - dedupe prevents repeated observer emissions for the same report and observer version,
 - telemetry write failures never block the primary validation result.
 </observability-loop>

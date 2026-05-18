@@ -49,7 +49,11 @@ mkdir -p "$observability_dir" "$(dirname "$observability_dir")"
 if [[ ! -f "$observability_dir/config.json" ]]; then
 	cat > "$observability_dir/config.json" <<'JSON'
 {
-  "version": "0.1.0",
+  "version": "0.2.0",
+  "storage_model": "central-ledger-reference-indexes",
+  "source_of_truth": "signals/sigil-invocations.jsonl",
+  "per_sigil_index_path": "by-sigil/<sigil-name>.jsonl",
+  "per_capability_index_path": "by-capability/<kind>/<capability-id>.jsonl",
   "thresholds": {
     "meaningful_executions": 99,
     "generated_outputs": 99,
@@ -72,7 +76,8 @@ if [[ ! -f "$observability_dir/reflection-state.json" ]]; then
     "quality_bar_failures": 0,
     "output_contract_drift_events": 0
   },
-  "by_sigil": {}
+  "by_sigil": {},
+  "by_capability": {}
 }
 JSON
 fi

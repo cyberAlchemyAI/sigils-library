@@ -38,6 +38,8 @@ For a reusable sigil, prefer sigil-local templates and clearly named signal file
 observability/signals/sigil-invocations.jsonl
 ```
 
+The central ledger is the source of truth. `by-sigil/` and `by-capability/` are rebuildable lookup indexes that point to central ledger rows rather than storing duplicate telemetry events.
+
 Generated telemetry can be stored wherever the using project or runtime keeps operational records. The sigil library defines the schema and lifecycle pattern; it does not require one global storage backend.
 
 Use [invocation-envelope.json](templates/invocation-envelope.json) as the portable JSON shape for one observed sigil invocation.

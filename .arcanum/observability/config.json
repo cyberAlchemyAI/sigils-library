@@ -1,8 +1,9 @@
 {
-  "version": "0.1.0",
-  "storage_model": "hybrid",
+  "version": "0.2.0",
+  "storage_model": "central-ledger-reference-indexes",
   "source_of_truth": "signals/sigil-invocations.jsonl",
-  "per_sigil_path": "by-sigil/<sigil-name>.jsonl",
+  "per_sigil_index_path": "by-sigil/<sigil-name>.jsonl",
+  "per_capability_index_path": "by-capability/<kind>/<capability-id>.jsonl",
   "reflection_path": "reflections/",
   "thresholds": {
     "meaningful_executions": 5,

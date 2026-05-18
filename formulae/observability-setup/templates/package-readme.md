@@ -7,7 +7,7 @@ This package stores local telemetry for sigil usage in this repository.
 - `config.json` defines storage model and reflection thresholds.
 - `reflection-state.json` tracks counters since the last reflection.
 - `signals/sigil-invocations.jsonl` is the central append-only invocation ledger.
-- `by-sigil/` can hold optional or derived per-sigil ledgers.
+- `by-sigil/` and `by-capability/` hold rebuildable indexes that point back to central ledger rows.
 - `hooks/hook-operations.jsonl` tracks background extraction, observer, append, and dedupe hook work.
 - `hooks/failures.jsonl` tracks hook failures without changing primary task results.
 - `runs/` stores observed run bundles and checkpoints for long-running work.
@@ -15,7 +15,7 @@ This package stores local telemetry for sigil usage in this repository.
 
 ## Default Model
 
-The default storage model is hybrid: use the central ledger as the source of truth and optional per-sigil ledgers for focused reflection.
+The default storage model is central-ledger-reference-indexes: use the central ledger as the source of truth and rebuild compact lookup indexes for focused reflection.
 
 ## Privacy
 

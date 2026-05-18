@@ -90,7 +90,7 @@ Observation itself is background infrastructure. Extraction hooks, observer hook
 
 Hook operation rows are not capability telemetry and must never trigger another `signal-observer` pass. They always carry `observe: false`.
 
-Use `hooks/failures.jsonl` for hook failures and `hooks/dedupe.jsonl` for observer emission dedupe keys.
+Use `hooks/failures.jsonl` for hook failures and `hooks/dedupe.jsonl` for observer emission dedupe keys. Use `by-sigil/` and `by-capability/` only as rebuildable indexes; `signals/sigil-invocations.jsonl` remains the source of truth.
 
 ## Hook Flow
 

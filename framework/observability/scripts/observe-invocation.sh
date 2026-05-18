@@ -152,6 +152,8 @@ event="$(
 		| (.capability.mode // .mode // "execute") as $capability_mode
 		| {
 			timestamp: .timestamp,
+			run_id: (.run_id // .id // .target_run_id // null),
+			session_id: (.session_id // null),
 			sigil: (.sigil // $capability_id),
 			tier: $capability_tier,
 			mode: $capability_mode,
@@ -182,10 +184,12 @@ event="$(
 				recommendation: .observer.recommendation
 			},
 			target_artifact: (.target_artifact // .artifact // null),
+			dedupe_key: null,
 			observer_version: $observer_version
 		}
 		' "$envelope_abs"
 )"
+event="$(printf '%s\n' "$event" | jq -c --arg run_id "$target_run_id" --arg session_id "$target_session_id" --arg dedupe_key "$dedupe_key" '.run_id = $run_id | .session_id = $session_id | .dedupe_key = $dedupe_key')"
 
 reflection_trigger="$(printf '%s\n' "$event" | jq -r '.observer.reflection_trigger')"
 if [[ -f "$reflection_state" && -f "$observability_config" && "$reflection_trigger" == "none" ]]; then
@@ -230,6 +234,7 @@ if [[ "$hook_status" == "skipped" ]]; then
 fi
 
 printf '%s\n' "$event" >> "$ledger"
+ledger_line="$(wc -l < "$ledger" | tr -d ' ')"
 
 capability_id="$(printf '%s\n' "$event" | jq -r '.capability.id')"
 capability_kind="$(printf '%s\n' "$event" | jq -r '.capability.kind')"
@@ -240,8 +245,27 @@ safe_capability_kind="${capability_kind//[^A-Za-z0-9._-]/-}"
 safe_sigil="${legacy_sigil//[^A-Za-z0-9._-]/-}"
 
 mkdir -p "$observability_dir/by-capability/$safe_capability_kind"
-printf '%s\n' "$event" >> "$observability_dir/by-capability/$safe_capability_kind/$safe_capability_id.jsonl"
-printf '%s\n' "$event" >> "$observability_dir/by-sigil/$safe_sigil.jsonl"
+index_event="$(
+	printf '%s\n' "$event" | jq -c \
+		--arg ledger "signals/sigil-invocations.jsonl" \
+		--argjson line "$ledger_line" \
+		'{
+			timestamp,
+			run_id,
+			session_id,
+			dedupe_key,
+			ledger: $ledger,
+			line: $line,
+			sigil,
+			capability,
+			execution_status: .execution.status,
+			reflection_trigger: .observer.reflection_trigger,
+			recommendation: .observer.recommendation,
+			target_artifact
+		}'
+)"
+printf '%s\n' "$index_event" >> "$observability_dir/by-capability/$safe_capability_kind/$safe_capability_id.jsonl"
+printf '%s\n' "$index_event" >> "$observability_dir/by-sigil/$safe_sigil.jsonl"
 
 reflection_state_status="unavailable"
 if [[ -f "$reflection_state" ]]; then
@@ -284,8 +308,10 @@ fi
 
 printf 'OBSERVATION=recorded\n'
 printf 'LEDGER=%s\n' "$ledger"
+printf 'LEDGER_LINE=%s\n' "$ledger_line"
 printf 'BY_CAPABILITY=%s\n' "$observability_dir/by-capability/$safe_capability_kind/$safe_capability_id.jsonl"
 printf 'BY_SIGIL=%s\n' "$observability_dir/by-sigil/$safe_sigil.jsonl"
+printf 'INDEX_MODEL=central-ledger-reference\n'
 printf 'CAPABILITY=%s\n' "$capability_id"
 printf 'CAPABILITY_KIND=%s\n' "$capability_kind"
 printf 'DEDUPE_KEY=%s\n' "$dedupe_key"

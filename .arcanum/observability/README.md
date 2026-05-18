@@ -1,7 +1,9 @@
 # Sigil Observability
 
-This repository-local package stores Arcanum sigil invocation telemetry and reflection state.
+This repository-local package stores Arcanum command, sigil, and spell telemetry plus reflection state.
 
 - signals/sigil-invocations.jsonl is the central append-only invocation ledger.
-- by-sigil/ can hold optional per-sigil ledgers.
+- by-sigil/ and by-capability/ are rebuildable lookup indexes that point to central ledger rows.
+- hooks/ stores hook operation evidence.
+- runs/ stores pending and completed observer envelopes.
 - reflections/ can hold future reflection reports.

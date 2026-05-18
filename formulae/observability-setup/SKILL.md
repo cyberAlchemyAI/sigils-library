@@ -86,7 +86,7 @@ Avoid:
 
 - overwriting existing telemetry ledgers,
 - storing telemetry inside the Arcanum repository when observing a different consuming repository,
-- creating per-sigil ledgers without a central index or aggregation path,
+- creating full duplicate per-sigil ledgers instead of rebuildable central-ledger indexes,
 - treating setup as reflection,
 - adding runtime-specific dependencies to the portable package contract.
   </anti-patterns>
@@ -99,7 +99,7 @@ Return:
 
 - Repository: <path>
 - Package path: <path>
-- Storage model: central | per-sigil | hybrid
+- Storage model: central-ledger-reference-indexes
 - Files created: <paths>
 - Files preserved: <paths>
 - Validation: <checks performed>
