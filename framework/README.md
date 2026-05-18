@@ -8,9 +8,13 @@ Use this folder when you are changing the rules of the system rather than adding
 
 - [Quality Bar](QUALITY-BAR.md) - observable completion criteria for sigil execution.
 - [Anti-Patterns](ANTI-PATTERNS.md) - failure modes and misuse boundaries.
+- [Validation Experiment Protocol](VALIDATION-EXPERIMENT-PROTOCOL.md) - repeatable release-gate experiments for spells, sigils, and canonical templates.
+- [Experiment Harness Standard](EXPERIMENT-HARNESS-STANDARD.md) - artifact-local test harness layout for fixtures, prompts, outputs, runs, and promotion evidence.
 - [Sigil Development Workflow](SIGIL-DEVELOPMENT-WORKFLOW.md) - lifecycle from candidate capture through maintenance.
 - [Sigil Template](templates/sigil-template.md) - base `SKILL.md` structure.
-- [Observability](observability/) - telemetry, hook, runtime package, and reflection conventions.
+- [Validation Experiment Template](templates/validation-experiment.md) - starter validation experiment for any spell or sigil.
+- [Validation Report Template](templates/validation-report.md) - starter validation evidence report.
+- [Observability](observability/) - telemetry, hook, runtime package, observed-run, hook-ledger, and reflection conventions.
 
 ## Tier Ontology
 

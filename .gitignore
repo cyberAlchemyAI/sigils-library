@@ -1,0 +1,9 @@
+# Generated experiment evidence.
+**/development/example-outputs/*
+**/development/example-runs/*
+**/development/runs/*
+
+# Keep evidence directories present in reusable harnesses.
+!**/development/example-outputs/.gitkeep
+!**/development/example-runs/.gitkeep
+!**/development/runs/.gitkeep

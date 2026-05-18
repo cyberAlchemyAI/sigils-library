@@ -40,6 +40,7 @@ The spell supports two installation postures:
 | `context-builder`   | The target repository should prove retrieval over installed sigils. | Useful after selected installs.                   |
 | `sigil-development` | The user plans to author local sigils.                              | Include in authoring-oriented installs.           |
 | `spellcraft`        | The user plans to compose local spells.                             | Include when local workflow recipes are expected. |
+| `experiment-harness` | The user plans to validate local spells or sigils with examples.    | Include in authoring-oriented installs.           |
 
 ## Prerequisites
 
@@ -59,6 +60,7 @@ The spell supports two installation postures:
 | `.arcanum/runtimes/claude/`           | target repository | `sigil-runtime-installer`               | Claude discovery bridge, individual sigil and spell adapters            |
 | `.arcanum/runtimes/codex/`            | target repository | `sigil-runtime-installer`               | Codex discovery bridge, individual sigil and spell adapters             |
 | `.arcanum/necronomicon/`              | target repository | bootstrap script, Necronomicon Session  | session memory, capability manifest, route ledgers, decisions, handoffs |
+| artifact-local `development/`         | local artifacts   | `experiment-harness`                    | spellcraft, sigil-development, Codex CLI example runners                |
 | `.github/skills/arcanum-orchestrate/` | target repository | `sigil-runtime-installer`               | GitHub Copilot discovery only                                           |
 | `.claude/commands/`                   | target repository | `sigil-runtime-installer`               | Claude discovery only                                                   |
 | `.codex/commands/`                    | target repository | `sigil-runtime-installer`               | Codex discovery only                                                    |

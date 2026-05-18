@@ -41,6 +41,7 @@ Expected inputs, if available:
 - current `README.md`, `SKILL.md`, templates, or draft notes,
 - examples of successful or failed usage,
 - generated outputs from prior sigil runs,
+- experiment harness files under `development/`,
 - known workflow gaps, repeated confusion, or review comments,
 - desired telemetry threshold, if different from defaults.
   </inputs>
@@ -87,21 +88,26 @@ If no subagent mechanism is available, run the observer pass as a separate clear
 3. Classify or confirm the sigil tier using the Formulae, Transmutations, and Arcana concept files.
 4. Design or revise the human-facing `README.md`: problem solved, usage conditions, non-usage conditions, inputs, outputs, tier rationale, and lifecycle expectations.
 5. Design or revise `SKILL.md`: objective, logic type, applicability, inputs, process, Quality Bar, Anti-Patterns, output contract, and origin.
-6. Add observability design:
+6. Ensure a reusable sigil has an experiment harness:
+   - initialize `development/` through `experiment-harness` when creating a new sigil,
+   - add or preserve low, medium, and complex task examples when the sigil will be promoted,
+   - keep Codex CLI runs explicit through `development/run-example-with-codex.sh`,
+   - require real output bodies, not save-summary evidence.
+7. Add observability design:
    - define what counts as a meaningful execution,
    - define which usage outputs should emit telemetry,
    - define whether the general post-run hook should append invocation JSON,
    - define default reflection thresholds,
    - define gap categories and severity levels,
    - add telemetry and reflection templates when useful.
-7. Delegate to the observer subagent when telemetry or reflection is needed. The observer must inspect usage outputs and return structured signals before synthesis.
-8. Synthesize observer results into one of three outcomes:
+8. Delegate to the observer subagent when telemetry or reflection is needed. The observer must inspect usage outputs and return structured signals before synthesis.
+9. Synthesize observer results into one of three outcomes:
    - no change needed,
    - targeted iteration recommended,
    - reflection gate required before further use.
-9. Apply targeted edits only after the reflection outcome is clear. Preserve the sigil's core contract unless the evidence shows the contract itself is wrong.
-10. Validate the result: folder structure, markdown links, tier fit, Quality Bar, Anti-Patterns, telemetry schema, reflection triggers, and product-neutral wording.
-11. Return a concise result with files changed, validation performed, reflection trigger state, and next recommended lifecycle step.
+10. Apply targeted edits only after the reflection outcome is clear. Preserve the sigil's core contract unless the evidence shows the contract itself is wrong.
+11. Validate the result: folder structure, markdown links, tier fit, Quality Bar, Anti-Patterns, experiment harness state, telemetry schema, reflection triggers, and product-neutral wording.
+12. Return a concise result with files changed, validation performed, reflection trigger state, and next recommended lifecycle step.
 </process>
 
 <observability-model>
@@ -152,6 +158,7 @@ Use `templates/reflection-report.md` as the default report shape.
 A successful execution of this sigil must:
 
 - produce or update a self-contained sigil folder when in design or update mode,
+- initialize or preserve an experiment harness for reusable sigils,
 - define observability signals for any sigil that will be reused,
 - define a post-run JSON hook when usage history is needed for later reflection,
 - use an observer subagent or clearly labeled observer pass when generating telemetry or reflection,

@@ -70,17 +70,22 @@ spells/<spell-name>/README.md
    - gates,
    - failure policy,
    - observability needs.
-6. If installing a library spell, adapt only local paths, thresholds, interaction mode, aliases, and gate strictness. Do not rewrite upstream sigil contracts.
-7. If validating, check:
+6. If designing a reusable spell, initialize or preserve an experiment harness through `experiment-harness`:
+   - create `development/VALIDATION-EXPERIMENT.md`, `VALIDATION.md`, fixtures, and runner scripts,
+   - add low, medium, and complex examples when the spell has reusable modes or phases,
+   - keep live Codex CLI execution explicit and bounded.
+7. If installing a library spell, adapt only local paths, thresholds, interaction mode, aliases, and gate strictness. Do not rewrite upstream sigil contracts.
+8. If validating, check:
    - referenced sigils exist or are declared local/external,
    - aliases resolve to exactly one canonical spell,
    - every phase has input, output, gate, and failure policy,
    - handoff artifacts are named,
    - spell does not copy full sigil instructions,
+   - experiment harness evidence exists when the spell is expected to be reused,
    - observability is defined when the spell is expected to be reused.
-8. If observing, record spell-level telemetry using the repository observability package when available.
-9. If reflecting, review accumulated spell telemetry and propose targeted changes while preserving the spell's core purpose.
-10. Return the spell file path, validation state, canonical ID, alias used, and next recommended action.
+9. If observing, record spell-level telemetry using the repository observability package when available.
+10. If reflecting, review accumulated spell telemetry and propose targeted changes while preserving the spell's core purpose.
+11. Return the spell file path, validation state, canonical ID, alias used, and next recommended action.
 </process>
 
 <spell-contract>
@@ -132,6 +137,7 @@ A successful execution must:
 - define phase inputs, outputs, gates, and failure policy,
 - preserve local customization without forking upstream sigils,
 - validate referenced sigils and handoff artifacts,
+- define or preserve an experiment harness for reusable spells,
 - define observability for reusable spells,
 - return a clear next action.
 </quality-bar>

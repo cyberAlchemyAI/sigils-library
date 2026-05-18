@@ -41,6 +41,10 @@ It belongs here because it coordinates semantic authority and traceability acros
 
 It belongs here because it governs ambiguity, user choice, persistence, and pass/block authority across a task lifecycle.
 
+[experiment-harness](experiment-harness/) gives reusable spells and sigils a portable development test loop with fixtures, prompts, real runtime outputs, validation, and reports.
+
+It belongs here because it coordinates lifecycle evidence across artifact contracts, Codex CLI execution, output capture, and promotion gates without owning the artifact's domain meaning.
+
 [inventory](inventory/) installs and maintains a repository-local compiled knowledge layer with immutable raw sources, generated markdown entries, indexes, tags, logs, lookup, and linting.
 
 It belongs here because it coordinates local schema design, ingestion, cross-page maintenance, health checks, and integration with other sigils over time.

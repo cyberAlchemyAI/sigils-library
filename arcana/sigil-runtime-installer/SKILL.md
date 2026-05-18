@@ -25,6 +25,8 @@ Arcana: target selection, adapter generation, repository-local installation, val
 - `codex`: create or plan `.arcanum/runtimes/codex/commands/<command>.md` and a `.codex/commands/<command>.md` discovery bridge.
 
 Install the general `arcanum-orchestrate` command and individual artifact commands for each selected sigil and spell. Individual commands use `arcanum-sigil-<id>` and `arcanum-spell-<id>`. When `ontology-harness` is selected, also install `arcanum-necronomicon` as its friendly alias command and `arcanum-necronomicon-session` as the persistent repository harness command unless disabled.
+
+When `experiment-harness` is selected for Codex, also install the short convenience aliases `experiment-next`, `experiment-run`, `experiment-validate`, and `experiment-observe`. These aliases remain thin wrappers around `arcanum-sigil-experiment-harness`.
 </targets>
 
 <applicability>
@@ -92,20 +94,27 @@ codex          -> .codex/commands/arcanum-orchestrate.md
 6. Keep the adapter focused: route requests, follow its embedded canonical definition snapshot, apply observability handoff, and report validation.
 7. Do not require generated `.arcanum/necronomicon/` registry files. If Necronomicon session state exists there, treat it as harness memory and selected capability state only.
 8. Preserve local runtime conventions and avoid changing unrelated agent files.
+9. When repository observability is installed, prefer the observed-run wrapper pattern:
+   - start observed run,
+   - execute the selected command inline or through the runtime,
+   - checkpoint meaningful phases for long work,
+   - finish observed run,
+   - dispatch observer hook,
+   - append capability telemetry and hook operation rows.
 
 ## Step 3 - Install Or Dry Run
 
-9. In dry-run mode, return the files that would be created or updated.
-10. In install mode, create or update only the selected runtime files under `.arcanum/runtimes/` plus the required platform discovery bridges.
-11. If an existing adapter has unrelated local changes, stop and ask before overwriting.
+10. In dry-run mode, return the files that would be created or updated.
+11. In install mode, create or update only the selected runtime files under `.arcanum/runtimes/` plus the required platform discovery bridges.
+12. If an existing adapter has unrelated local changes, stop and ask before overwriting.
 
 ## Step 4 - Validate
 
-12. Check that the adapter file exists.
-13. Check that the adapter contains or points to a resolvable canonical definition snapshot.
-14. Check that links in generated markdown resolve when the repository has a markdown link checker.
-15. Check that the adapter names the canonical source and does not make local wrappers authoritative.
-16. Return pass, flag, or block.
+13. Check that the adapter file exists.
+14. Check that the adapter contains or points to a resolvable canonical definition snapshot.
+15. Check that links in generated markdown resolve when the repository has a markdown link checker.
+16. Check that the adapter names the canonical source and does not make local wrappers authoritative.
+17. Return pass, flag, or block.
     </process>
 
 <github-copilot-adapter>
