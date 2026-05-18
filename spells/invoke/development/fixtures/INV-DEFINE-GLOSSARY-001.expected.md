@@ -1,0 +1,19 @@
+## Invoke Validation Fixture Result
+
+- Fixture: INV-DEFINE-GLOSSARY-001
+- User request: Define an experiment session notebook for Mars geology analysis with the local term "sol-thread".
+- Mode: define
+- Spell: invoke
+- Canonical ID: invoke
+- Scope: library
+- Phase status: pass
+- Mode contract: arcanum/spells/invoke/define.md
+- Outputs: artifacts/mars-geology-notebook/SPEC.md, artifacts/mars-geology-notebook/GLOSSARY.md, .arcanum/necronomicon/sessions/demo/invoke-transports/define.md
+- Template selection: research family
+- Decisions: define notebook baseline while keeping "sol-thread" as a candidate glossary term
+- Glossary updates: experiment session notebook, Mars geology analysis, sol-thread
+- Glossary linking: sol-thread is no-match with rationale; canonical promotion requires decision-gate or ontology-vault
+- Implementation layering: seed emitted
+- Work-pack: n/a
+- Unresolved gaps: candidate term promotion unresolved
+- Next route: deferred

@@ -1,0 +1,19 @@
+## Invoke Validation Fixture Result
+
+- Fixture: INV-DEFINE-FLAG-001
+- User request: Define a planetary dust risk scoring workflow combining inspections, weather observations, and mission timeline constraints.
+- Mode: define
+- Spell: invoke
+- Canonical ID: invoke
+- Scope: library
+- Phase status: flag
+- Mode contract: arcanum/spells/invoke/define.md
+- Outputs: artifacts/dust-risk-scoring/SPEC.draft.md, artifacts/dust-risk-scoring/GLOSSARY.draft.md, artifacts/dust-risk-scoring/gap-ledger.md
+- Template selection: candidate-template recommendation recorded; no canonical promotion
+- Decisions: proceed only with safe partial define output and record unsupported template-family gap
+- Glossary updates: dust risk score, inspection note, weather observation, mission timeline constraint
+- Glossary linking: no-match terms include rationale and promotion gate
+- Implementation layering: gap recorded
+- Work-pack: n/a
+- Unresolved gaps: candidate-template approval missing; scoring evidence model unresolved
+- Next route: deferred

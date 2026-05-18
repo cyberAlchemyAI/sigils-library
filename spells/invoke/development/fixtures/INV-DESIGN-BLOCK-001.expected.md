@@ -1,0 +1,19 @@
+## Invoke Validation Fixture Result
+
+- Fixture: INV-DESIGN-BLOCK-001
+- User request: Design the architecture for an approval workflow, but no approved spec, glossary, source contracts, or discovery approval were provided.
+- Mode: design
+- Spell: invoke
+- Canonical ID: invoke
+- Scope: library
+- Phase status: block
+- Mode contract: arcanum/spells/invoke/design.md
+- Outputs: n/a
+- Design views: n/a
+- Glossary consistency: n/a
+- Template/profile selection: none finalized
+- Implementation layering: gap recorded
+- Work-pack: n/a
+- Decisions: normal design cannot proceed without approved define outputs or explicit discovery-mode approval
+- Unresolved gaps: approved spec missing; approved glossary missing; source contracts missing; discovery-mode approval missing
+- Next route: define

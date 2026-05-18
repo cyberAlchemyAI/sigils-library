@@ -1,0 +1,19 @@
+## Invoke Validation Fixture Result
+
+- Fixture: INV-DESIGN-PASS-001
+- User request: Design the architecture for a reusable Mars sample catalog module from approved discovery outputs.
+- Mode: design
+- Spell: invoke
+- Canonical ID: invoke
+- Scope: library
+- Phase status: pass
+- Mode contract: arcanum/spells/invoke/design.md
+- Outputs: artifacts/mars-sample-catalog/ARCHITECTURE.md, artifacts/mars-sample-catalog/glossary-consistency.md, .arcanum/necronomicon/sessions/demo/invoke-transports/design.md
+- Design views: context, high-level structure, low-level components, workflow process, decision flow, dependency interface
+- Glossary consistency: pass
+- Template/profile selection: Module Formulae architecture profile
+- Implementation layering: seed emitted
+- Work-pack: n/a
+- Decisions: proceed with module-first architecture; preserve sample provenance, curation state, and search boundaries as source contracts
+- Unresolved gaps: none blocking
+- Next route: plan
