@@ -1,3 +1,56 @@
+# Arcanum Spell: arcanum bootstrap
+
+<!-- arcanum:capability-id arcanum-bootstrap -->
+<!-- arcanum:capability-kind spell -->
+<!-- arcanum:capability-tier spell -->
+<!-- arcanum:command arcanum-bootstrap -->
+
+## Observer Envelope: Task Zero
+
+Before doing domain work, establish the observer envelope for this Arcanum invocation.
+
+- `run_id`: use an existing hook-provided run id when present; otherwise use `arcanum-arcanum-bootstrap-<UTC timestamp>`.
+- `capability.id`: `arcanum-bootstrap`
+- `capability.kind`: `spell`
+- `capability.tier`: `spell`
+- `capability.mode`: `command`
+- `target_artifact`: this command file
+- request summary: summarize the user request before execution.
+- expected outputs: list intended artifacts before execution when known.
+
+Closeout is mandatory but must not hide the primary result. At the end, report:
+
+- `OBSERVATION`
+- `LEDGER`
+- `REFLECTION_TRIGGER`
+- `RECOMMENDATION`
+- `DEDUPE_KEY`
+
+If deterministic hook or wrapper telemetry is unavailable, preserve the result and report the observability gap.
+
+
+## Objective
+
+Run the installed Arcanum spell `arcanum-bootstrap` using the canonical spell snapshot embedded below.
+
+## Process
+
+1. Use the embedded canonical spell snapshot as the execution contract.
+2. Execute only this installed spell unless the definition explicitly delegates or the user asks to route elsewhere.
+3. Preserve the selected spell's process, quality bar, output contract, validation gates, gaps, and next route.
+4. Return artifact used, command used, validation result, observability result, and next action.
+
+## Guardrails
+
+- Keep this command focused on `arcanum-bootstrap`.
+- Do not silently add, remove, or refresh capabilities.
+- Do not treat generated observer telemetry as a substitute for the primary result.
+
+## Canonical Spell Snapshot
+
+Canonical source: https://github.com/cyberAlchemyAI/arcanum/blob/main/spells/arcanum-bootstrap/README.md
+
+````markdown
 # Arcanum Bootstrap
 
 ## Identity
@@ -161,3 +214,5 @@ Return:
 - Validation: <checks>
 - Follow-up: <items or none>
 ```
+
+````

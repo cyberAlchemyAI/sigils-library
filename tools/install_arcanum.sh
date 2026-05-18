@@ -18,14 +18,14 @@ Bootstrap options are forwarded to tools/bootstrap_arcanum.sh, for example:
   --target <path>
   --sigils <list|all>
   --spells <list|all|none>
-  --runtime <github-copilot|claude|codex|none>
+  --runtime <codex|none>
   --force
   --dry-run
 
 Examples:
-  curl -fsSL https://raw.githubusercontent.com/cyberAlchemyAI/arcanum/main/tools/install_arcanum.sh | bash -s -- --target . --sigils all --spells all --runtime github-copilot
+  curl -fsSL https://raw.githubusercontent.com/cyberAlchemyAI/arcanum/main/tools/install_arcanum.sh | bash -s -- --target . --sigils all --spells all --runtime codex
 
-  curl -fsSL https://raw.githubusercontent.com/cyberAlchemyAI/arcanum/main/tools/install_arcanum.sh | bash -s -- --target . --sigils ontology-vault,context-builder --spells ontology-harness --runtime github-copilot
+  curl -fsSL https://raw.githubusercontent.com/cyberAlchemyAI/arcanum/main/tools/install_arcanum.sh | bash -s -- --target . --sigils ontology-vault,context-builder --spells ontology-harness --runtime codex
 USAGE
 }
 

@@ -3,12 +3,12 @@
 ## Install Request
 
 - Repository: {repository}
-- Requested target: github-copilot | claude | codex | undecided
+- Requested target: codex | none | undecided
 - Command name: {command}
-- Registry path: {registry}
+- Command surface: .codex/commands
 
 ## Decision
 
-- Selected target: github-copilot | claude | codex
+- Selected target: codex | none
 - Rationale: {rationale}
 - Path override: {path-or-none}

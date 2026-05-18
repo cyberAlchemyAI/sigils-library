@@ -1,45 +1,38 @@
 # Sigil Runtime Installer
 
-Sigil Runtime Installer is an Arcana sigil for installing Arcanum sigils into agent-specific command surfaces.
+Sigil Runtime Installer installs Arcanum sigils and spells into the Codex command surface.
 
-It creates runtime adapters for GitHub Copilot, Claude, or Codex so a repository can invoke Arcanum sigils and spells from the agent interface it actually uses. Canonical runtime adapter files live under `.arcanum/runtimes/`; platform-specific folders contain only discovery bridges when required.
+Arcanum now treats `.codex/commands/` as the installed runtime surface. Generated command files are full executable command contracts with embedded canonical snapshots; there is no `.arcanum/runtimes/` indirection and no GitHub Copilot skill bridge.
 
-For each selected runtime, the installer should create one general `arcanum-orchestrate` adapter plus individual adapters for every selected sigil and spell. Individual adapter names use `arcanum-sigil-<id>` and `arcanum-spell-<id>`. When `ontology-harness` is selected, it should also create `arcanum-necronomicon` as the friendly alias command.
+For each selected install, the installer creates one general `arcanum-orchestrate` command plus individual commands for every selected sigil and spell. Prefixed names use `arcanum-sigil-<id>` and `arcanum-spell-<id>` as stable compatibility names. Bare-id aliases such as `interrogation` or `invoke` are also full command files unless the alias would collide. When `ontology-harness` is selected, it creates `arcanum-ontology-harness`. When Necronomicon harness generation is enabled, it creates `arcanum-necronomicon`.
 
 ## Problem It Solves
 
-Arcanum stores canonical sigils and spells as framework artifacts, but each agent runtime has its own command surface and file conventions. A registry is useful only when agents can discover and invoke the selected capabilities from their local command surface.
+Arcanum stores canonical sigils and spells as framework artifacts, but Codex discovers repository slash commands from `.codex/commands/`. A registry is useful only when the selected capabilities are invokable from that local command surface.
 
-Sigil Runtime Installer bridges that gap. It asks for the target runtime, installs adapters under `.arcanum/runtimes/`, adds the required platform discovery bridges, embeds the canonical instruction snapshot needed by each selected command, and validates that installed commands can run without generated `.arcanum/necronomicon/` registry files.
+Sigil Runtime Installer bridges that gap by generating Codex commands directly from canonical Arcanum artifacts, installing observer hooks, and validating that commands can run without generated `.arcanum/necronomicon/` registry files.
 
 ## Use When
 
-- a repository should expose Arcanum sigils as slash-command style skills,
-- GitHub Copilot should discover Arcanum through `.github/skills/` while the canonical local adapter lives under `.arcanum/runtimes/github-copilot/`,
-- Claude or Codex needs a local command adapter plan,
-- a consuming repository should use Arcanum without generated runtime registry folders,
-- installed command wrappers need validation.
+- a repository should expose Arcanum sigils as Codex slash-command style commands,
+- a consuming repository should install selected Arcanum capabilities without runtime adapter folders,
+- installed commands need observer-envelope-first telemetry,
+- command wrappers need validation.
 
-Adapters should use their embedded canonical instruction snapshots and apply observability handoff through `.arcanum/observability/`. Necronomicon is the Ontology Harness alias, not a generated definition-storage folder.
+Generated commands use their embedded canonical instruction snapshots and the observer envelope task-zero contract. Necronomicon is the persistent repository harness, not a generated definition-storage folder.
 
 ## Do Not Use When
 
 - the user only wants to read the registry,
-- the target runtime is unknown and the user cannot choose one,
-- the repository should not receive agent-specific files,
-- the requested install would make local wrappers authoritative over canonical sigils.
+- the repository should not receive Codex command files,
+- the requested install would make local generated commands authoritative over canonical sigils.
 
 ## Supported Targets
 
-| Target         | Adapter Shape                  | Canonical Path                                               | Discovery Bridge                    |
-| -------------- | ------------------------------ | ------------------------------------------------------------ | ----------------------------------- |
-| GitHub Copilot | repository-local skill wrapper | `.arcanum/runtimes/github-copilot/skills/<command>/SKILL.md` | `.github/skills/<command>/SKILL.md` |
-| Claude         | command adapter plan           | `.arcanum/runtimes/claude/commands/<command>.md`             | `.claude/commands/<command>.md`     |
-| Codex          | command adapter plan           | `.arcanum/runtimes/codex/commands/<command>.md`              | `.codex/commands/<command>.md`      |
-
-For artifact-specific adapters, `<command>` is `arcanum-sigil-<id>` or `arcanum-spell-<id>`.
-
-Repositories may override paths when their local runtime uses a different convention.
+| Target | Command Surface | Generated Shape |
+| --- | --- | --- |
+| Codex | `.codex/commands/<command>.md` | Full command contract with observer task-zero block and embedded canonical snapshot |
+| None | n/a | Observability and optional Necronomicon state only |
 
 ## Output
 
@@ -47,11 +40,10 @@ The sigil can produce:
 
 - target selection report,
 - install manifest,
-- GitHub Copilot skill wrapper,
-- Claude command adapter plan,
-- Codex command adapter plan,
+- Codex command files,
+- Codex hook files,
 - validation report.
 
 ## Why This Is Arcana
 
-The sigil coordinates target-runtime selection, adapter generation, local path decisions, registry linking, validation, and installation reporting across repository boundaries.
+The sigil coordinates command generation, local path decisions, canonical snapshot embedding, observer hook installation, validation, and installation reporting across repository boundaries.

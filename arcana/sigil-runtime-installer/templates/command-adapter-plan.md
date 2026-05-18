@@ -2,20 +2,27 @@
 
 ## Target
 
-- Runtime: github-copilot | claude | codex
+- Runtime: codex
 - Command: {command}
-- Path: {path}
+- Path: .codex/commands/{command}.md
 
-## Adapter Contract
+## Command Contract
 
-- Discover Arcanum registry.
-- Route request to sigil or spell.
-- Read canonical artifact files.
+- Resolve observer envelope task zero.
+- Route request to the selected sigil or spell.
+- Use the embedded canonical artifact snapshot.
 - Execute or guide the selected process.
+- Preserve primary result, validation, files changed, gaps, and next route.
+- Apply Observed Invocation Loop closeout through Codex hooks or `tools/arcanum --exec`.
 - Report selected route and validation.
+
+<!-- arcanum:capability-id {capability-id} -->
+<!-- arcanum:capability-kind {capability-kind} -->
+<!-- arcanum:capability-tier {capability-tier} -->
+<!-- arcanum:command {command} -->
 
 ## Notes
 
-- Keep this adapter thin.
-- Do not copy full sigil internals.
-- Keep canonical behavior in Arcanum.
+- Keep this command focused on one capability or on orchestration.
+- Do not generate `.arcanum/runtimes/`.
+- Keep canonical behavior in Arcanum source; generated commands are installed snapshots.

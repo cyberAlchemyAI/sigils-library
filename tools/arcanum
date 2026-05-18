@@ -1,0 +1,334 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+usage() {
+	cat <<'USAGE'
+Usage:
+  tools/arcanum --list
+  tools/arcanum --resolve <command>
+  tools/arcanum [--print-prompt] <command> [arguments...]
+  tools/arcanum --exec [--output <path>] <command> [arguments...]
+
+Examples:
+  tools/arcanum /invoke define a cache invalidation sigil
+  tools/arcanum --exec invoke define a cache invalidation sigil
+  tools/arcanum --resolve interrogation
+
+This is the repository-local Arcanum command surface. It accepts bare aliases
+such as invoke and slash-like aliases such as /invoke, resolves them through
+.codex/commands, and can run the selected command through the Codex CLI.
+USAGE
+}
+
+script_path="${BASH_SOURCE[0]}"
+script_dir="$(cd "$(dirname "$script_path")" && pwd)"
+repo_root="$(cd "$script_dir/.." && pwd)"
+commands_dir="$repo_root/.codex/commands"
+observability_dir="$repo_root/.arcanum/observability"
+observer="$repo_root/framework/observability/scripts/observe-invocation.sh"
+
+mode="prompt"
+output_path=""
+command_name=""
+
+find_codex() {
+	if [[ -n "${CODEX_BIN:-}" && -x "${CODEX_BIN:-}" ]]; then
+		printf '%s\n' "$CODEX_BIN"
+		return 0
+	fi
+	if command -v codex >/dev/null 2>&1; then
+		command -v codex
+		return 0
+	fi
+	local candidate
+	for candidate in \
+		"$HOME/.vscode-server/extensions/openai.chatgpt-"*/bin/linux-x86_64/codex \
+		"$HOME/.vscode/extensions/openai.chatgpt-"*/bin/linux-x86_64/codex \
+		"$HOME/.local/bin/codex" \
+		"$HOME/bin/codex"; do
+		if [[ -x "$candidate" ]]; then
+			printf '%s\n' "$candidate"
+			return 0
+		fi
+	done
+	return 1
+}
+
+normalize_command() {
+	local raw="$1"
+	raw="${raw#/}"
+	printf '%s' "$raw"
+}
+
+detect_kind() {
+	local command_file="$1"
+	local command_name="$2"
+	local marked
+	marked="$(sed -n 's/^<!-- arcanum:capability-kind \(.*\) -->$/\1/p' "$command_file" | head -n 1)"
+	if [[ -n "$marked" ]]; then
+		printf '%s' "$marked"
+		return 0
+	fi
+	case "$command_name" in
+		arcanum-sigil-*) printf 'sigil' ;;
+		arcanum-spell-*) printf 'spell' ;;
+		arcanum-necronomicon|arcanum-ontology-harness) printf 'spell' ;;
+		*) printf 'skill' ;;
+	esac
+}
+
+detect_capability_id() {
+	local command_file="$1"
+	local command_name="$2"
+	local marked
+	marked="$(sed -n 's/^<!-- arcanum:capability-id \(.*\) -->$/\1/p' "$command_file" | head -n 1)"
+	if [[ -n "$marked" ]]; then
+		printf '%s' "$marked"
+		return 0
+	fi
+	case "$command_name" in
+		arcanum-sigil-*) printf '%s' "${command_name#arcanum-sigil-}" ;;
+		arcanum-spell-*) printf '%s' "${command_name#arcanum-spell-}" ;;
+		arcanum-necronomicon) printf 'necronomicon' ;;
+		arcanum-ontology-harness) printf 'ontology-harness' ;;
+		*) printf '%s' "$command_name" ;;
+	esac
+}
+
+detect_tier() {
+	local command_file="$1"
+	local marked
+	marked="$(sed -n 's/^<!-- arcanum:capability-tier \(.*\) -->$/\1/p' "$command_file" | head -n 1)"
+	if [[ -n "$marked" ]]; then
+		printf '%s' "$marked"
+	else
+		printf 'runtime'
+	fi
+}
+
+resolve_command() {
+	local selected="$1"
+	local command_file="$commands_dir/$selected.md"
+	if [[ ! -f "$command_file" ]]; then
+		return 1
+	fi
+	printf '%s\n' "${command_file#$repo_root/}"
+}
+
+build_prompt() {
+	local selected="$1"
+	local adapter_rel="$2"
+	local request="$3"
+	cat <<PROMPT
+Use the Arcanum command surface for command \`$selected\`.
+
+1. Read \`$adapter_rel\`.
+2. Follow that command's process and embedded canonical contract.
+3. Treat the user request below as the command arguments.
+4. Treat observer envelope setup as task zero.
+5. Preserve the command output contract and include observability closeout status when available.
+
+User request:
+$request
+PROMPT
+}
+
+observe_result() {
+	local selected="$1"
+	local command_rel="$2"
+	local request="$3"
+	local status="$4"
+	local output_rel="$5"
+	local command_abs kind capability_id capability_tier run_id run_dir envelope timestamp recommendation
+
+	if [[ ! -x "$observer" || ! -d "$observability_dir" ]] || ! command -v jq >/dev/null 2>&1; then
+		printf 'OBSERVATION=skipped\n'
+		printf 'REASON=observer unavailable\n'
+		return 0
+	fi
+
+	command_abs="$repo_root/$command_rel"
+	kind="$(detect_kind "$command_abs" "$selected")"
+	capability_id="$(detect_capability_id "$command_abs" "$selected")"
+	capability_tier="$(detect_tier "$command_abs")"
+	timestamp="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+	run_id="arcanum-command-$selected-$(date -u +%Y%m%dT%H%M%SZ)"
+	run_dir="$observability_dir/runs/arcanum-command/$run_id"
+	envelope="$run_dir/envelope.json"
+	mkdir -p "$run_dir"
+	recommendation="none"
+	if [[ "$status" != "completed" ]]; then
+		recommendation="inspect-run"
+	fi
+
+	jq -n \
+		--arg timestamp "$timestamp" \
+		--arg run_id "$run_id" \
+		--arg selected "$selected" \
+		--arg capability_id "$capability_id" \
+		--arg kind "$kind" \
+		--arg capability_tier "$capability_tier" \
+		--arg command_rel "$command_rel" \
+		--arg request "$request" \
+		--arg status "$status" \
+		--arg output "$output_rel" \
+		--arg recommendation "$recommendation" \
+		'{
+			timestamp: $timestamp,
+			run_id: $run_id,
+			session_id: "arcanum-command-surface",
+			sigil: $capability_id,
+			tier: $capability_tier,
+			mode: "command",
+			capability: {
+				id: $capability_id,
+				kind: $kind,
+				tier: $capability_tier,
+				mode: "command"
+			},
+			request: {
+				raw: $request,
+				summary: ("Arcanum command " + $selected),
+				intent: $request
+			},
+			execution: {
+				status: $status,
+				outputs: (if $output == "" then [] else [$output] end),
+				files_changed: [],
+				validation: ["arcanum command surface dispatch", "tools/arcanum deterministic observer envelope"],
+				notes: ("command=" + $command_rel)
+			},
+			observer: {
+				quality_bar_status: (if $status == "completed" then "pass" else "partial" end),
+				anti_pattern_hits: [],
+				workflow_gaps: [],
+				output_contract_drift: false,
+				reflection_trigger: "none",
+				recommendation: $recommendation
+			},
+			target_artifact: $command_rel
+		}' > "$envelope"
+
+	"$observer" --envelope "$envelope" --observability-dir "$observability_dir"
+}
+
+if [[ "$#" -eq 0 ]]; then
+	usage >&2
+	exit 2
+fi
+
+while [[ "$#" -gt 0 ]]; do
+	case "$1" in
+		--help|-h)
+			usage
+			exit 0
+			;;
+		--list)
+			if [[ ! -d "$commands_dir" ]]; then
+				printf 'ERROR: command directory not found: %s\n' "${commands_dir#$repo_root/}" >&2
+				exit 1
+			fi
+			find "$commands_dir" -maxdepth 1 -type f -name '*.md' -printf '%f\n' | sed 's/\.md$//' | sort
+			exit 0
+			;;
+		--resolve)
+			mode="resolve"
+			shift
+			if [[ "$#" -eq 0 ]]; then
+				usage >&2
+				exit 2
+			fi
+			command_name="$(normalize_command "$1")"
+			shift
+			break
+			;;
+		--print-prompt)
+			mode="prompt"
+			shift
+			;;
+		--exec)
+			mode="exec"
+			shift
+			;;
+		--output)
+			output_path="$2"
+			shift 2
+			;;
+		--)
+			shift
+			break
+			;;
+		-*)
+			printf 'ERROR: unknown option: %s\n' "$1" >&2
+			usage >&2
+			exit 2
+			;;
+		*)
+			command_name="$(normalize_command "$1")"
+			shift
+			break
+			;;
+	esac
+done
+
+if [[ -z "$command_name" ]]; then
+	if [[ "$#" -eq 0 ]]; then
+		usage >&2
+		exit 2
+	fi
+	command_name="$(normalize_command "$1")"
+	shift
+fi
+
+command_rel="$(resolve_command "$command_name" || true)"
+if [[ -z "$command_rel" ]]; then
+	printf 'ERROR: unknown Arcanum command: %s\n' "$command_name" >&2
+	printf 'Try: tools/arcanum --list\n' >&2
+	exit 1
+fi
+
+if [[ "$mode" == "resolve" ]]; then
+	printf 'COMMAND=%s\n' "$command_name"
+	printf 'COMMAND_FILE=%s\n' "$command_rel"
+	exit 0
+fi
+
+request="$*"
+prompt="$(build_prompt "$command_name" "$command_rel" "$request")"
+
+if [[ "$mode" == "prompt" ]]; then
+	printf '%s\n' "$prompt"
+	exit 0
+fi
+
+codex_bin="$(find_codex || true)"
+if [[ -z "$codex_bin" ]]; then
+	printf 'ERROR: codex CLI not found on PATH\n' >&2
+	printf 'Set CODEX_BIN to the codex executable path.\n' >&2
+	exit 1
+fi
+
+if [[ -z "$output_path" ]]; then
+	run_stamp="$(date -u +%Y%m%dT%H%M%SZ)"
+	output_path=".arcanum/observability/runs/arcanum-command/$run_stamp-$command_name/output.md"
+fi
+output_abs="$repo_root/$output_path"
+mkdir -p "$(dirname "$output_abs")"
+
+status="completed"
+if ! "$codex_bin" exec \
+	-C "$repo_root" \
+	--sandbox workspace-write \
+	--output-last-message "$output_abs" \
+	"$prompt"; then
+	status="failed"
+fi
+
+printf 'COMMAND=%s\n' "$command_name"
+printf 'COMMAND_FILE=%s\n' "$command_rel"
+printf 'OUTPUT=%s\n' "$output_path"
+observe_result "$command_name" "$command_rel" "$request" "$status" "$output_path"
+
+if [[ "$status" != "completed" ]]; then
+	exit 1
+fi
