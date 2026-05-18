@@ -7,6 +7,7 @@ DEFINE_CONTRACT="$INVOKE_DIR/define.md"
 DESIGN_CONTRACT="$INVOKE_DIR/design.md"
 FIXTURE_DIR="$INVOKE_DIR/development/fixtures"
 TEMPLATE_TASKS="$INVOKE_DIR/development/TEMPLATE-VALIDATION-TASKS.md"
+EXPERIMENT_REGIMES="$INVOKE_DIR/development/EXPERIMENT-REGIMES.md"
 EXAMPLE_PROMPTS_DIR="$INVOKE_DIR/development/example-prompts"
 EXAMPLE_OUTPUTS_DIR="$INVOKE_DIR/development/example-outputs"
 PROMPT_SELECTOR="$INVOKE_DIR/development/select-template-example-prompt.sh"
@@ -21,6 +22,9 @@ events=()
 passed_fixtures=()
 failed_checks=()
 output_artifacts=()
+quality_bar_status="pass"
+anti_pattern_hits=()
+workflow_gaps=()
 
 mkdir -p "$RUNS_DIR"
 
@@ -28,6 +32,52 @@ record() {
 	local message="$1"
 	events+=("$message")
 	printf '%s\n' "$message"
+}
+
+json_array() {
+	if [[ "$#" -eq 0 ]]; then
+		printf '[]\n'
+		return 0
+	fi
+	printf '%s\n' "$@" | jq -Rsc 'split("\n")[:-1]'
+}
+
+json_objects() {
+	if [[ "$#" -eq 0 ]]; then
+		printf '[]\n'
+		return 0
+	fi
+	printf '%s\n' "$@" | jq -sc '.'
+}
+
+add_quality_gap() {
+	local category="$1"
+	local severity="$2"
+	local summary="$3"
+	local evidence="$4"
+	workflow_gaps+=("$(
+		jq -cn \
+			--arg category "$category" \
+			--arg severity "$severity" \
+			--arg summary "$summary" \
+			--arg evidence "$evidence" \
+			'{
+				category: $category,
+				severity: $severity,
+				summary: $summary,
+				evidence: $evidence
+			}'
+	)")
+	if [[ "$severity" == "severe" || "$severity" == "high" ]]; then
+		quality_bar_status="fail"
+	elif [[ "$quality_bar_status" == "pass" ]]; then
+		quality_bar_status="partial"
+	fi
+}
+
+add_anti_pattern_hit() {
+	local summary="$1"
+	anti_pattern_hits+=("$summary")
 }
 
 require_file() {
@@ -52,14 +102,25 @@ require_pattern() {
 
 write_report() {
 	local verdict="$1"
+	local anti_json
+	local gaps_json
+	if [[ "$verdict" == "block" ]]; then
+		quality_bar_status="fail"
+	fi
+	anti_json="$(json_array "${anti_pattern_hits[@]}")"
+	gaps_json="$(json_objects "${workflow_gaps[@]}")"
 	{
 		printf '# Invoke Validation Fixture Run\n\n'
 		printf -- '- Run ID: `%s`\n' "$RUN_ID"
 		printf -- '- Verdict: `%s`\n' "$verdict"
+		printf -- '- Validation: %s\n' "$verdict"
+		printf -- '- Quality Bar: `%s`\n' "$quality_bar_status"
+		printf -- '- Anti-Pattern hits: `%s`\n' "${#anti_pattern_hits[@]}"
 		printf -- '- Runner: `arcanum/spells/invoke/development/run-validation-fixtures.sh`\n'
 		printf -- '- Fixture directory: `arcanum/spells/invoke/development/fixtures/`\n'
 		printf -- '- Define contract: `arcanum/spells/invoke/define.md`\n'
 		printf -- '- Design contract: `arcanum/spells/invoke/design.md`\n\n'
+		printf -- '- Experiment regimes: `arcanum/spells/invoke/development/EXPERIMENT-REGIMES.md`\n\n'
 		printf -- '- Template task matrix: `arcanum/spells/invoke/development/TEMPLATE-VALIDATION-TASKS.md`\n\n'
 		printf -- '- Example prompts: `arcanum/spells/invoke/development/example-prompts/`\n\n'
 		printf -- '- Example outputs: `arcanum/spells/invoke/development/example-outputs/`\n\n'
@@ -106,6 +167,10 @@ write_report() {
 			printf '%s\n' "$event"
 		done
 		printf '```\n'
+		printf '\n## Machine Summary\n\n'
+		printf 'QUALITY_BAR_STATUS=%s\n' "$quality_bar_status"
+		printf 'ANTI_PATTERN_HITS_JSON=%s\n' "$anti_json"
+		printf 'WORKFLOW_GAPS_JSON=%s\n' "$gaps_json"
 	} > "$RUN_REPORT"
 }
 
@@ -220,6 +285,8 @@ run_example_output_checks() {
 		if rg -q -- '^Saved the .*output to ' "$output"; then
 			record "FAIL: $output_name is a save-summary, not an Invoke Result body"
 			failed_checks+=("$output_name is a save-summary")
+			add_anti_pattern_hit "$output_name is a save-summary instead of an Invoke Result body"
+			add_quality_gap "output-contract" "severe" "$output_name is not a real artifact body" "${output#$ROOT_DIR/}"
 			failures=$((failures + 1))
 		fi
 		require_pattern "$output" '## Invoke Result|## Invoke Validation Fixture Result' "$output_name output heading"
@@ -377,9 +444,43 @@ run_integration_fixture() {
 	fi
 }
 
+run_quality_antipattern_fixture() {
+	local fixture="$1"
+	local expected="$2"
+	local label="$3"
+
+	require_file "$fixture"
+	require_file "$expected"
+
+	require_pattern "$fixture" 'Quality Bar pass output' "$label quality pass scenario"
+	require_pattern "$fixture" 'Quality Bar partial output' "$label quality partial scenario"
+	require_pattern "$fixture" 'Quality Bar fail output' "$label quality fail scenario"
+	require_pattern "$fixture" 'Anti-Pattern flag hit' "$label anti-pattern flag scenario"
+	require_pattern "$fixture" 'Anti-Pattern block hit' "$label anti-pattern block scenario"
+	require_pattern "$expected" 'QUALITY_BAR_STATUS=pass' "$label expected quality pass"
+	require_pattern "$expected" 'QUALITY_BAR_STATUS=partial' "$label expected quality partial"
+	require_pattern "$expected" 'QUALITY_BAR_STATUS=fail' "$label expected quality fail"
+	require_pattern "$expected" 'ANTI_PATTERN_HITS_JSON=' "$label expected anti-pattern json"
+	require_pattern "$expected" 'WORKFLOW_GAPS_JSON=' "$label expected workflow gaps json"
+	require_pattern "$expected" 'reflection_trigger' "$label expected telemetry trigger"
+
+	require_pattern "$DEFINE_CONTRACT" 'block on missing core goal or contradictory scope' "$label define quality missing goal"
+	require_pattern "$DEFINE_CONTRACT" 'Candidate glossary promotion is never automatic' "$label define anti-pattern glossary promotion"
+	require_pattern "$DESIGN_CONTRACT" 'Normal design blocks without approved define outputs unless discovery mode is explicitly approved' "$label design anti-pattern source approval"
+	require_pattern "$DESIGN_CONTRACT" 'Design mode must not create work-pack tasks' "$label design anti-pattern deferred plan behavior"
+	require_pattern "$DESIGN_CONTRACT" 'Spell and sigil lifecycle work routes to `spellcraft` or `sigil-development`' "$label design anti-pattern downstream mutation"
+
+	if [[ "$failures" -eq 0 ]]; then
+		passed_fixtures+=("$label")
+		output_artifacts+=("${expected#$ROOT_DIR/}")
+		record "PASS: $label"
+	fi
+}
+
 require_file "$DEFINE_CONTRACT"
 require_file "$DESIGN_CONTRACT"
 require_file "$TEMPLATE_TASKS"
+require_file "$EXPERIMENT_REGIMES"
 require_pattern "$DEFINE_CONTRACT" 'Status: implemented \(L0 contract, candidate template-family scaffold coverage\)' 'define contract status'
 require_pattern "$DEFINE_CONTRACT" 'block on missing core goal or contradictory scope' 'define missing-goal block'
 require_pattern "$DEFINE_CONTRACT" 'flag when no eligible template exists and candidate creation is unapproved' 'define candidate-template flag'
@@ -485,6 +586,11 @@ run_integration_fixture \
 	"$FIXTURE_DIR/INV-INTEGRATION-DEFINE-DESIGN-001.glossary-consistency.md" \
 	"$FIXTURE_DIR/INV-INTEGRATION-DEFINE-DESIGN-001.design-transport.md" \
 	'INV-INTEGRATION-DEFINE-DESIGN-001'
+
+run_quality_antipattern_fixture \
+	"$FIXTURE_DIR/INV-QUALITY-ANTI-PATTERN-001.md" \
+	"$FIXTURE_DIR/INV-QUALITY-ANTI-PATTERN-001.expected.md" \
+	'INV-QUALITY-ANTI-PATTERN-001'
 
 if [[ "$failures" -gt 0 ]]; then
 	record "RESULT: block ($failures failure(s))"

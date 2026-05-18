@@ -6,11 +6,11 @@ Validation protocol: [VALIDATION-EXPERIMENT.md](VALIDATION-EXPERIMENT.md)
 
 - Artifact: `invoke`
 - Scope: library spell
-- Validation date: 2026-05-17
-- Validated layer: L0 define and L1 design contract readiness
-- Promotion target: proceed to L2 planning work after L0/L1 fixture evidence passes
+- Validation date: 2026-05-18
+- Validated layer: L0 define, L1 design, and define-to-design live loop readiness
+- Promotion target: proceed to L2 planning work after loop-first evidence passes
 - Verdict: `pass`
-- Latest run report: [runs/20260517T230901Z.md](runs/20260517T230901Z.md)
+- Latest deterministic control report: generated under ignored `runs/`
 
 ## Checks Performed
 
@@ -29,6 +29,37 @@ Validation protocol: [VALIDATION-EXPERIMENT.md](VALIDATION-EXPERIMENT.md)
 | Codex adapter readiness | pass | Root-level `.arcanum/runtimes/codex/commands/arcanum-spell-invoke.md` and `.codex/commands/arcanum-spell-invoke.md` exist and route Codex to canonical `arcanum/spells/invoke` contracts. |
 | Fixture replay | pass | `arcanum/spells/invoke/development/run-validation-fixtures.sh` reports all define and design realistic fixtures and expected output files passing. |
 | Integration replay | pass | `INV-INTEGRATION-DEFINE-DESIGN-001` proves define artifacts feed design inputs, preserve glossary terms, emit six views, and route next to `plan`. |
+| Live define loop | pass | [live-evidence/LIVE-DEFINE-001/loop-report.md](live-evidence/LIVE-DEFINE-001/loop-report.md) reached two consecutive passing Codex attempts; [output.md](live-evidence/LIVE-DEFINE-001/output.md) preserves the real artifact body. |
+| Live design loop | pass | [live-evidence/LIVE-DESIGN-001/loop-report.md](live-evidence/LIVE-DESIGN-001/loop-report.md) reached two consecutive passing Codex attempts after correcting overly broad placeholder/blocker detection in the harness validator; [output.md](live-evidence/LIVE-DESIGN-001/output.md) preserves the real artifact body. |
+| Live define-to-design loop | pass | [live-evidence/LIVE-DEFINE-DESIGN-001/loop-report.md](live-evidence/LIVE-DEFINE-DESIGN-001/loop-report.md) reached two consecutive passing Codex attempts and preserved the define-to-design authority boundary; [output.md](live-evidence/LIVE-DEFINE-DESIGN-001/output.md) preserves the real artifact body. |
+| Observability loop | pass | `.arcanum/observability/signals/sigil-invocations.jsonl` records completed observer telemetry with `quality_bar_status`, `anti_pattern_hits`, `workflow_gaps`, and `reflection_trigger`; hook rows in `.arcanum/observability/hooks/hook-operations.jsonl` carry `observe: false` and duplicate observer emission skips cleanly. |
+
+## Loop Validation
+
+Live Codex loop validation is now required promotion evidence for the implemented `invoke` scope. Deterministic fixtures remain controls; they prove stable contract expectations, but they do not replace live execution.
+
+| Regime | Result | Evidence |
+| --- | --- | --- |
+| `CTRL-DEFINE-001` | pass | `run-validation-fixtures.sh` latest generated report under ignored `runs/` |
+| `CTRL-DESIGN-001` | pass | `run-validation-fixtures.sh` latest generated report under ignored `runs/` |
+| `CTRL-INTEGRATION-001` | pass | `run-validation-fixtures.sh` latest generated report under ignored `runs/` |
+| `CTRL-CONTRACT-001` | pass | `run-validation-fixtures.sh` latest generated report under ignored `runs/` |
+| `LIVE-DEFINE-001` | pass | [live-evidence/LIVE-DEFINE-001/loop-report.md](live-evidence/LIVE-DEFINE-001/loop-report.md), [output.md](live-evidence/LIVE-DEFINE-001/output.md), [validation.json](live-evidence/LIVE-DEFINE-001/validation.json) |
+| `LIVE-DESIGN-001` | pass | [live-evidence/LIVE-DESIGN-001/loop-report.md](live-evidence/LIVE-DESIGN-001/loop-report.md), [output.md](live-evidence/LIVE-DESIGN-001/output.md), [validation.json](live-evidence/LIVE-DESIGN-001/validation.json) |
+| `LIVE-DEFINE-DESIGN-001` | pass | [live-evidence/LIVE-DEFINE-DESIGN-001/loop-report.md](live-evidence/LIVE-DEFINE-DESIGN-001/loop-report.md), [output.md](live-evidence/LIVE-DEFINE-DESIGN-001/output.md), [validation.json](live-evidence/LIVE-DEFINE-DESIGN-001/validation.json) |
+| `LIVE-OBSERVABILITY-001` | pass | Observer emissions recorded for define, design, and define-to-design loop reports with observer version `0.1.1`; duplicate design observation skipped by dedupe. |
+
+Latest live loop machine summaries:
+
+```text
+LIVE-DEFINE-001: VALIDATION=pass QUALITY_BAR_STATUS=pass ANTI_PATTERN_HITS_JSON=[] WORKFLOW_GAPS_JSON=[]
+LIVE-DESIGN-001: VALIDATION=pass QUALITY_BAR_STATUS=pass ANTI_PATTERN_HITS_JSON=[] WORKFLOW_GAPS_JSON=[]
+LIVE-DEFINE-DESIGN-001: VALIDATION=pass QUALITY_BAR_STATUS=pass ANTI_PATTERN_HITS_JSON=[] WORKFLOW_GAPS_JSON=[]
+```
+
+Failure/improvement evidence: an earlier generated `LIVE-DESIGN-001` partial loop produced non-pass attempts with `robot-talks.md` and `improvement-argument.md` artifacts. That loop exposed overly broad harness checks for Mermaid decision braces and benign missing-field decision rules; after tightening the validator, the design regime passed with two consecutive live attempts.
+
+Registry release remains blocked for `plan`, `full`, and `validate` modes until they have matching deterministic controls and live loop regimes.
 
 ## Fixture Status
 
@@ -55,9 +86,7 @@ Command:
 arcanum/spells/invoke/development/run-validation-fixtures.sh
 ```
 
-Latest report:
-
-[runs/20260517T230901Z.md](runs/20260517T230901Z.md)
+Latest report: generated under ignored `runs/`.
 
 Output:
 
@@ -74,6 +103,7 @@ PASS: INV-DESIGN-BLOCK-001
 PASS: INV-DESIGN-FLAG-001
 PASS: INV-DESIGN-HANDOFF-001
 PASS: INV-INTEGRATION-DEFINE-DESIGN-001
+PASS: INV-QUALITY-ANTI-PATTERN-001
 RESULT: pass
 ```
 
@@ -169,7 +199,7 @@ The runner checks both the realistic user-request fixture files and their expect
 
 Promote `invoke` from L1 validation to L2 planning work.
 
-Do not register `invoke` in the spell registry yet. Registry release still requires L2/L3 plan, full, validate, examples, and release validation.
+Do not register `invoke` in the spell registry yet. Registry release still requires `plan`, `full`, `validate`, examples, deterministic controls, live loop regimes, and release validation.
 
 ## Next Actions
 
