@@ -52,12 +52,18 @@ Create or verify this package at the repository root:
    - `.arcanum/observability/`,
    - `.arcanum/observability/signals/`,
    - `.arcanum/observability/by-sigil/`,
+   - `.arcanum/observability/hooks/`,
+   - `.arcanum/observability/hooks/reflections/`,
+   - `.arcanum/observability/runs/`,
    - `.arcanum/observability/reflections/`.
 5. Create missing files:
    - `README.md`,
    - `config.json`,
    - `reflection-state.json`,
    - `signals/sigil-invocations.jsonl`,
+   - `hooks/hook-operations.jsonl`,
+   - `hooks/failures.jsonl`,
+   - `hooks/dedupe.jsonl`,
    - `.gitkeep` files for empty optional folders.
 6. If files exist, preserve user content unless `--repair` is provided and the file is invalid against the package contract.
 7. Validate JSON files parse.

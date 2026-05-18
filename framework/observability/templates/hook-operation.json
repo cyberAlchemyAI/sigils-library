@@ -1,0 +1,16 @@
+{
+  "timestamp": "YYYY-MM-DDTHH:MM:SSZ",
+  "hook": "signal-observer",
+  "hook_run_id": "<hook-run-id>",
+  "target_run_id": "<target-run-id>",
+  "target_session_id": "<session-id>",
+  "action": "observe",
+  "status": "completed",
+  "inputs": ["<safe input path>"],
+  "outputs": ["<safe output path>"],
+  "emitted_signal": true,
+  "reason": "<short reason>",
+  "duration_ms": 0,
+  "dedupe_key": "<target-run-id>:signal-observer:<version>",
+  "observe": false
+}

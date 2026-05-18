@@ -8,6 +8,10 @@ For the general post-run hook pattern, see [Sigil Observability Hook](SIGIL-OBSE
 
 For the repository-local package that makes the hook portable across consuming repositories, see [Repository Observability Package](REPOSITORY-PACKAGE.md).
 
+For background hook audit rows and loop guards, see [Hook Operations Ledger](HOOK-OPERATIONS-LEDGER.md).
+
+For long-running task boundaries and recoverable checkpoints, see [Observed Runs](OBSERVED-RUNS.md).
+
 ## What To Observe
 
 Observe meaningful sigil executions: runs that produce or attempt to produce a user-facing artifact, decision, validation result, orchestration result, telemetry signal, or reflection report.

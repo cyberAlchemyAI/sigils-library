@@ -34,6 +34,7 @@ Expected inputs:
 
 - invocation envelope path, preferably matching `framework/observability/templates/invocation-envelope.json`,
 - optional telemetry ledger path,
+- optional hook operations ledger path,
 - visible execution summary,
 - changed artifact list,
 - validation results,
@@ -79,14 +80,21 @@ Use these defaults when the user does not provide explicit paths:
    - `gap-threshold`,
    - `severe-gap`.
 6. Append exactly one JSON object to the configured JSONL ledger.
-7. Update reflection counters if reflection state is available.
-8. Validate appended telemetry when a JSON or JSONL checker is available.
-9. Return a concise observation report.
+7. Record observer hook activity in the hook operations ledger with `observe: false` when hook self-tracking is enabled.
+8. Update reflection counters if reflection state is available.
+9. Validate appended telemetry when a JSON or JSONL checker is available.
+10. Return a concise observation report.
 </process>
 
 <authority-rule>
 This sigil is non-blocking by default. It appends observability signals and updates reflection counters only. It must not modify application source code, user artifacts, or the observed sigil unless explicitly delegated by a separate maintenance workflow.
 </authority-rule>
+
+<loop-guard>
+Signal Observer must not observe its own hook operation as a normal capability run.
+
+Use `.arcanum/observability/hooks/hook-operations.jsonl` for observer start, completion, skip, failure, and dedupe events. These rows must carry `observe: false`.
+</loop-guard>
 
 <privacy-rules>
 - Do not store secrets, credentials, tokens, private keys, or sensitive raw content.

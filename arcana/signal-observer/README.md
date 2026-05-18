@@ -47,10 +47,22 @@ The sigil emits:
 - reflection trigger state,
 - recommended follow-up actions.
 
+## Hook Self-Tracking
+
+Signal Observer may record its own background work only in the hook operations ledger:
+
+```text
+.arcanum/observability/hooks/hook-operations.jsonl
+```
+
+It must not emit normal capability telemetry for its own hook operation. Hook rows carry `observe: false` so observer activity does not recursively trigger more observation.
+
 ## Related Docs
 
 - [Sigil Observability Hook](../../framework/observability/SIGIL-OBSERVABILITY-HOOK.md)
 - [Repository Observability Package](../../framework/observability/REPOSITORY-PACKAGE.md)
+- [Hook Operations Ledger](../../framework/observability/HOOK-OPERATIONS-LEDGER.md)
+- [Observed Runs](../../framework/observability/OBSERVED-RUNS.md)
 - [Observability Setup](../../formulae/observability-setup/)
 
 ## Why This Is Arcana

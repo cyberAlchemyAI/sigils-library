@@ -1,0 +1,34 @@
+{
+  "version": "0.1.0",
+  "session_id": "<session-id>",
+  "run_id": "<run-id>",
+  "parent_run_id": null,
+  "capability": {
+    "id": "<sigil-or-spell-id>",
+    "kind": "sigil | spell",
+    "tier": "formulae | transmutations | arcana | spell",
+    "mode": "execute"
+  },
+  "status": "opened",
+  "opened_at": "YYYY-MM-DDTHH:MM:SSZ",
+  "closed_at": null,
+  "request": {
+    "summary": "<safe summary>",
+    "intent": "<intent>",
+    "raw": null
+  },
+  "execution": {
+    "outputs": [],
+    "files_changed": [],
+    "validation": [],
+    "notes": ""
+  },
+  "observer": {
+    "quality_bar_status": "not_checked",
+    "anti_pattern_hits": [],
+    "workflow_gaps": [],
+    "output_contract_drift": false,
+    "reflection_trigger": "none",
+    "recommendation": "none"
+  }
+}

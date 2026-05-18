@@ -29,6 +29,14 @@ When Arcanum is installed through bootstrap, `.arcanum/necronomicon/OBSERVABILIT
     sigil-invocations.jsonl
   by-sigil/
     .gitkeep
+  hooks/
+    hook-operations.jsonl
+    failures.jsonl
+    dedupe.jsonl
+    reflections/
+      .gitkeep
+  runs/
+    .gitkeep
   reflections/
     .gitkeep
 ```
@@ -166,3 +174,7 @@ Use [observability-setup](../../formulae/observability-setup/) to install or ver
 ## Hook Integration
 
 Use [Sigil Observability Hook](SIGIL-OBSERVABILITY-HOOK.md) after each meaningful sigil execution. The hook appends one invocation event to the configured ledger and reports whether reflection is required.
+
+Background extraction, observation, append, and hook-health work must write operational audit rows to `hooks/hook-operations.jsonl`, not to the capability telemetry ledger. See [Hook Operations Ledger](HOOK-OPERATIONS-LEDGER.md).
+
+Long-running sigil and spell executions should use observed run bundles under `runs/`. See [Observed Runs](OBSERVED-RUNS.md).

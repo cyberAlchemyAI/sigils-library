@@ -80,6 +80,18 @@ The important rule is one invocation per JSON object.
 
 See [Repository Observability Package](REPOSITORY-PACKAGE.md) for central, per-sigil, and hybrid storage options.
 
+## Hook Operations Ledger
+
+Observation itself is background infrastructure. Extraction hooks, observer hooks, telemetry appenders, dedupe checks, and hook-health reflection must record operational rows in:
+
+```text
+.arcanum/observability/hooks/hook-operations.jsonl
+```
+
+Hook operation rows are not capability telemetry and must never trigger another `signal-observer` pass. They always carry `observe: false`.
+
+Use `hooks/failures.jsonl` for hook failures and `hooks/dedupe.jsonl` for observer emission dedupe keys.
+
 ## Hook Flow
 
 1. Sigil execution completes or blocks.
@@ -88,7 +100,8 @@ See [Repository Observability Package](REPOSITORY-PACKAGE.md) for central, per-s
 4. Observer subagent synthesizes request summary, gap signals, Quality Bar status, Anti-Pattern hits, and reflection trigger state.
 5. Main agent reviews the observer result.
 6. Main agent appends one JSON object to the telemetry ledger.
-7. Main agent reports whether reflection is now required.
+7. Hook operation rows record observer start, completion, skip, or failure.
+8. Main agent reports whether reflection is now required.
 
 If no subagent mechanism exists, the main agent runs a clearly labeled local observer pass and writes the same JSON shape.
 
@@ -130,6 +143,14 @@ The agent runs the hook as the final step of any sigil execution. This is easies
 ### Runtime Wrapper
 
 A command wrapper invokes the sigil, captures inputs and outputs, calls an observer, and appends the JSON event. This is better when sigils are run through a CLI or automation harness.
+
+Runtime wrappers should use observed run bundles for long or multi-phase work:
+
+```text
+.arcanum/observability/runs/<session-id>/<run-id>/
+```
+
+The observer should read the closed bundle. If close data is missing, it may read the latest checkpoint and emit `partial` or `interrupted`.
 
 ### Platform Event Hook
 
