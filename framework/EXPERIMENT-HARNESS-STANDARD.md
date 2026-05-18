@@ -38,6 +38,8 @@ Generated runtime evidence under `example-outputs/`, `example-runs/`, and `runs/
 
 When `.arcanum/observability/` exists in the repository, reports should emit one signal-observer-compatible event to `.arcanum/observability/signals/sigil-invocations.jsonl`. This closes the loop from experiment evidence to reflection counters without committing generated logs or model outputs.
 
+Validation should use the target artifact's own `SKILL.md` contract when available. `<quality-bar>` defines acceptance evidence. `<anti-patterns>` defines known false-success boundaries. The harness records those findings as `QUALITY_BAR_STATUS`, `ANTI_PATTERN_HITS_JSON`, and `WORKFLOW_GAPS_JSON` so telemetry can distinguish a real pass from a polished-looking violation.
+
 ## Required Evidence Types
 
 | Evidence | Purpose | Required For Promotion |
@@ -57,10 +59,12 @@ Each artifact-local runner should:
 2. Validate fixture files exist.
 3. Validate expected outputs contain the artifact's real output contract.
 4. Reject save-summary outputs such as `Saved the output to ...` when a real result body is required.
-5. Validate mode-specific gates and known negative cases.
-6. Validate integration handoffs when one stage consumes another stage's output.
-7. Write a timestamped report under `development/runs/`.
-8. Exit non-zero on any failed check.
+5. Check the artifact's Quality Bar criteria and record `pass`, `partial`, `fail`, or `not_checked`.
+6. Check the artifact's Anti-Patterns and record any hits as validation flags or blocks.
+7. Validate mode-specific gates and known negative cases.
+8. Validate integration handoffs when one stage consumes another stage's output.
+9. Write a timestamped report under `development/runs/`.
+10. Exit non-zero on any failed check.
 
 The runner should not silently run expensive live AI calls. Live runtime execution must be explicit through a separate script or flag.
 
@@ -128,6 +132,18 @@ Examples:
 | Implementation plan | source design refs, tasks or waves, gates, blockers, validation plan. |
 | Work-pack | objective, complexity, tasks/waves, traceability links, blockers, closure strategy. |
 | Observability | signal definitions, emission points, storage path, reflection trigger, privacy/safety notes. |
+
+## Quality Bar And Anti-Patterns
+
+The generic harness check is intentionally conservative. It does not prove deep semantic correctness by itself; it catches common contract violations that should never pass quietly:
+
+- missing or empty artifact output,
+- self-referential save summaries instead of the artifact body,
+- unresolved placeholders or TODO markers,
+- `pass` status paired with missing-required or blocker language,
+- missing Quality Bar or Anti-Pattern sections in reusable artifact contracts.
+
+Artifact-specific runners should add deeper checks for phase rules. For example, `invoke define` checks goal, scope, missing input, glossary, and transport evidence; `invoke design` checks source contracts, views, risks, dependency/interface notes, and handoff boundaries; the combined define-to-design experiment checks that design consumes define outputs without inventing upstream authority.
 
 ## Generalization Workflow
 

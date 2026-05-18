@@ -1,7 +1,7 @@
 ---
 name: experiment-harness
-description: "Use when initializing, running, validating, reporting, or observing repeatable development experiments for Arcanum spells and sigils, especially through Codex CLI."
-argument-hint: "<init|next|run|validate|report|observe> <artifact-path> [example-id|report-path|--type spell|sigil|--all]"
+description: "Use when initializing, running, looping, validating, reporting, or observing repeatable development experiments for Arcanum spells and sigils, especially through Codex CLI."
+argument-hint: "<init|next|run|loop|validate|report|observe> <artifact-path> [regime-id|example-id|report-path|--type spell|sigil|--all]"
 tier: arcana
 domain: spell-sigil-validation
 version: 0.1.0
@@ -25,6 +25,7 @@ Use this sigil for:
 - initializing a development harness for a spell or sigil,
 - selecting the next missing example prompt,
 - running one bounded Codex CLI example,
+- running a live stability loop for one regime,
 - validating fixtures, expected outputs, live outputs, and reports,
 - writing a run report,
 - emitting signal-observer-compatible telemetry from a run report,
@@ -34,7 +35,7 @@ Use this sigil for:
 <inputs>
 Expected inputs:
 
-- mode: `init`, `next`, `run`, `validate`, `report`, or `observe`,
+- mode: `init`, `next`, `run`, `loop`, `validate`, `report`, or `observe`,
 - artifact path,
 - artifact type for init: `spell` or `sigil`,
 - optional example ID or `--all`,
@@ -47,13 +48,23 @@ Expected inputs:
 2. For `init`, create `development/` directories and starter validation files without overwriting existing files.
 3. For `next`, select the first prompt in `development/example-prompts/` without a matching `development/example-outputs/<task-id>.output.md`.
 4. For `run`, execute exactly one selected prompt through Codex CLI unless `--all` is explicitly provided.
-5. Save Codex's final user-facing message to `development/example-outputs/<task-id>.output.md` and raw logs to `development/example-runs/`.
-6. Reject empty outputs and self-referential save summaries such as `Saved the output to ...`.
-7. For `validate`, check required harness files, fixture pairs, example outputs, and latest report shape.
-8. For `report`, write a timestamped report under `development/runs/`.
-9. For `observe`, or after `report` when observability exists, append one JSONL signal under `.arcanum/observability/` and update reflection counters.
-10. Return the selected artifact, command mode, files touched, validation state, telemetry state, and next missing example.
+5. For `loop`, execute the selected regime until it reaches the required pass streak or max attempts.
+6. Save Codex's final user-facing message to generated evidence paths and raw logs to the attempt bundle.
+7. Reject empty outputs and self-referential save summaries such as `Saved the output to ...`.
+8. For `validate`, check required harness files, fixture pairs, example outputs, Quality Bar evidence, Anti-Pattern hits, and latest report shape.
+9. For `report`, write a timestamped report under `development/runs/`.
+10. For `observe`, or after `report` when observability exists, append one JSONL signal under `.arcanum/observability/` and update reflection counters.
+11. Return the selected artifact, command mode, files touched, validation state, telemetry state, and next missing example.
 </process>
+
+<validation-loop>
+When validating saved outputs, extract the target artifact's `SKILL.md` sections:
+
+- `<quality-bar>` defines the acceptance criteria that classify the output as `pass`, `partial`, `fail`, or `not_checked`.
+- `<anti-patterns>` defines known false-success boundaries that become `anti_pattern_hits`.
+- The first implementation uses structured section and keyword checks; semantic judging can be layered into the observer later.
+- Report machine fields must include `QUALITY_BAR_STATUS`, `ANTI_PATTERN_HITS_JSON`, and `WORKFLOW_GAPS_JSON` when findings exist.
+</validation-loop>
 
 <observability-loop>
 The experiment harness closes the lifecycle loop by integrating with `signal-observer` and the framework observability package:
@@ -66,6 +77,18 @@ The experiment harness closes the lifecycle loop by integrating with `signal-obs
 - dedupe prevents repeated observer emissions for the same report and observer version,
 - telemetry write failures never block the primary validation result.
 </observability-loop>
+
+<loop-first-architecture>
+The planned promotion path is loop-first:
+
+- live Codex regimes are primary promotion evidence,
+- deterministic fixtures remain controls,
+- a loop passes after two consecutive successful attempts,
+- failed attempts require robot-talks improvement reasoning before auto-improvement,
+- improvements must be reversible and rolled back when the next attempt is worse.
+
+See `development/ARCHITECTURE.md` and `development/IMPLEMENTATION-LAYERING.md`.
+</loop-first-architecture>
 
 <artifact-boundary>
 This sigil owns testing mechanics only. Artifact-specific meaning stays with the target spell or sigil. If the output contract is wrong, route that change through `spellcraft` or `sigil-development`.
@@ -116,10 +139,10 @@ Return:
 ```markdown
 ## Experiment Harness Result
 
-- Mode: init | next | run | validate | report | observe
+- Mode: init | next | run | loop | validate | report | observe
 - Artifact: <path>
 - Artifact type: spell | sigil | unknown
-- Selection: <task-id | none | not applicable>
+- Selection: <regime-id | task-id | none | not applicable>
 - Output: <path | none | not applicable>
 - Report: <path | none | not applicable>
 - Validation: pass | flag | block | not run

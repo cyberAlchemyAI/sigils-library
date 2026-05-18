@@ -1,0 +1,5 @@
+# Generated phase gate reports.
+runs/*
+
+# Keep report directory present.
+!runs/.gitkeep

@@ -33,9 +33,11 @@ repo_root="${EXPERIMENT_REPO_ROOT:-$(git -C "$PWD" rev-parse --show-toplevel 2>/
 
 mkdir -p \
 	"$dev_dir/fixtures" \
+	"$dev_dir/regimes" \
 	"$dev_dir/example-prompts" \
 	"$dev_dir/example-outputs" \
 	"$dev_dir/example-runs" \
+	"$dev_dir/experiment-loops" \
 	"$dev_dir/runs"
 
 write_if_missing() {
@@ -100,15 +102,18 @@ write_if_missing "$dev_dir/.gitignore" \
 	"# Generated experiment evidence." \
 	"example-outputs/*" \
 	"example-runs/*" \
+	"experiment-loops/*" \
 	"runs/*" \
 	"" \
 	"# Keep evidence directories present." \
 	"!example-outputs/.gitkeep" \
 	"!example-runs/.gitkeep" \
+	"!experiment-loops/.gitkeep" \
 	"!runs/.gitkeep"
 
 write_if_missing "$dev_dir/example-outputs/.gitkeep" ""
 write_if_missing "$dev_dir/example-runs/.gitkeep" ""
+write_if_missing "$dev_dir/experiment-loops/.gitkeep" ""
 write_if_missing "$dev_dir/runs/.gitkeep" ""
 
 write_if_missing "$dev_dir/fixtures/${artifact_type}-low.md" \
@@ -147,6 +152,40 @@ write_if_missing "$dev_dir/example-prompts/${artifact_type}-low.md" \
 	"" \
 	"Save only the final artifact result body to \`development/example-outputs/${artifact_type}-low.output.md\`."
 
+write_if_missing "$dev_dir/regimes/LIVE-${artifact_type^^}-LOW-001.md" \
+	"# Regime: LIVE-${artifact_type^^}-LOW-001" \
+	"" \
+	"## Goal" \
+	"" \
+	"Validate one live Codex loop for the starter $artifact_type prompt." \
+	"" \
+	"## Prompt" \
+	"" \
+	"- Prompt: \`example-prompts/${artifact_type}-low.md\`" \
+	"" \
+	"## Required Output Patterns" \
+	"" \
+	"- \`## .+Result|# .+Result\`" \
+	"- \`Status:|Validation:|Phase status:\`" \
+	"" \
+	"## Quality Bar" \
+	"" \
+	"- Output must be a real artifact body, not a save-summary." \
+	"" \
+	"## Anti-Patterns" \
+	"" \
+	"- Avoid accepting empty output or a summary that only says a file was saved." \
+	"" \
+	"## Observability" \
+	"" \
+	"- Attempt telemetry should record quality, anti-patterns, workflow gaps, and reflection trigger." \
+	"" \
+	"## Lessons To Capture" \
+	"" \
+	"- Missing output sections." \
+	"- Prompt ambiguity." \
+	"- Observer gaps."
+
 write_if_missing "$dev_dir/select-example-prompt.sh" \
 	"#!/usr/bin/env bash" \
 	"set -euo pipefail" \
@@ -156,6 +195,11 @@ write_if_missing "$dev_dir/run-example-with-codex.sh" \
 	"#!/usr/bin/env bash" \
 	"set -euo pipefail" \
 	"\"$SCRIPT_DIR/run-with-codex.sh\" \"$artifact_abs\" \"\$@\""
+
+write_if_missing "$dev_dir/run-experiment-loop.sh" \
+	"#!/usr/bin/env bash" \
+	"set -euo pipefail" \
+	"\"$SCRIPT_DIR/loop-harness.sh\" \"$artifact_abs\" \"\$@\""
 
 write_if_missing "$dev_dir/run-validation-fixtures.sh" \
 	"#!/usr/bin/env bash" \
@@ -175,6 +219,7 @@ write_if_missing "$dev_dir/observe-experiment-report.sh" \
 chmod +x \
 	"$dev_dir/select-example-prompt.sh" \
 	"$dev_dir/run-example-with-codex.sh" \
+	"$dev_dir/run-experiment-loop.sh" \
 	"$dev_dir/run-validation-fixtures.sh" \
 	"$dev_dir/write-experiment-report.sh" \
 	"$dev_dir/observe-experiment-report.sh"

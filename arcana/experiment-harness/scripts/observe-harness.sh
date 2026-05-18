@@ -71,7 +71,7 @@ timestamp="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 safe_timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
 target_run_id="experiment-${report_rel//[^A-Za-z0-9._-]/-}"
 target_session_id="${EXPERIMENT_SESSION_ID:-experiment-harness}"
-observer_version="0.1.0"
+observer_version="${EXPERIMENT_OBSERVER_VERSION:-0.1.0}"
 dedupe_key="$target_run_id:signal-observer:$observer_version"
 hook_started_at_ms="$(date +%s%3N)"
 
@@ -114,11 +114,17 @@ record_hook started false "observer started" 0
 
 validation="$(sed -n 's/^- Validation: //p' "$report_abs" | head -n 1)"
 if [[ -z "$validation" ]]; then
+	validation="$(sed -n 's/^VALIDATION=//p' "$report_abs" | tail -n 1)"
+fi
+if [[ -z "$validation" ]]; then
 	validation="$(sed -n 's/^RESULT: //p' "$report_abs" | sed 's/ .*//' | tail -n 1)"
 fi
 if [[ -z "$validation" ]]; then
 	validation="not_checked"
 fi
+reported_quality_bar_status="$(sed -n 's/^QUALITY_BAR_STATUS=//p' "$report_abs" | tail -n 1)"
+reported_anti_pattern_hits_json="$(sed -n 's/^ANTI_PATTERN_HITS_JSON=//p' "$report_abs" | tail -n 1)"
+reported_workflow_gaps_json="$(sed -n 's/^WORKFLOW_GAPS_JSON=//p' "$report_abs" | tail -n 1)"
 
 case "$validation" in
 	pass)
@@ -146,6 +152,27 @@ case "$validation" in
 		recommendation="targeted-update"
 		;;
 esac
+
+if [[ -n "$reported_quality_bar_status" ]]; then
+	quality_bar_status="$reported_quality_bar_status"
+	case "$quality_bar_status" in
+		pass)
+			if [[ "$validation" == "pass" ]]; then
+				execution_status="completed"
+				recommendation="none"
+			fi
+			;;
+		partial)
+			execution_status="partial"
+			recommendation="targeted-update"
+			;;
+		fail)
+			execution_status="blocked"
+			reflection_trigger="severe-gap"
+			recommendation="reflect-now"
+			;;
+	esac
+fi
 
 prompt_count="$(find "$dev_dir/example-prompts" -maxdepth 1 -type f -name '*.md' 2>/dev/null | wc -l | tr -d ' ')"
 output_count="$(find "$dev_dir/example-outputs" -maxdepth 1 -type f -name '*.output.md' 2>/dev/null | wc -l | tr -d ' ')"
@@ -175,6 +202,13 @@ if [[ "$validation" != "pass" ]]; then
 			}]'
 	)"
 fi
+if [[ -n "$reported_workflow_gaps_json" ]] && printf '%s\n' "$reported_workflow_gaps_json" | jq -e . >/dev/null 2>&1; then
+	workflow_gaps_json="$reported_workflow_gaps_json"
+fi
+anti_pattern_hits_json='[]'
+if [[ -n "$reported_anti_pattern_hits_json" ]] && printf '%s\n' "$reported_anti_pattern_hits_json" | jq -e . >/dev/null 2>&1; then
+	anti_pattern_hits_json="$reported_anti_pattern_hits_json"
+fi
 
 event="$(
 	jq -cn \
@@ -192,6 +226,7 @@ event="$(
 		--arg quality "$quality_bar_status" \
 		--arg trigger "$reflection_trigger" \
 		--arg recommendation "$recommendation" \
+		--argjson anti_pattern_hits "$anti_pattern_hits_json" \
 		--argjson workflow_gaps "$workflow_gaps_json" \
 		'{
 			timestamp: $timestamp,
@@ -212,7 +247,7 @@ event="$(
 			},
 			observer: {
 				quality_bar_status: $quality,
-				anti_pattern_hits: [],
+				anti_pattern_hits: $anti_pattern_hits,
 				workflow_gaps: $workflow_gaps,
 				output_contract_drift: false,
 				reflection_trigger: $trigger,
